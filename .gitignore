@@ -1,1 +1,4 @@
 EclipseWorkspace/.metadata/
+*.class
+*.in
+EclipseWorkspace/Contest/

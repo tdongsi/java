@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
