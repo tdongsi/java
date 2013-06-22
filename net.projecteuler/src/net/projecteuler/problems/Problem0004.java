@@ -1,5 +1,7 @@
 package net.projecteuler.problems;
 
+import net.projecteuler.utility.StringUtility;
+
 /**
  * Find the largest palindrome made from the product of two 3-digit numbers.
  * 
@@ -23,10 +25,8 @@ public class Problem0004 {
 		System.out.println( "Largest: " + solution );
 		
 		// Faster solution
-		// TODO: Make it cleaner, more general
-		// 997997 and 10010 is the nearest numbers to 999*999 and 100*100, respectively, that are divisible by 11
-		final int maxNum = 997997;
-		final int minNum = 10010;
+		final int maxNum = 999;
+		final int minNum = 100;
 		solution = Problem0004.solve(maxNum, minNum);
 		System.out.println( "Largest: " + solution );
 		
@@ -34,40 +34,45 @@ public class Problem0004 {
 
 	}
 
+	/**
+	 * Find the largest palindrome made from the product of two numbers.
+	 * For example: if the two numbers are three-digit, then minNum should be 100, maxNum should be 999
+	 * 
+	 * @param maxNum: upper limit of the factors.
+	 * @param minNum: lower limit of the factors.
+	 * @return the largest palindromic number, -1 if there is none.
+	 */
 	public static int solve(final int maxNum, final int minNum) {
-		int maxProduct = -1;
-		StringBuilder productString = new StringBuilder(10);
 		
-		int product;
-		int numberOfDigits;
-		int reverseProduct;
-		product_loop: 
-		for ( product = maxNum; product >= minNum; product -= 11 ) {
+		final int maxProduct = ((maxNum*maxNum)/11)*11;
+		final int minProduct = ((minNum*minNum)/11 + 1)*11;
+		
+		// 997997 and 10010 is the nearest numbers to 999*999 and 100*100, respectively, that are divisible by 11
+//		System.out.println(maxProduct + " " + minProduct);
+		
+		for ( int product = maxProduct; product >= minProduct; product -= 11 ) {
 			// Find the lower bound
 			int lowerBound = (int)Math.floor(Math.sqrt(product));
 			
-			for ( int number = 999; number >= lowerBound; number-- ) {
+			for ( int number = maxNum; number >= lowerBound; number-- ) {
 				
 				// Check if it can be a product of two 3-digit numbers
 				if ( product % number == 0) {
-					numberOfDigits = ((product / 100000) == 0 )? 5 : 6;
+
+					// get the integer that is reverse string of the current number
+					int reverseProduct = Integer.parseInt( StringUtility.reverseString(Integer.toString(product)));
 					
-					productString.append( Integer.toString(product), 0, numberOfDigits);
-					productString.reverse();
-					reverseProduct = Integer.parseInt(productString.toString());
-					
+					// if they are the same, then the current number is palindromic
 					if ( reverseProduct == product ) {
-						maxProduct = product;
-						System.out.println( "Largest2: " + product );
-						break product_loop;
-					} else {
-						productString.delete(0, numberOfDigits);
+						return product;
 					}
 				}
 			}
 		}
 		
-		return maxProduct;
+		// Return -1 if it cannot find one
+		return -1;
+		
 	}
 	
 
