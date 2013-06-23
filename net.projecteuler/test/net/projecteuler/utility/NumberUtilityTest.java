@@ -89,5 +89,17 @@ public class NumberUtilityTest {
 		assertEquals( NumberUtility.lcm(8, 6), 24 );
 		
 	}
+	
+	@Test
+	public void test_remainderDivideNineSeries() {
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(1, 3));
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(6, 7));
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(2, 11));
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(16, 17));
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(15, 31));
+		
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(486, 487));
+		assertEquals( 0, NumberUtility.remainderDivideNineSeries(486, 487*487));
+	}
 
 }

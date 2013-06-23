@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class BitSetPrimeSieve implements PrimeSieve
 {
-	private static Logger logger = LoggerFactory.getLogger(RepeatingDecimalsTest.class);
+	private static Logger logger = LoggerFactory.getLogger(BitSetPrimeSieve.class);
 	
 	// the sieve for odd numbers
 	// Using boolean array gives similar performance with no obvious benefits.
@@ -88,7 +88,7 @@ public class BitSetPrimeSieve implements PrimeSieve
 
         return list;
     }
-
+    
     public boolean isPrime(int n)
     {
         if (n <= 1)
@@ -212,7 +212,7 @@ public class BitSetPrimeSieve implements PrimeSieve
 			if ( number % j == 0 )
 			{
 				// remainder = (10^divisor - 1) % prime;
-				int remainder = RepeatingDecimals.remainderDivideNineSeries(j, prime);
+				int remainder = NumberUtility.remainderDivideNineSeries(j, prime);
 				if ( remainder == 0 )
 				{
 					// As j is increasing, the first found j is the lowest divisor
@@ -225,7 +225,7 @@ public class BitSetPrimeSieve implements PrimeSieve
 				if ( div != j && div != number )
 				{
 					// remainder = (10^divisor - 1) % prime;
-					remainder = RepeatingDecimals.remainderDivideNineSeries(div, prime);
+					remainder = NumberUtility.remainderDivideNineSeries(div, prime);
 					if ( remainder == 0 )
 					{
 						if ( div < minDivisor )

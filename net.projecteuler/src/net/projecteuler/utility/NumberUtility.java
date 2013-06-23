@@ -163,5 +163,38 @@ public class NumberUtility {
 
 		return digitCount;
 	}
+	
+	/**
+ 	 * Compute remainder = (10^power - 1) % number;
+ 	 */
+ 	public static int remainderDivideNineSeries(int power, int number) {
+ 		// This is to speed up the computation.
+ 		// Too large POWER_STEP may be inaccurate due to Math.pow.
+ 		// Naive implementation is equivalent to 10 and 1, respectively.
+ 	 	final int NUMBER_STEP = 1000;
+ 	 	final int POWER_STEP = 3;
+ 	 	
+ 		int remainder = 0;
+
+ 		for (int i = power; i > 0; i -= POWER_STEP) {
+ 			if (i > POWER_STEP) {
+ 				remainder++;
+ 				remainder *= NUMBER_STEP;
+ 				remainder--;
+ 				remainder %= number;
+ 			} else {
+ 				int number_step = (int) Math.pow(10, i);
+
+ 				remainder++;
+ 				remainder *= number_step;
+ 				remainder--;
+ 				remainder %= number;
+
+ 				break;
+ 			}
+ 		}
+
+ 		return remainder;
+ 	}
 
 }

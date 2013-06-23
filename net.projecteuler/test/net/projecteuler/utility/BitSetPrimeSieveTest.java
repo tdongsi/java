@@ -46,13 +46,7 @@ public class BitSetPrimeSieveTest {
 		// Test 2 and 5
 		assertEquals( sieve.primeReciprocalLength(2), 0);
 		assertEquals( sieve.primeReciprocalLength(5), 0);
-		
-		
-//		assertEquals( sieve.remainder(2,3), 0);
-//		assertEquals( sieve.remainder(6,7), 0);
-//		assertEquals( sieve.remainder(2,11), 0);
-//		assertEquals( sieve.remainder(16,17), 0);
-//		assertEquals( sieve.remainder(15,31), 0);
+
 	}
 
 }
