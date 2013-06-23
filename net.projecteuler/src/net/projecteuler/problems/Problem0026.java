@@ -52,9 +52,9 @@ public class Problem0026 {
 				continue;
 			}
 
-			long digitCount = findReciprocalLength(prime);
+			long digitCount = NumberUtility.computeReciprocalLength(prime);
 
-					logger.debug( "Prime: {} , cycle length: {}", prime, digitCount );
+			logger.debug( "Prime: {} , cycle length: {}", prime, digitCount );
 
 			if ( digitCount > maxLength )
 			{
@@ -67,35 +67,4 @@ public class Problem0026 {
 
 	}
 	
-	/**
-	 * The dirty version for finding the length of reciprocal cycle.
-	 * Check NumberUtility for faster version.
-	 * @param prime: a prime number
-	 * @return the length of reciprocal cycle.
-	 */
-	private long findReciprocalLength(long prime)
-	{
-		BigInteger current = new BigInteger("9");
-		BigInteger bigPrime = new BigInteger( String.valueOf(prime));
-		BigInteger nine = new BigInteger("9");
-		int digitCount = 1;
-		while ( true )
-		{
-			BigInteger remainder = current.remainder(bigPrime);
-			
-			if ( remainder.equals(BigInteger.ZERO) )
-			{
-				break;
-			}
-			
-			// add one more 9
-			current = current.multiply( BigInteger.TEN );
-			current = current.add(nine);
-			
-			digitCount++;
-		}
-		
-		return digitCount;
-	}
-
 }
