@@ -3,7 +3,5 @@ EclipseWorkspace/.metadata/
 *.in
 EclipseWorkspace/Contest/
 JavaProgramming4th/bin/
-JavaProgramming4th/.classpath
-JavaProgramming4th/.project
 JavaProgramming4th/.settings/org.eclipse.jdt.core.prefs
 EclipseWorkspace/problemc.in.txt
