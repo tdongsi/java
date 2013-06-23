@@ -16,44 +16,12 @@ public class Problem0015 {
 
 	public static void main(String[] args) {
 		int dist = 20;
-		Point startingPoint = new Point(0,0);
-		Point destination = new Point(dist,dist);
-		int routeNumber2 = getRouteNumber( startingPoint, destination );
-		System.out.println( "number of routes: " + routeNumber2 );
 		
 		long routeNumber = getRouteNumber(dist,dist);
 		
 		System.out.println( "number of routes: " + routeNumber );
 	}
 	
-	/**
-	 * Naive solution. Working fine with dist <= 15.
-	 * 
-	 * @param currPos: coordinate of the starting point
-	 * @param des: coordinate of the destination point
-	 * @return number of routes
-	 */
-	private static int getRouteNumber( Point currPos, Point des ) {
-		int number = 0;
-		// System.out.println( "currPos: " + currPos );
-		if ( currPos.x == des.x && currPos.y == des.y ) {
-			return 0;
-		} else if ( currPos.x < des.x && currPos.y == des.y ) {
-			return 1;
-		} else if ( currPos.y < des.y && currPos.x == des.x ) {
-			return 1;
-		} 
-		
-		if ( currPos.x < des.x ) {
-			number += getRouteNumber( new Point(currPos.x+1,currPos.y), des );
-		} 
-		
-		if ( currPos.y < des.y ) {
-			number += getRouteNumber( new Point(currPos.x,currPos.y+1), des );
-		}
-		
-		return number;
-	}
 	
 	/**
 	 * Recursive implementation using the closed-form formula.
@@ -78,20 +46,3 @@ public class Problem0015 {
 
 }
 
-/**
- * Simple pair of numbers
- */
-class Point {
-	public int x, y;
-
-	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	public String toString() {
-		return "Point [x=" + x + ", y=" + y + "]";
-	}
-	
-	
-}
