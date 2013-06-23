@@ -30,7 +30,7 @@ public class Problem0015 {
 	 * @param yDistance: y coordinate of the destination point
 	 * @return number of routes
 	 */
-	private static long getRouteNumber( int xDistance, int yDistance ) {
+	public static long getRouteNumber( int xDistance, int yDistance ) {
 		if ( xDistance == 0 && yDistance == 0 ) {
 			return 0;
 		} else if ( xDistance == 0 || yDistance == 0  ) {
