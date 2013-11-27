@@ -7,6 +7,15 @@ package net.projecteuler.utility;
  *
  */
 public class StringUtility {
+	
+	/**
+	 * Enforce that this class should not be instantiated.
+	 * Suppress default constructor.
+	 */
+	private StringUtility()
+	{
+		throw new AssertionError();
+	}
 
 	public static void main(String[] args) {
 

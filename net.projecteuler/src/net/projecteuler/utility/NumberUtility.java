@@ -3,13 +3,22 @@ package net.projecteuler.utility;
 import java.util.*;
 
 /**
- * Containing some basic number utility functions.
- * As of 2013 March 1st, number utility functions should be added to NumberUtils class instead.
+ * Containing some BASIC number utility functions.
+ * As of 2013 March 1st, more complex number utility functions should be added to NumberUtils class instead.
  * 
  * @author tdongsi
  *
  */
 public class NumberUtility {
+	
+	/**
+	 * Enforce that this class should not be instantiated.
+	 * Suppress default constructor.
+	 */
+	private NumberUtility()
+	{
+		throw new AssertionError();
+	}
 
 	/**
 	 * Check if the number is a prime number

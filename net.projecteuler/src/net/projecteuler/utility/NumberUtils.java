@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Experimental and complex utility functions for numbers.
+ * These utility functions are not public static. They may evolve and not be stateless.
  * 
  * @author tdongsi
  *
