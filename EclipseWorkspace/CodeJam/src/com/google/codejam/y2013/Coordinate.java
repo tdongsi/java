@@ -30,11 +30,11 @@ public class Coordinate
 		return result;
 	}
 	
-	public int getY() {
+	public int getX() {
 		return x;
 	}
 
-	public int getX() {
+	public int getY() {
 		return y;
 	}
 

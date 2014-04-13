@@ -12,6 +12,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.codejam.y2013.Coordinate; 
 
+/**
+ * Given the size of the board (R x C) and the number of hidden mines M, is it possible (however unlikely) to win in one click?
+ * You may choose where you click. If it is possible, then print any valid mine configuration and the coordinates of your click, 
+ * following the specifications in the Output section. Otherwise, print "Impossible".
+ * 
+ * @author dongsi.tuecuong@gmail.com
+ *
+ */
 public class MineSweeper {
 	
 	private static Logger logger = LoggerFactory.getLogger(MineSweeper.class);
@@ -19,9 +27,7 @@ public class MineSweeper {
 	public static void main(String[] args) {
 		MineSweeper solver = new MineSweeper();
 		solver.solve("data/MineSweeperSample.txt");
-//		solver.solve("data/B-small-attempt1.in");
-//		solver.solve("data/B-large.in");
-		
+//		solver.solve("data/C-small-practice.in");		
 	}
 	
 	private int testNum;
@@ -35,7 +41,7 @@ public class MineSweeper {
 		try {
 			Scanner fileScanner = new Scanner(new File(fileName));
 			Scanner lineScanner;
-			PrintStream out = new PrintStream("output_unique.txt");
+			PrintStream out = new PrintStream("output.txt");
 			
 			// Processing input
 			String line;
@@ -73,6 +79,9 @@ public class MineSweeper {
 	
 
 
+	/**
+	 * Naive strategy: put the mines at the edge of available grids. 
+	 */
 	private String findMinimumMinefield(int ROW, int COL, int MINE) {
 		
 		logger.trace("Size: {} {}",  ROW, COL);
@@ -114,15 +123,14 @@ public class MineSweeper {
 		logger.debug( "Minefield:\n{}", field.toString() );
 		if ( !field.isAnyBlank() )
 		{
-			return "Impossible";
+			return "Impossible\n";
 		} else if ( mine == 0 )
 		{
 			field.setClick();
-			return field.toString();
+			return field.toAnswerString();
 		} else {
 			
 			for (int i = 0; i < row && mine > 0; i++, mine--) {
-				logger.trace( "Row {}, col {}", offset+i, offset);
 				mineSquares.add(new Coordinate(offset+i,offset));
 			}
 			for (int j=0; j < col && mine > 0; j++, mine--)
@@ -142,11 +150,11 @@ public class MineSweeper {
 			
 			if ( !field.isAnyBlank() )
 			{
-				return "Impossible";
+				return "Impossible\n";
 			} else if ( mine == 0 )
 			{
 				field.setClick();
-				return field.toString();
+				return field.toAnswerString();
 			}
 			
 		} // end if mine > 0
@@ -165,7 +173,7 @@ public class MineSweeper {
 	 */
 	public void printSolution(int i, String solution, PrintStream outStream) {
 //		outStream.println("Case #" + (i+1) + ": " + solution);
-		outStream.printf("Case #%d: %s\n", i+1, solution );
+		outStream.printf("Case #%d:\n%s", i+1, solution );
 	}
 
 }

@@ -61,6 +61,30 @@ public class MineField {
 	}
 	
 	/**
+	 * Similar to toString(), except that number grids is represented as '.'
+	 */
+	public String toAnswerString() {
+		// Change number grids to blank grids
+		for (Coordinate coordinate : numbers) {
+			field[coordinate.getX()][coordinate.getY()] = BLANK;
+		}
+		
+		StringBuilder builder = new StringBuilder(2*row*col);
+		
+		for (int i = 0; i < row; i++) {
+			builder.append(field[i]);
+			builder.append('\n');
+		}
+		
+		// Set it back
+		for (Coordinate coordinate : numbers) {
+			field[coordinate.getX()][coordinate.getY()] = NUMBER;
+		}
+		
+		return builder.toString();
+	}
+	
+	/**
 	 * Set mines at the coordinates given by the input collection
 	 * Update the grids from the input as mine grids.
 	 * Update the adjacent grids as number grids.
@@ -131,9 +155,7 @@ public class MineField {
 	}
 
 	private void addNumbers(Set<Coordinate> numberSet) {
-		System.err.println( "Check: " + row + " " + col );
 		for (Coordinate coordinate : numberSet) {
-			System.err.println( "Check: " + coordinate.getX() + " " + coordinate.getY() );
 			field[coordinate.getX()][coordinate.getY()] = NUMBER;
 		}
 	}
