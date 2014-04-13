@@ -11,9 +11,10 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Scanner;
 
-import com.google.codejam.y2012.PasswordProblem;
-
 /**
+ * Using BigDecimal is a bit overkill, given the range of the inputs.
+ * It's just an easy exercise for practicing using BigDecimal. 
+ * 
  * @author dongsi.tuecuong@gmail.com
  *
  */
@@ -21,9 +22,9 @@ public class CookieClicker {
 
 	public static void main(String[] args) {
 		CookieClicker solver = new CookieClicker();
-//		solver.solve("data/CookieClickerSample.txt");
+		solver.solve("data/CookieClickerSample.txt");
 //		solver.solve("data/B-small-attempt1.in");
-		solver.solve("data/B-large.in");
+//		solver.solve("data/B-large.in");
 		
 	}
 	
@@ -94,7 +95,7 @@ public class CookieClicker {
 		// int farmCountInt = farmCount.round(new MathContext(1,RoundingMode.CEILING)).intValue();
 		int farmCountInt = farmCount.setScale(0, RoundingMode.CEILING).intValue();
 //		System.out.println( "farmCount: " + farmCountInt);
-		BigDecimal sum = BigDecimal.ZERO;
+		BigDecimal sum = startingCookie;
 		BigDecimal currentRate = startingRate;
 		BigDecimal temp;
 		

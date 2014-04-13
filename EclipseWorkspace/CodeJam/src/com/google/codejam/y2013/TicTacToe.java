@@ -179,7 +179,7 @@ public class TicTacToe {
 		int[] count = new int[SIZE];
 
 		for (Coordinate coordinate : listPos) {
-			count[coordinate.x]++;
+			count[coordinate.getX()]++;
 		}
 
 		for (int i = 0; i < count.length; i++) {
@@ -200,7 +200,7 @@ public class TicTacToe {
 		int[] count = new int[SIZE];
 		
 		for (Coordinate coordinate : listPos) {
-			count[coordinate.y]++;
+			count[coordinate.getY()]++;
 		}
 		
 		for (int i = 0; i < count.length; i++) {
@@ -302,50 +302,3 @@ public class TicTacToe {
 
 }
 
-/**
- * Simple class for a pair of numbers: (x,y)
- * @author tdongsi
- *
- */
-class Coordinate
-{
-	public int x;
-	public int y;
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
-		return result;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Coordinate other = (Coordinate) obj;
-		if (x != other.x)
-			return false;
-		if (y != other.y)
-			return false;
-		return true;
-	}
-	
-	/**
-	 * @param x
-	 * @param y
-	 */
-	public Coordinate(int x, int y) {
-		super();
-		this.x = x;
-		this.y = y;
-	}
-	
-	
-}
