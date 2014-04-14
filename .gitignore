@@ -6,3 +6,12 @@ JavaProgramming4th/bin/
 JavaProgramming4th/.settings/org.eclipse.jdt.core.prefs
 EclipseWorkspace/problemc.in.txt
 .metadata/
+JavaProgramming4th/src/my/java/effective/annot/AttributePreferred.java
+JavaProgramming4th/src/my/java/effective/annot/AttributeVisibility.java
+JavaProgramming4th/src/my/java/effective/annot/AttributeVisibilityTest.java
+JavaProgramming4th/src/my/java/effective/generic/ConstructStack.java
+JavaProgramming4th/src/my/java/effective/generic/PopStack.java
+JavaProgramming4th/src/my/java/effective/generic/UnaryFunction.java
+JavaProgramming4th/src/my/java/effective/generic/UtilityClass.java
+JavaProgramming4th/src/my/java/programming/reflection/GenericTest.java
+*.o
