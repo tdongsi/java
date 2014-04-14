@@ -30,10 +30,44 @@ public class PluginGenerator {
 
 	// Hidden parameter
 	private boolean enableSslAll = false;
+	
+	// Supporting fields
+	private Document doc;
+	private Transformer transformer;
+	private Map<String,String> valueMap;
 
 	public PluginGenerator(String rootName) {
 		super();
 		this.rootName = rootName;
+		
+		valueMap = new HashMap<String,String>(50);
+		
+		try {
+			// Prepare to construct the xml file
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			doc = docBuilder.newDocument();
+			
+			////////////////////////////////////////////////////////
+
+			// Prepare to write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			transformer = transformerFactory.newTransformer();
+
+			// Set formatting for XML output
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "4");
+			// Remove xml file tag <?xml version='1.0' encoding='UTF-8'?>
+			transformer.setOutputProperty("omit-xml-declaration", "yes");
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		}
 	}
 
 	/**
@@ -43,28 +77,12 @@ public class PluginGenerator {
 	 */
 	public void generateXml(String filename) {
 		try {
-
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
 			
 			// use my XML schema to generate XML doc
 			myXmlSchema(doc);
 			
 			////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////
-			
-
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			
-			// Set formatting for XML output
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-			// Remove xml file tag <?xml version='1.0' encoding='UTF-8'?>
-			transformer.setOutputProperty("omit-xml-declaration", "yes");
 			
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(filename));
@@ -75,8 +93,6 @@ public class PluginGenerator {
 			StreamResult out = new StreamResult(System.out);
 			transformer.transform(source, out);
 
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
 		} catch (TransformerException tfe) {
 			tfe.printStackTrace();
 		}
@@ -111,7 +127,6 @@ public class PluginGenerator {
 			
 			{
 				// Value elements
-				Map<String,String> valueMap = new HashMap<>(50);
 				valueMap.put("SecureSocketType", ssType);
 				valueMap.put("Certificate", certPath);
 				
