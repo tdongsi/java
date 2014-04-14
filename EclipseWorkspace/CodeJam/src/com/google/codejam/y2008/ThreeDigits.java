@@ -27,8 +27,8 @@ public class ThreeDigits {
 	public static void main(String[] args) {
 		ThreeDigits solver = new ThreeDigits();
 		solver.solve("data/ThreeDigitsSample.txt");
-//		solver.solve("C-small-practice.in");
-//		solver.solve("C-large-practice.in");
+//		solver.solve("data/C-small-practice.in");
+//		solver.solve("data/C-large-practice.in");
 		
 		String solution = solver.findDigits(10000);
 		System.out.println(solution);
@@ -81,6 +81,8 @@ public class ThreeDigits {
 			
 			BigDecimal three = new BigDecimal(3);
 			BigDecimal five = new BigDecimal(5);
+			
+			three.setScale(exponent);
 			BigDecimal bigNumber = three.add(sqrt(five,exponent));
 			
 //			// double lacks precision to represent this number
@@ -131,7 +133,6 @@ public class ThreeDigits {
             // x = (x + n/x)/2
             ix = ix.add(n.divide(ix)).shiftRight(1);
  
-            Thread.yield();
         } while (ix.compareTo(ixPrev) != 0);
  
         return new BigDecimal(ix, scale);

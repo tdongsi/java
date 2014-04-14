@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ScalarProduct {
 
-	private static Logger logger = LoggerFactory.getLogger(ScalarProduct.class);
-
 	/**
 	 * @param args
 	 */

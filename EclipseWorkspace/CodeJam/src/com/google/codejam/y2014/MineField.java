@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.codejam.y2013.Coordinate;
+import com.google.codejam.utility.Coordinate;
 
 public class MineField {
 	private char[][] field;

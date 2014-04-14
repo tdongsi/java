@@ -1,4 +1,4 @@
-package com.google.codejam.y2013;
+package com.google.codejam.utility;
 
 /**
  * Simple class for a pair of numbers: (x,y)

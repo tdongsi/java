@@ -3,6 +3,7 @@ package com.google.codejam.y2013;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -98,6 +99,15 @@ public class Bullseye {
 		double x2 = cDouble/x1/a;
 		
 		return x2;
+	}
+	
+	/**
+	 * Solving the quadratic equation for the positive root.
+	 * Using BigDecimal for large dataset.
+	 */
+	private BigDecimal quadraticSolveBig(long a, long b, long c) {
+		// TODO
+		return null;
 	}
 
 

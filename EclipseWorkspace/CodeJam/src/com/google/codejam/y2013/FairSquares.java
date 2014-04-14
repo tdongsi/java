@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO: this currently only solves the small and medium problems
+ * TODO: this currently only solves the small and medium (large-1) problems
  * @author tdongsi
  *
  */

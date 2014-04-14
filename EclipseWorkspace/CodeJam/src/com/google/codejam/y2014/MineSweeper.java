@@ -10,7 +10,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.codejam.y2013.Coordinate; 
+import com.google.codejam.utility.Coordinate;
 
 /**
  * Given the size of the board (R x C) and the number of hidden mines M, is it possible (however unlikely) to win in one click?
