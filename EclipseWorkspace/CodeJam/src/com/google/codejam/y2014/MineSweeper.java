@@ -81,6 +81,7 @@ public class MineSweeper {
 
 	/**
 	 * Naive strategy: put the mines at the edge of available grids. 
+	 * There are several cases that this naive strategy does not work.
 	 */
 	private String findMinimumMinefield(int ROW, int COL, int MINE) {
 		
@@ -120,6 +121,9 @@ public class MineSweeper {
 			logger.trace( "Mine: {} vs {}", mine, 2*(row+col-2));
 		}
 		
+		
+		
+		// Naive strategy: put it one by one to the edges
 		logger.debug( "Minefield:\n{}", field.toString() );
 		if ( !field.isAnyBlank() )
 		{
@@ -130,19 +134,31 @@ public class MineSweeper {
 			return field.toAnswerString();
 		} else {
 			
-			for (int i = 0; i < row && mine > 0; i++, mine--) {
-				mineSquares.add(new Coordinate(offset+i,offset));
+			for (int i = 0; i < row && mine > 0; i++) {
+				if ( mineSquares.add(new Coordinate(offset+i,offset)) )
+				{
+					mine--;
+				}
 			}
-			for (int j=0; j < col && mine > 0; j++, mine--)
+			for (int j=0; j < col && mine > 0; j++)
 			{
-				mineSquares.add(new Coordinate(ROW-offset-1,offset+j));
+				if ( mineSquares.add(new Coordinate(ROW-offset-1,offset+j)) )
+				{
+					mine--;
+				}
 			}
-			for (int i = 0; i < row && mine > 0; i++, mine--) {
-				mineSquares.add(new Coordinate(offset+i,COL-offset-1));
+			for (int i = row-1; i >= 0 && mine > 0; i--) {
+				if ( mineSquares.add(new Coordinate(offset+i,COL-offset-1)) )
+				{
+					mine--;
+				}
 			}
-			for (int j=0; j < col && mine > 0; j++, mine--)
+			for (int j=col-1; j >= 0 && mine > 0; j--)
 			{
-				mineSquares.add(new Coordinate(offset,offset+j));
+				if ( mineSquares.add(new Coordinate(offset,offset+j)) )
+				{
+					mine--;
+				}
 			}
 			field.addMines(mineSquares);
 			
@@ -159,7 +175,7 @@ public class MineSweeper {
 			
 		} // end if mine > 0
 		
-		return "solution";
+		return "Impossible\n";
 	}
 
 
