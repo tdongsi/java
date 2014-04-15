@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  */
 public class PluginGenerator {
 	
-	// Two pre-built XML template
+	// Two pre-built XML template. See 
 	// Server template
 	private static PluginGenerator serverTemplate;
 	// Client template
@@ -36,10 +36,18 @@ public class PluginGenerator {
 	private boolean enablePlugin = false;
 	private String libraryName = "SS";
 	private String ssType = "all";
-	private String certPath = "C:\\space\\server.crt";
-	private String keyPath = "C:\\space\\server.key";
+	private String certPath = "C:\\\\space\\\\server.crt";
+	private String keyPath = "C:\\\\space\\\\server.key";
 	private String passphrasePath = "";
 	private String cipherSuite = "AES256-SHA:RC4:AES128-SHA:ALL";
+	
+	// attributes for client
+	private boolean verifyCert = false;
+	private String verifyCertCAFile = "C:\\\\OpenSSL-Win64\\\\caroot\\\\ObjyCA\\\\root-1-ca.crt";
+	private String verifyCertCAPath = "C:\\\\OpenSSL-Win64\\\\caroot\\\\ObjyCA";
+	private String verifyCertSubCN = "";
+	private String verifyCertSubO = "";
+	private String verifyCertSubOU = "";
 
 	// Hidden parameter
 	private boolean enableSslAll = false;
@@ -157,9 +165,6 @@ public class PluginGenerator {
 			
 			{
 				// Value elements
-				valueMap.put("SecureSocketType", ssType);
-				valueMap.put("Certificate", certPath);
-				
 				for ( Map.Entry<String, String> entry: valueMap.entrySet() )
 				{
 					Element valueElement = doc.createElement("Value");
@@ -279,27 +284,128 @@ public class PluginGenerator {
 		return cipherSuite;
 	}
 
-	public void setCipherSuite(String cipherSuite) {
+	/**
+	 * Specify this line
+	 * <Value name="ciphersuite"         value="AES256-SHA:RC4:AES128-SHA:ALL"/>
+	 * 
+	 * @param cipherSuite
+	 */
+	public PluginGenerator setCipherSuite(String cipherSuite) {
 		this.cipherSuite = cipherSuite;
+		valueMap.put("ciphersuite", cipherSuite);
+		return this;
 	}
 
 	public boolean isEnableSslAll() {
 		return enableSslAll;
 	}
 
-	public void setEnableSslAll(boolean enableSslAll) {
+	/**
+	 * Specify this line
+	 * <Value name="SslAll"             value="1"/>
+	 * 
+	 * @param enableSslAll
+	 */
+	public PluginGenerator setEnableSslAll(boolean enableSslAll) {
 		this.enableSslAll = enableSslAll;
+		if ( enableSslAll )
+		{
+			valueMap.put("SslAll", "1");
+		} else
+		{
+			valueMap.put("SslAll", "0");
+		}
+		return this;
 	}
 
 	public String getRootElem() {
 		return rootName;
 	}
 	
+	public boolean isVerifyCert() {
+		return verifyCert;
+	}
+
+	/**
+	 * Specify this line and add default values for other VerifyCert fields
+	 * <Value name="VerifyCert"                   value="true"/>
+	 * 
+	 * @param verifyCert
+	 */
+	public PluginGenerator setVerifyCert(boolean verifyCert) {
+		this.verifyCert = verifyCert;
+		
+		valueMap.put("VerifyCert", Boolean.toString(verifyCert));
+		// Once you set VerifyCert, all these fields take default values
+		// Use the setter methods below to set a custom value
+		valueMap.put("VerifyCertCAFile", verifyCertCAFile);
+		valueMap.put("VerifyCertCAPath", verifyCertCAPath);
+		valueMap.put("VerifyCertSubCN", verifyCertSubCN);
+		valueMap.put("VerifyCertSubO", verifyCertSubO);
+		valueMap.put("VerifyCertSubOU", verifyCertSubOU);
+		
+		return this;
+	}
+
+	public String getVerifyCertCAFile() {
+		return verifyCertCAFile;
+	}
+
+	public PluginGenerator setVerifyCertCAFile(String verifyCertCAFile) {
+		this.verifyCertCAFile = verifyCertCAFile;
+		
+		valueMap.put("VerifyCertCAFile", verifyCertCAFile);
+		
+		return this;
+	}
+
+	public String getVerifyCertCAPath() {
+		return verifyCertCAPath;
+	}
+
+	public PluginGenerator setVerifyCertCAPath(String verifyCertCAPath) {
+		this.verifyCertCAPath = verifyCertCAPath;
+		
+		valueMap.put("VerifyCertCAPath", verifyCertCAPath);
+		
+		return this;
+	}
+
+	public String getVerifyCertSubCN() {
+		return verifyCertSubCN;
+	}
+
+	public PluginGenerator setVerifyCertSubCN(String verifyCertSubCN) {
+		this.verifyCertSubCN = verifyCertSubCN;
+		valueMap.put("VerifyCertSubCN", verifyCertSubCN);
+		return this;
+	}
+
+	public String getVerifyCertSubO() {
+		return verifyCertSubO;
+	}
+
+	public PluginGenerator setVerifyCertSubO(String verifyCertSubO) {
+		this.verifyCertSubO = verifyCertSubO;
+		valueMap.put("VerifyCertSubO", verifyCertSubO);
+		return this;
+	}
+
+	public String getVerifyCertSubOU() {
+		return verifyCertSubOU;
+	}
+
+	public PluginGenerator setVerifyCertSubOU(String verifyCertSubOU) {
+		this.verifyCertSubOU = verifyCertSubOU;
+		valueMap.put("VerifyCertSubOU", verifyCertSubOU);
+		return this;
+	}
+
 	/**
 	 * Return a minimum server plugin-specification file.
 	 * According to IG SSL plug-in doc.
 	 * 
-	 * TODO: maybe the more efficient way is to
+	 * TODO: Maybe the more efficient way is to
 	 * 1. implement a copy constructor for PluginGenerator (DO NOT use clone)
 	 * 2. pre-build the private static variable serverTemplate
 	 * 3. return a copy of the pre-built template in this method
@@ -314,6 +420,20 @@ public class PluginGenerator {
 				.setCertPath("C:\\\\objy\\\\server.crt")
 				.setKeyPath("C:\\\\objy\\\\server.key")
 				.setPassphrasePath("");
+	}
+	
+	/**
+	 * Return a minimum client plugin-specification file.
+	 * 
+	 * @return
+	 */
+	public static PluginGenerator createClientTemplate()
+	{
+		// For testing purpose, certificate by CA is skipped
+		return new PluginGenerator("Plugins").setEnablePlugin(true)
+				.setLibraryName("ooSecureSocket112")
+				.setSsType("all")
+				.setVerifyCert(false);
 	}
 
 	/**
@@ -337,17 +457,29 @@ public class PluginGenerator {
 		
 		System.out.println();
 		
-		// Modify the server template
+		// Modify the server template to have a custom server plugin-spec file
 		PluginGenerator customServerSpec = serverTemplate;
 		customServerSpec.setCertPath("C:\\\\ig\\\\server.crt")
 			.setKeyPath("C:\\\\ig\\\\server.key");
 		customServerSpec.printXml();
 		
+		// Use this method to generate the actual file
+		customServerSpec.generateXml("Secure.plugin");
+		
 		System.out.println();
 		
 		// Pre-built client template
+		PluginGenerator clientTemplate = PluginGenerator.createClientTemplate();
+		clientTemplate.printXml();
+		
+		System.out.println();
 		
 		// Modify the client template
+		PluginGenerator customClientSpec = PluginGenerator.createClientTemplate();
+		customClientSpec.setVerifyCert(true)
+			.setVerifyCertCAFile("C:\\\\newca.crt")
+			.setVerifyCertCAPath("C:\\\\");
+		customClientSpec.printXml();
 	}
 
 }
