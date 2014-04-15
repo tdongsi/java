@@ -17,8 +17,21 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * Generate SSL plugin-specification file in XML format
+ * 
+ * @author cuongd
+ *
+ */
 public class PluginGenerator {
+	
+	// Two pre-built XML template
+	// Server template
+	private static PluginGenerator serverTemplate;
+	// Client template
+	private static PluginGenerator clientTemplate;
 
+	// private attributes
 	private final String rootName;
 	private boolean enablePlugin = false;
 	private String libraryName = "SS";
@@ -32,7 +45,7 @@ public class PluginGenerator {
 	private boolean enableSslAll = false;
 	
 	// Supporting fields
-	private Document doc;
+	private DocumentBuilder docBuilder;
 	private Transformer transformer;
 	private Map<String,String> valueMap;
 
@@ -45,8 +58,7 @@ public class PluginGenerator {
 		try {
 			// Prepare to construct the xml file
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			doc = docBuilder.newDocument();
+			docBuilder = docFactory.newDocumentBuilder();
 			
 			////////////////////////////////////////////////////////
 
@@ -63,7 +75,6 @@ public class PluginGenerator {
 			// Remove xml file tag <?xml version='1.0' encoding='UTF-8'?>
 			transformer.setOutputProperty("omit-xml-declaration", "yes");
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException tfe) {
 			tfe.printStackTrace();
@@ -79,7 +90,7 @@ public class PluginGenerator {
 		try {
 			
 			// use my XML schema to generate XML doc
-			myXmlSchema(doc);
+			Document doc = myXmlSchema(docBuilder);
 			
 			////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////
@@ -89,7 +100,24 @@ public class PluginGenerator {
 			transformer.transform(source, result);
 			System.out.println("Plugin file saved at " + filename);
 
-			// DEBUG: Output to console for testing
+		} catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Output to console for testing
+	 */
+	public void printXml() {
+		try {
+
+			// use my XML schema to generate XML doc
+			Document doc = myXmlSchema(docBuilder);
+
+			// //////////////////////////////////////////////////////
+			// //////////////////////////////////////////////////////
+
+			DOMSource source = new DOMSource(doc);
 			StreamResult out = new StreamResult(System.out);
 			transformer.transform(source, out);
 
@@ -103,7 +131,9 @@ public class PluginGenerator {
 	 * 
 	 * The elements with relevant tag names and attributes are defined here
 	 */
-	private void myXmlSchema(Document doc) {
+	private Document myXmlSchema(DocumentBuilder docBuilder) {
+		Document doc = docBuilder.newDocument();
+		
 		Element rootElement = doc.createElement(rootName);
 		doc.appendChild(rootElement);
 
@@ -119,8 +149,8 @@ public class PluginGenerator {
 				Element cppImpl = doc.createElement("CppImplementation");
 				plugin.appendChild(cppImpl);
 				
-				String libraryFile = "oo" + libraryName + ".dll";
-				String debugLibraryFile = "oo" + libraryName + "d.dll";
+				String libraryFile = libraryName + ".dll";
+				String debugLibraryFile = libraryName + "d.dll";
 				cppImpl.setAttribute("library", libraryFile);
 				cppImpl.setAttribute("debugLibrary", debugLibraryFile);
 			}
@@ -141,6 +171,8 @@ public class PluginGenerator {
 				
 			}
 		}
+		
+		return doc;
 
 	}
 
@@ -164,6 +196,13 @@ public class PluginGenerator {
 		return libraryName;
 	}
 
+	/**
+	 * Specify this line
+	 * <CppImplementation library="SecureSocket.dll" debugLibrary="SecureSocketd.dll"/>
+	 * 
+	 * @param libraryName
+	 * @return
+	 */
 	public PluginGenerator setLibraryName(String libraryName) {
 		this.libraryName = libraryName;
 		return this;
@@ -173,32 +212,67 @@ public class PluginGenerator {
 		return ssType;
 	}
 
-	public void setSsType(String ssType) {
+	/**
+	 * Specify this line
+	 * <Value name="SecureSocketType"    value="all"/>
+	 * 
+	 * @param ssType
+	 * @return
+	 */
+	public PluginGenerator setSsType(String ssType) {
 		this.ssType = ssType;
+		valueMap.put("SecureSocketType", ssType);
+		return this;
 	}
 
 	public String getCertPath() {
 		return certPath;
 	}
 
-	public void setCertPath(String certPath) {
+	/**
+	 * Specify this line
+	 * <Value name="Certificate"         value="C:\\objy\\server.crt"/>
+	 * 
+	 * @param certPath
+	 * @return
+	 */
+	public PluginGenerator setCertPath(String certPath) {
 		this.certPath = certPath;
+		valueMap.put("Certificate", certPath);
+		return this;
 	}
 
 	public String getKeyPath() {
 		return keyPath;
 	}
 
-	public void setKeyPath(String keyPath) {
+	/**
+	 * Specify this line
+	 * <Value name="PrivateKey"         value="C:\\objy\\server.key"/>
+	 * 
+	 * @param keyPath
+	 * @return
+	 */
+	public PluginGenerator setKeyPath(String keyPath) {
 		this.keyPath = keyPath;
+		valueMap.put("PrivateKey", keyPath);
+		return this;
 	}
 
 	public String getPassphrasePath() {
 		return passphrasePath;
 	}
 
-	public void setPassphrasePath(String passphrasePath) {
+	/**
+	 * Specify this line
+	 * <Value name="PassphraseFile"      value=""/>
+	 * 
+	 * @param passphrasePath
+	 */
+	public PluginGenerator setPassphrasePath(String passphrasePath) {
 		this.passphrasePath = passphrasePath;
+		valueMap.put("PassphraseFile", passphrasePath);
+		return this;
 	}
 
 	public String getCipherSuite() {
@@ -220,18 +294,60 @@ public class PluginGenerator {
 	public String getRootElem() {
 		return rootName;
 	}
+	
+	/**
+	 * Return a minimum server plugin-specification file.
+	 * According to IG SSL plug-in doc.
+	 * 
+	 * TODO: maybe the more efficient way is to
+	 * 1. implement a copy constructor for PluginGenerator (DO NOT use clone)
+	 * 2. pre-build the private static variable serverTemplate
+	 * 3. return a copy of the pre-built template in this method
+	 * 
+	 * @return
+	 */
+	public static PluginGenerator createServerTemplate()
+	{
+		return new PluginGenerator("Plugins").setEnablePlugin(true)
+				.setLibraryName("ooSecureSocket112")
+				.setSsType("all")
+				.setCertPath("C:\\\\objy\\\\server.crt")
+				.setKeyPath("C:\\\\objy\\\\server.key")
+				.setPassphrasePath("");
+	}
 
 	/**
-	 * Testing
+	 * Example usages.
+	 * Use generateXml() instead of printXml() to create the XML plugin-spec file 
+	 * 
 	 */
 	public static void main(String[] args) {
-//		PluginGenerator gen = new PluginGenerator("Plugins");
-//		gen.generateXml("test.plugin");
 		
-		PluginGenerator gen2 = new PluginGenerator("Plugins");
-		gen2.setEnablePlugin(true)
-			.setLibraryName("SecureSocket112")
-			.generateXml("SecureSocket.plugin");
+		// Creating XML plugin file from scratch
+		PluginGenerator gen = new PluginGenerator("Plugins");
+		gen.setEnablePlugin(true)
+			.setLibraryName("OpenSSL")
+			.printXml();
+		
+		System.out.println();
+		
+		// Pre-built server template
+		PluginGenerator serverTemplate = PluginGenerator.createServerTemplate();
+		serverTemplate.printXml();
+		
+		System.out.println();
+		
+		// Modify the server template
+		PluginGenerator customServerSpec = serverTemplate;
+		customServerSpec.setCertPath("C:\\\\ig\\\\server.crt")
+			.setKeyPath("C:\\\\ig\\\\server.key");
+		customServerSpec.printXml();
+		
+		System.out.println();
+		
+		// Pre-built client template
+		
+		// Modify the client template
 	}
 
 }
