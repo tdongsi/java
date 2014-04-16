@@ -52,7 +52,7 @@ public class PluginGenerator {
 	// Hidden parameter
 	private boolean enableSslAll = false;
 	
-	// Supporting fields
+	// private supporting fields
 	private DocumentBuilder docBuilder;
 	private Transformer transformer;
 	private Map<String,String> valueMap;
@@ -90,9 +90,9 @@ public class PluginGenerator {
 	}
 
 	/**
-	 * Do the setup and output configurations for generating XML file
+	 * Generating XML plugin file based on the current state of object
 	 * 
-	 * @param filename
+	 * @param filename: name of output file
 	 */
 	public void generateXml(String filename) {
 		try {
@@ -136,8 +136,9 @@ public class PluginGenerator {
 
 	/**
 	 * The schema of the XML is defined here
-	 * 
 	 * The elements with relevant tag names and attributes are defined here
+	 * 
+	 * @return Document object that contains the right schema and specified values  
 	 */
 	private Document myXmlSchema(DocumentBuilder docBuilder) {
 		Document doc = docBuilder.newDocument();
@@ -434,6 +435,16 @@ public class PluginGenerator {
 				.setLibraryName("ooSecureSocket112")
 				.setSsType("all")
 				.setVerifyCert(false);
+	}
+
+	/**
+	 * Use this method to generate different combinations of options
+	 * 
+	 * @param valueMap
+	 */
+	public PluginGenerator setValueTags(Map<String, String> valueMap) {
+		this.valueMap.putAll(valueMap);
+		return this;
 	}
 
 	/**
