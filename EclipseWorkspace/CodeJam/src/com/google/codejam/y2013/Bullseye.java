@@ -3,13 +3,14 @@ package com.google.codejam.y2013;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.math.BigDecimal;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * https://code.google.com/codejam/contest/dashboard?c=2418487
+ * 
  * @author dongsi.tuecuong@gmail.com
  *
  */
@@ -22,9 +23,9 @@ public class Bullseye {
 	 */
 	public static void main(String[] args) {
 		Bullseye solver = new Bullseye();
-//		solver.solve("data/BullseyeSample.txt");
-		solver.solve("data/A-small-practice.in");
-//		solver.solve("A-large.in");
+		solver.solve("data/BullseyeSample.txt");
+//		solver.solve("data/A-small-practice.in");
+//		solver.solve("data/A-large-practice.in");
 	}
 	
 	private int testNum;
@@ -51,7 +52,7 @@ public class Bullseye {
 				long tank = lineScanner.nextLong();
 				
 				// Solve the problem
-				String solution = findRingNumber(radius, tank);
+				String solution = findRingNumberBig(radius, tank);
 				
 				// Print the output
 				printSolution(i, solution, out);
@@ -63,9 +64,7 @@ public class Bullseye {
 			e.printStackTrace();
 		}
 		
-		
 	}
-	
 
 	/**
 	 * Construct the quadratic equation based on r and t.
@@ -77,9 +76,9 @@ public class Bullseye {
 		// Construct the quadratic equation a*x^2 + bx + c
 		
 //		long a = 2;
-		long b = 2*r - 1;
+//		long b = 2*r - 1;
 //		long c = -t;
-		long solution = (long)quadraticSolve(2,b,-t) ;
+		long solution = (long)quadraticSolve(2,2*r - 1,-t) ;
 		
 		
 		return Long.toString(solution);
@@ -88,7 +87,8 @@ public class Bullseye {
 
 	/**
 	 * Solving the quadratic equation for the positive root.
-	 * TODO: using double and it won't pass on the large data set
+	 * i.e solve for k in (2r + 2k - 1)k <= t
+	 * Using double and it won't pass on the large data set
 	 */
 	private double quadraticSolve(long a, long b, long c) {
 		double bDouble = (double) b;
@@ -102,12 +102,50 @@ public class Bullseye {
 	}
 	
 	/**
-	 * Solving the quadratic equation for the positive root.
-	 * Using BigDecimal for large dataset.
+	 * Instead of forming and solving a quadratic equation for the positive root
+	 * utilize the fact that we're finding an integer close to the root.
+	 * 
+	 * @param r radius
+	 * @param t starting paint
 	 */
-	private BigDecimal quadraticSolveBig(long a, long b, long c) {
-		// TODO
-		return null;
+	public String findRingNumberBig(long r, long t) {
+		logger.debug( "Problem: {} {}", r, t);
+		
+		long left = 0;
+		long right = 1;
+		long res = 0;
+		while (checkSolved(right, r, t))
+		{
+			left = right;
+			right *= 2;
+		}
+		
+		// Using the (almost) bisection method to find the integer (almost) root
+		while (left <= right)
+		{
+			logger.debug("left {} : right {}", left, right);
+			long med = (left + right)/2;
+			if ( (2*r+2*med-1) * med == t )
+			{
+				return Long.toString(med);
+			}
+			
+			if ( checkSolved(med, r, t) )
+			{
+				left = med+1;
+				res = med;
+			} else {
+				right = med-1;
+			}
+			
+		}
+		
+		return Long.toString(res);
+	}
+	
+	private boolean checkSolved(long k, long r, long t)
+	{
+		return ( (2*r+2*k-1) * k <= t );
 	}
 
 
