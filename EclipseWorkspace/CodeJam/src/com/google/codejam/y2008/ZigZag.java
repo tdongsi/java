@@ -38,9 +38,92 @@ public class ZigZag {
 
 	}
 
-	public static int longestZigZag(int[] sequence) {
-		// TODO Auto-generated method stub
-		return 0;
+	/**
+	 * A sequence of numbers is called a zig-zag sequence if the differences between successive numbers strictly alternate between positive and negative.
+	 * Given a sequence of integers, return the length of the longest subsequence that is a zig-zag sequence. 
+	 * A subsequence is obtained by deleting some number of elements (possibly zero) from the original sequence, leaving the remaining elements in their original order.
+	 * 
+	 * @param sequence
+	 * @return
+	 */
+	public static int longestZigZag(int[] sequence)
+	{
+		if ( sequence.length == 1 )
+			return 1;
+		
+		int[] diff = new int[sequence.length-1];
+		
+		for (int i = 0; i < diff.length; i++) {
+			diff[i] = (int)Math.signum(sequence[i+1] - sequence[i]);
+		}
+		
+//		System.out.println(Arrays.toString(diff));
+		
+		// Solve the problem using dynamic programming
+		int[] maxLength = new int[diff.length];
+		maxLength[0] = 1;
+		
+		for (int i = 1; i < maxLength.length; i++) {
+			// initialize maxLength
+			maxLength[i] = maxLength[i-1];
+			
+			for (int j = 0; j < i; j++) {
+				int temp = 0;
+				
+				if ( diff[i] != 0 && diff[j] == -diff[i] )
+				{
+					temp = maxLength[j] + 1;
+				}
+				
+				if ( temp > maxLength[i])
+				{
+					maxLength[i] = temp;
+				}
+			}
+		}
+		
+		return  maxLength[maxLength.length-1]+1;
+	}
+
+	/**
+	 * Given a sequence of integers, return the length of the longest subsequence that is of same signum (all 1 or -1). 
+	 * 
+	 * @param sequence: a sequence of integers either 1, -1, or 0.
+	 * @return
+	 */
+	public static int longestSameSignum(int[] sequence) {
+		
+		int[] signumSequence = new int[sequence.length];
+		for (int i = 0; i < signumSequence.length; i++) {
+			signumSequence[i] = (int) Math.signum(sequence[i]);
+		}
+		
+		int[] maxLength = new int[signumSequence.length];
+		maxLength[0] = 1;
+		
+		for (int i = 1; i < maxLength.length; i++) {
+			// initialize maxLength
+			maxLength[i] = maxLength[i-1];
+			
+			for (int j = 0; j < i; j++) {
+				int temp = 0;
+				
+				if ( signumSequence[i] != 0 && signumSequence[j] == signumSequence[i] )
+				{
+					temp = maxLength[j] + 1;
+				}
+				
+				if ( temp > maxLength[i])
+				{
+					maxLength[i] = temp;
+				}
+			}
+		}
+		
+//		System.out.println(Arrays.toString(sequence));
+//		System.out.println(Arrays.toString(maxLength));
+		
+		return maxLength[maxLength.length-1];
 	}
 
 }
