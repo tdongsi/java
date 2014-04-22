@@ -51,30 +51,48 @@ public class BadNeighbors {
 			return donations[0];
 		
 		int[] maxAmount = donations.clone();
-		boolean[] firstIncluded = new boolean[donations.length];
-		firstIncluded[0] = true;
+		int[] maxAmount2 = donations.clone();
+		maxAmount2[0] = 0;
+		int length = donations.length;
 		
-		for (int i = 2; i < maxAmount.length; i++) {
+		// First run: first element is included
+		for (int i = 2; i < maxAmount.length-1; i++) {
 			for (int j = 0; j < i-1; j++) {
 				int temp = donations[i] + maxAmount[j];
 				
-				// The last element is neighbor to the first element
-				if ( i == maxAmount.length-1 && firstIncluded[j]) {
-					temp = donations[i];
-				}
-				
 				if ( temp > maxAmount[i]) {
 					maxAmount[i] = temp;
-					firstIncluded[i] = firstIncluded[j];
 				}
 			}
 		}
-		System.out.println(Arrays.toString(firstIncluded));
-		System.out.println(Arrays.toString(maxAmount));
+		
+		// Second run: first element is NOT included
+		for (int i = 2; i < maxAmount2.length; i++) {
+			for (int j = 0; j < i-1; j++) {
+				int temp = donations[i] + maxAmount2[j];
+				
+				if ( temp > maxAmount2[i]) {
+					maxAmount2[i] = temp;
+				}
+			}
+		}
+		
+//		System.out.println(Arrays.toString(maxAmount));
+//		System.out.println(Arrays.toString(maxAmount2));
 		
 		// The maximum may be not the last one maxAmount
-		Arrays.sort(maxAmount);
-		return maxAmount[maxAmount.length-1];
+		if ( length > 5 )
+		{
+			// Sorting may be time consuming. Only care about the last few.
+			Arrays.sort(maxAmount, length-5, length);
+			Arrays.sort(maxAmount2, length-5, length);
+		} else {
+			Arrays.sort(maxAmount);
+			Arrays.sort(maxAmount2);
+		}
+		
+		// Pick the best of two cases
+		return Math.max(maxAmount[length-1],maxAmount2[length-1]);
 	}
 
 }

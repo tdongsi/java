@@ -16,6 +16,11 @@ public class BadNeighborsTest {
 		assertEquals(19, BadNeighbors.maxDonations(new int[]{ 19, 11, 15 }));
 		
 		
+		assertEquals(44, BadNeighbors.maxDonations(new int[]{ 19, 29, 13, 14, 15 }));
+		assertEquals(8, BadNeighbors.maxDonations(new int[]{ 1, 2, 3, 4, 5 }));
+		assertEquals(28, BadNeighbors.maxDonations(new int[]{ 11, 12, 13, 14, 15 }));
+		
+		
 		assertEquals(19, BadNeighbors.maxDonations(new int[]{ 10, 3, 2, 5, 7, 8 }));
 		
 		assertEquals(21, BadNeighbors.maxDonations(new int[]{ 7, 7, 7, 7, 7, 7, 7 }));
