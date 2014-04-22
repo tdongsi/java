@@ -8,9 +8,15 @@ public class BadNeighborsTest {
 
 	@Test
 	public void testMaxDonations() {
-		assertEquals(19, BadNeighbors.maxDonations(new int[]{ 10, 3, 2, 5, 7, 8 }));
+		
+		assertEquals(11, BadNeighbors.maxDonations(new int[]{ 11 }));
 		
 		assertEquals(15, BadNeighbors.maxDonations(new int[]{ 11, 15 }));
+		
+		assertEquals(19, BadNeighbors.maxDonations(new int[]{ 19, 11, 15 }));
+		
+		
+		assertEquals(19, BadNeighbors.maxDonations(new int[]{ 10, 3, 2, 5, 7, 8 }));
 		
 		assertEquals(21, BadNeighbors.maxDonations(new int[]{ 7, 7, 7, 7, 7, 7, 7 }));
 		

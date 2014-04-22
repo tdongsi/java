@@ -1,5 +1,8 @@
 package com.google.codejam.y2008;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /**
  * http://community.topcoder.com/stat?c=problem_statement&pm=2402&rd=5009
  * 
@@ -37,12 +40,41 @@ public class BadNeighbors {
 	 * Next-door neighbors are always listed consecutively in donations, except that the first and last entries in donations are also for next-door neighbors. 
 	 * You must calculate and return the maximum amount of donations that can be collected.
 	 * 
-	 * @param donations: list of donte ammount by residents
+	 * @param donations: list of donate amount by residents
 	 * @return Maximum amount of donations that can be collected
 	 */
 	public static int maxDonations(int[] donations)
 	{
-		return 0;
+		if (donations.length == 0)
+			return 0;
+		if (donations.length == 1)
+			return donations[0];
+		
+		int[] maxAmount = donations.clone();
+		boolean[] firstIncluded = new boolean[donations.length];
+		firstIncluded[0] = true;
+		
+		for (int i = 2; i < maxAmount.length; i++) {
+			for (int j = 0; j < i-1; j++) {
+				int temp = donations[i] + maxAmount[j];
+				
+				// The last element is neighbor to the first element
+				if ( i == maxAmount.length-1 && firstIncluded[j]) {
+					temp = donations[i];
+				}
+				
+				if ( temp > maxAmount[i]) {
+					maxAmount[i] = temp;
+					firstIncluded[i] = firstIncluded[j];
+				}
+			}
+		}
+		System.out.println(Arrays.toString(firstIncluded));
+		System.out.println(Arrays.toString(maxAmount));
+		
+		// The maximum may be not the last one maxAmount
+		Arrays.sort(maxAmount);
+		return maxAmount[maxAmount.length-1];
 	}
 
 }
