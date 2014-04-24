@@ -46,7 +46,7 @@ public class FlowerGardenTest {
 				FlowerGarden.getOrdering(
 				new int[]{5,4,3,2,1}, 
 				new int[]{1,5,10,15,20},
-				new int[]{5,10,15,20,25}
+				new int[]{5,10,14,20,25}
 				)
 			);
 		

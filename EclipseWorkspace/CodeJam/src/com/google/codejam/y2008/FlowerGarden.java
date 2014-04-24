@@ -2,6 +2,9 @@ package com.google.codejam.y2008;
 
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * http://community.topcoder.com/stat?c=problem_statement&pm=1918&rd=5006
  * 
@@ -24,6 +27,8 @@ import java.util.Arrays;
  *
  */
 public class FlowerGarden {
+	
+	private static Logger logger = LoggerFactory.getLogger(FlowerGarden.class);
 
 	/**
 	 * Example of usage
@@ -46,9 +51,98 @@ public class FlowerGarden {
 	 * @return the elements of height in the order you should plant your flowers to achieve no blocking
 	 */
 	public static int[] getOrdering(int[] height, int[] bloom, int[] wilt) {
-		int[] order = new int[height.length];
+		int len = height.length;
+		int[] order = new int[len];
+		boolean[] usedFlag = new boolean[len];
+		int[][] blocking = new int[len][len];
+		
+		// Construct the table that represents who blocks who
+		for (int i = 0; i < height.length; i++) {
+			for (int j = 0; j < height.length; j++) {
+				if (j !=i ) {
+					blocking[i][j] = isBlocking(
+							new int[]{height[i], bloom[i], wilt[i]}, 
+							new int[]{height[j], bloom[j], wilt[j]});
+				}
+			}
+		}
+		
+		for (int i = 0; i < height.length; i++) {
+			logger.debug(Arrays.toString(blocking[i]));
+		}
+		
+		// iterate over the length of the result
+		for (int k = 0; k < order.length; k++) {
+			int maxHeight = -1;
+			int maxIndex = 0;
+			
+			// check if the tree is blocking the rest
+			for (int i = 0; i < len; i++) {
+				
+				if (!usedFlag[i])
+				{
+					boolean blockFlag = false;
+					for (int j = 0; j < len; j++) {
+						// skipped if tree j has been used
+						if ( blocking[i][j] != 0 ) {
+							// tree i blocking some tree j
+							blockFlag = true;
+							break;
+						}
+					}
+					
+					// if the current tree is NOT blocking any tree
+					if (!blockFlag && height[i] > maxHeight) {
+						maxHeight = height[i];
+						maxIndex = i;
+					}
+					
+				}
+				
+			}
+			
+			logger.debug( Integer.toString(maxIndex) );
+			// push into the order
+			order[k] = maxHeight;
+			// remove the tree type
+			usedFlag[maxIndex] = true;
+			// the rest of the trees should not block this tree
+			for (int i = 0; i < len; i++) {
+				blocking[i][maxIndex] = 0;
+			}
+			
+			for (int i = 0; i < height.length; i++) {
+				logger.debug(Arrays.toString(blocking[i]));
+			}
+		}
+		
 		
 		return order;
+	}
+
+
+	/**
+	 * Use integer instead of boolean in case of more than binary states needed
+	 * 
+	 * @param iTree array of numbers representing height, bloom time, and wilt time for tree i.
+	 * @param jTree array of numbers representing height, bloom time, and wilt time for tree i.
+	 * @return 1 if iTree is blocking jTree, 0 if iTree otherwise.
+	 */
+	private static int isBlocking(int[] iTree, int[] jTree) {
+		
+		if (iTree[0] < jTree[0]) {
+			// if height is smaller, not blocking no matter what
+			return 0;
+		} else {
+			// if height of i > height of j
+			if ( (iTree[1] >= jTree[1] && iTree[1] <= jTree[2])
+					|| (jTree[1] >= iTree[1] && jTree[1] <= iTree[2])) {
+				// if two time intervals overlap
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 	}
 
 }
