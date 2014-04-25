@@ -45,6 +45,9 @@ public class FlowerGarden {
 	
 	
 	/**
+	 * This approach uses dynamic programming with O(n^2) space required.
+	 * TODO: Another approach is to sort similar to insertion sort (not tried)
+	 * 
 	 * @param height how high each type of flower grows
 	 * @param bloom the morning that each type of flower springs from the ground
 	 * @param wilt the evening that each type of flower shrivels up and dies
@@ -82,6 +85,9 @@ public class FlowerGarden {
 				if (!usedFlag[i])
 				{
 					boolean blockFlag = false;
+					
+					// TODO: this loop can be avoided if we maintain an array 
+					// containing sum of rows of blocking[i][j]
 					for (int j = 0; j < len; j++) {
 						// skipped if tree j has been used
 						if ( blocking[i][j] != 0 ) {
