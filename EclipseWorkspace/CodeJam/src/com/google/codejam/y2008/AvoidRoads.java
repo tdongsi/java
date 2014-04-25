@@ -37,7 +37,10 @@ public class AvoidRoads {
 
 	public static long numWays(int width, int height, String[] bad) {
 		// TODO: Modify String[] bad such that c, d is top-right from a,b
-		return numWaysStandard(width,height,Arrays.asList(bad));
+		
+		numWaysStandard(width,height,Arrays.asList(bad));
+		
+		return numWaysFast(width,height,Arrays.asList(bad));
 	}
 
 	/**
@@ -70,19 +73,50 @@ public class AvoidRoads {
 			
 		}
 		
+//		// DEBUG
+//		for (int i = 0; i <= width; i++) {
+//			System.out.println(Arrays.toString(maxPath[i]));
+		// }
+
 		return maxPath[width][height];
 	}
-	
+
 	/**
+	 * Implementation of 2D dynamic programming with O(2N) space.
+	 * 
 	 * @param width
 	 * @param height
 	 * @param bad Each element of the bad will be in the format "a b c d" where c, d is top-right from a,b
 	 * @return
 	 */
-	private static long numWaysFast(int width, int height, String[] bad) {
-		long[][] maxPath = new long[2][height+1];
-		
-		return 0;
+	private static long numWaysFast(int width, int height, List<String> bad) {
+		final int BUFFER = 2;
+		long[][] maxPath = new long[BUFFER][height + 1];
+		maxPath[0][0] = 1;
+
+		for (int i = 0; i <= width; i++) {
+			for (int j = 0; j <= height; j++) {
+
+				String route1 = String.format("%d %d %d %d", i - 1, j, i, j);
+				if (i > 0 && !bad.contains(route1)) {
+					maxPath[i % BUFFER][j] = maxPath[(i - 1) % BUFFER][j];
+				} else {
+					if (j > 0)
+					{
+						maxPath[i % BUFFER][j] = 0;
+					}
+				}
+
+				String route2 = String.format("%d %d %d %d", i, j - 1, i, j);
+				if (j > 0 && !bad.contains(route2)) {
+					maxPath[i % BUFFER][j] += maxPath[i % BUFFER][j - 1];
+				}
+
+			}
+
+		}
+
+		return maxPath[width % BUFFER][height];
 	}
 
 }
