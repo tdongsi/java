@@ -8,7 +8,7 @@ public class AvoidRoadsTest {
 
 	@Test
 	public void test_numWays() {
-		assertEquals(252, AvoidRoads.numWays(6,6,new String[]{"0 0 0 1","6 6 5 6"}));
+		assertEquals(252, AvoidRoads.numWays(6,6,new String[]{"0 0 0 1","5 6 6 6"}));
 		
 		assertEquals(2, AvoidRoads.numWays(1,1,new String[]{}));
 		
