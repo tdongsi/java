@@ -38,9 +38,9 @@ public class AvoidRoads {
 	public static long numWays(int width, int height, String[] bad) {
 		// TODO: Modify String[] bad such that c, d is top-right from a,b
 		
-		numWaysStandard(width,height,Arrays.asList(bad));
+//		numWaysStandard(width,height,Arrays.asList(bad));
 		
-		return numWaysFast(width,height,Arrays.asList(bad));
+		return numWaysFastRenamed(width,height,Arrays.asList(bad));
 	}
 
 	/**
@@ -117,6 +117,56 @@ public class AvoidRoads {
 		}
 
 		return maxPath[width % BUFFER][height];
+	}
+	
+	/**
+	 * Implementation of 2D dynamic programming with O(2N) space.
+	 * With renaming variables, instead of modulus, for easy understanding.
+	 * 
+	 * @param width
+	 * @param height
+	 * @param bad Each element of the bad will be in the format "a b c d" where c, d is top-right from a,b
+	 * @return
+	 */
+	private static long numWaysFastRenamed(int width, int height, List<String> bad) {
+		final int BUFFER = 2;
+		long[][] maxPath = new long[BUFFER][height+1];
+		maxPath[0][0] = 1;
+		
+		long[] previousRow = maxPath[1]; // at the start, this row should be all zeroes.
+		long[] currentRow = maxPath[0];
+		
+		for (int i = 0; i <= width; i++) {
+			
+			for (int j = 0; j <= height; j++) {
+				
+				String route1 = String.format("%d %d %d %d", i-1, j, i, j);
+				if ( i > 0 && !bad.contains(route1)) {
+					currentRow[j] = previousRow[j]; 
+				} else {
+					if ( j > 0 )
+					{
+						currentRow[j] = 0;
+					}
+				}
+				
+				String route2 = String.format("%d %d %d %d", i, j-1, i, j);
+				if ( j > 0 && !bad.contains(route2)) {
+					currentRow[j] += currentRow[j-1];
+				}
+				
+			}
+			
+//			// DEBUG
+//			System.out.println(Arrays.toString(previous));
+//			System.out.println(Arrays.toString(current));
+//			System.out.println(i + "\n");
+			
+			previousRow = currentRow;
+			currentRow = maxPath[(i+1)%BUFFER];
+		}
+		
+		return maxPath[width%BUFFER][height];
 	}
 
 }
