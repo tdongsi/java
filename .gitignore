@@ -15,3 +15,5 @@ JavaProgramming4th/src/my/java/effective/generic/UnaryFunction.java
 JavaProgramming4th/src/my/java/effective/generic/UtilityClass.java
 JavaProgramming4th/src/my/java/programming/reflection/GenericTest.java
 *.o
+my.vip.applets/bin/
+JavaProgramming4th/Secure.plugin
