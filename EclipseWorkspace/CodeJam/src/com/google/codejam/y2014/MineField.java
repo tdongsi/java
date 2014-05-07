@@ -76,7 +76,7 @@ public class MineField {
 			builder.append('\n');
 		}
 		
-		// Set it back
+		// Change blank grids back to number grids
 		for (Coordinate coordinate : numbers) {
 			field[coordinate.getX()][coordinate.getY()] = NUMBER;
 		}
