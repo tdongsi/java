@@ -35,5 +35,21 @@ public class StringUtility {
 		}
 		return new String(reverse);
 	}
+	
+	
+	/**
+	 * Check if the input string is a palindrome
+	 * A palindrome is a string which remains unchanged even after reversing
+	 */
+	public static boolean isPalindrome(String input)
+	{
+		char[] string = input.toCharArray();
+		for (int i = 0; i < string.length/2; i++) {
+			if ( string[i] != string[string.length-1-i]) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
