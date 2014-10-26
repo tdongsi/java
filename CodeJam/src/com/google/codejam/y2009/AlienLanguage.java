@@ -17,7 +17,8 @@ public class AlienLanguage extends Template {
 	public static void main(String[] args) {
 		AlienLanguage solver = new AlienLanguage();
 //		solver.solve("data/AlienLanguageSample.txt");
-		solver.solve("data/A-small-practice.in");
+//		solver.solve("data/A-small-practice.in");
+		solver.solve("data/A-large-practice.in");
 	}
 	
 	@Override
@@ -32,6 +33,7 @@ public class AlienLanguage extends Template {
 			int length = lineScanner.nextInt(); // L
 			int dictNum = lineScanner.nextInt(); // D: number of words
 			int testNum = lineScanner.nextInt(); // N
+			lineScanner.close();
 			List<String> dictionary = new ArrayList<String>(dictNum);
 			
 			for (int i = 0; i < dictNum; i ++ ) {
