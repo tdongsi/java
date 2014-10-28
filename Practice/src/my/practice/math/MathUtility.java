@@ -7,16 +7,23 @@ public class MathUtility {
 	}
 	
 	public static long gcd(long a, long b) {
-		if ( a < b ) {
-			long temp = b;
-			b = a;
-			a = temp;
+		while (a % b != 0 ) {
+			long temp = a;
+			a = b;
+			b = temp % b;
 		}
-		
+		return b;
+	}
+	
+	/**
+	 * Recursive version: easier to remember
+	 */
+	public static long gcd_recursive(long a, long b) {
+		// NOTE: a does not have to be larger than b
 		if ( b == 0 ) {
 			return a;
 		} else {
-			return gcd(b, a%b);
+			return gcd_recursive(b, a%b);
 		}
 	}
 	
