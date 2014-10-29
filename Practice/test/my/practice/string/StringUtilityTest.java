@@ -11,6 +11,7 @@ public class StringUtilityTest {
 		assertEquals(123, StringUtility.atoi("123"));
 		assertEquals(-123, StringUtility.atoi("-123"));
 		assertEquals(0, StringUtility.atoi("0"));
+		assertEquals(0, StringUtility.atoi("0000"));
 	}
 
 }
