@@ -8,7 +8,7 @@ public class StackTest {
 
 	@Test
 	public void test_Stack() {
-		Stack<Integer> stack = new Stack<Integer>();
+		ArrayStack<Integer> stack = new ArrayStack<Integer>();
 		
 		stack.push(1);
 		stack.push(2);

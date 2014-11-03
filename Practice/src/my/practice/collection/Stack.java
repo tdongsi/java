@@ -1,41 +1,42 @@
+/**
+ * 
+ */
 package my.practice.collection;
 
-import java.util.ArrayList;
-
 /**
- * Just a toy implementation of a stack. For practice purpose.
- * For serious application, use Deque interface in Java Collections Framework.
+ * General contract of a stack
  * 
  * @author tdongsi
+ *
  */
-public class Stack<E> {
-	private ArrayList<E> array;
+public interface Stack<E> {
 	
-	public Stack() {
-		array = new ArrayList<E>();
-	}
+	/**
+	 * Add an element into the stack
+	 * 
+	 * @param element
+	 */
+	public void push(E element);
 	
-	public void push(E object) {
-		array.add(object);
-	}
+	/**
+	 * Return the top element of the stack
+	 * 
+	 * @return
+	 */
+	public E peek();
 	
-	public E pop() {
-		if ( array.isEmpty() ) {
-			throw new IllegalStateException("Stack is empty");
-		} else {
-			return array.remove(array.size()-1);
-		}
-	}
+	/**
+	 * Remove the top element of the stack and return that element
+	 * 
+	 * @return
+	 */
+	public E pop();
 	
-	public E peek() {
-		if ( array.isEmpty() ) {
-			throw new IllegalStateException("Stack is empty");
-		} else {
-			return array.get(array.size()-1);
-		}
-	}
-	
-	public boolean isEmpty() {
-		return array.isEmpty();
-	}
+	/**
+	 * Return true if the stack is empty
+	 * 
+	 * @return
+	 */
+	public boolean isEmpty();
+
 }
