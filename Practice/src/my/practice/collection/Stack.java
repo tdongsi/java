@@ -4,7 +4,8 @@
 package my.practice.collection;
 
 /**
- * General contract of a stack
+ * General contract of a simple stack.
+ * For serious application, use Deque<E> in Java Collections Framework.
  * 
  * @author tdongsi
  *
