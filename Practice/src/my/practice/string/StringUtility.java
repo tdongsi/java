@@ -23,5 +23,29 @@ public class StringUtility {
 		else
 			return sum;		
 	}
+	
+	public static boolean hasSubstring( String str, String sub ) {
+		
+		if ( str.length() == 0 && sub.length() == 0 ) {
+			return true;
+		}
+		
+		for (int i = 0; i < str.length(); i++) {
+			int j = 0;
+			
+			for ( j = 0; j < sub.length(); j++ ) {
+				if ( str.charAt(i+j) != sub.charAt(j) ) {
+					break;
+				}
+			}
+			
+			// j reaches full-length of sub
+			if ( j == sub.length() ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 }
