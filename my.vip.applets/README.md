@@ -40,8 +40,9 @@ The electric current's direction can be changed.
 
 In this project, the components of power/energy loss in different DC motor circuit configurations (e.g., shunt, series) are shown.
 The animation is done using Adobe (then Macromedia) Flash instead of Java. The fla source file and supporting image files are checked in here for record.
-The project is done near the end of the three-month internship, when I was convinced that using Flash is better for such a animation-heavy project and took the risk to complete it.
 
-[Final SWF animation](https://www.dropbox.com/s/fja9kho6psbbx3i/EnergyFlow.swf?dl=0)
+The project is done near the end of the three-month internship, when I was able to convince my supervising professor that using Flash is better for such a animation-heavy project and took the risk to complete it.
+
+[Final SWF animation](https://dl.dropbox.com/s/fja9kho6psbbx3i/EnergyFlow.swf)
 
 ![alt text](https://dl.dropbox.com/s/zwnu696bhh31c67/EnergyFlow.jpg "EnergyFlow")
