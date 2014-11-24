@@ -49,27 +49,39 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 	private final int BTM = 2;
 	
 	/**
-	 * 
+	 * Drawing the top of the circuit (the DC motor) as a JLabel 
 	 */
 	private JLabel top;
 	
 	/**
-	 * 
+	 * Drawing the bottom of the circuit (wire, electric source) as customized JLabel
 	 */
 	private CustomLabel bottom;
 	
 	/**
-	 * 
+	 * Data structure for storing the frame images for the DC motor
 	 */
 	private ImageIcon[] topIcon;
 	
 	/**
-	 * 
+	 * Data structure for storing the frame images for the bottom of the circuit
 	 */
 	private ImageIcon[] bottomIcon;
 	
+	/**
+	 * Slider to change speed of the motor
+	 */
 	private JSlider wSlider;
-	private JButton changePoles, pause, reset;
+	
+	/**
+	 * The button to change electric current's direction
+	 */
+	private JButton changePoles;
+	
+	/**
+	 * The button to pause the animation
+	 */
+	private JButton pause;
 	
 	/**
 	 * Timer for animation
@@ -92,12 +104,12 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 	JPanel menu;
 	
 	/**
-	 * 
+	 * An area reserved for displaying an animated DC motor and its circuit.
 	 */
 	JPanel display;
 	
 	/**
-	 * 
+	 * An area reserved for displaying control buttons.
 	 */
 	JPanel controlDisplay;
 
@@ -119,11 +131,13 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		// Add a menu bar
 		prepareMenuBar();
 
-		// Add a view
+		// Add a view with an animated DC motor and its electric circuit.
 		prepareViewPanel();
 
+		// Add a control panel with buttons to control animation.
 		prepareControlPanel();
 
+		// Lay out to the main app
 		Container container = getContentPane();
 		container.setLayout(new BorderLayout(20, 0));
 		container.setBackground(Color.white);
@@ -131,13 +145,20 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		container.add(display, BorderLayout.CENTER);
 		container.add(controlDisplay, BorderLayout.EAST);
 		
+		// Start the animation timer
 		animationTimer = new Timer(animationDelay, this);
 		animationTimer.start();
 	}
 
+	/**
+	 * Prepare a control panel with buttons to control animation.
+	 */
 	private void prepareControlPanel() {
+		// Add a button to change the electric current's direction
 		changePoles = new JButton("Change direction");
 		changePoles.addActionListener(this);
+		
+		// Add a button to pause the animation
 		pause = new JButton("Pause animation");
 		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -150,11 +171,14 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 				}
 			}
 		});
+		
+		// Add a slider to control the animation speed
 		JLabel freqLabel = new JLabel("Animation speed", JLabel.CENTER);
 		wSlider = new JSlider(JSlider.HORIZONTAL, WMIN, WMAX, WINIT);
 		wSlider.addChangeListener(this);
 		wSlider.setBackground(Color.white);
 
+		// Trying to arrange the layout of the above controllers
 		JPanel control = new JPanel(new BorderLayout(0, 10));
 		control.setBackground(Color.white);
 		JPanel buttonControl = new JPanel(new BorderLayout());
@@ -174,9 +198,15 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		controlDisplay.setBackground(Color.white);
 	}
 
+	/**
+	 * Prepare a view with an animated DC motor and its electric circuit.
+	 */
 	private void prepareViewPanel() {
+		// draw the top of the DC motor's circuit
 		top = new JLabel(topIcon[0]);
+		// draw the bottom of the DC motor's circuit
 		bottom = new CustomLabel(bottomIcon[0]);
+		
 		display = new JPanel(new BorderLayout());
 		display.setBackground(Color.white);
 		display.add(top, BorderLayout.CENTER);
