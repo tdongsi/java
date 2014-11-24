@@ -24,11 +24,33 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * A project when I was working as a Teaching Assistant (TA) for the course Basic Electrical Enginering, 
+ * under Vacation Internship Program (VIP).
+ * An applet to illustrate how a DC (direct current) motor works. Programmed in Java 1.4. 
+ * 
+ * @author dongsi.tuecuong@gmail.com
+ *
+ */
 public class DcMotor extends JApplet implements ActionListener, ChangeListener {
-	final int WMIN = 35, WMAX = 49, WINIT = 40;
-	final int IMG = 15, BTM = 2;
-	JLabel top;
-	CustomLabel bottom;
+	/**
+	 * Min, max, initial values of the slider that controls animation speed
+	 */
+	private final int WMIN = 35, WMAX = 49, WINIT = 40;
+	
+	/**
+	 * Number of frames for the DC motor
+	 */
+	private final int IMG = 15;
+	
+	/**
+	 * Number of frames for the DC circuit
+	 */
+	private final int BTM = 2;
+	
+	private JLabel top;
+	
+	private CustomLabel bottom;
 	ImageIcon[] topIcon;
 	ImageIcon[] bottomIcon;
 	JSlider wSlider;
@@ -36,6 +58,7 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 	private int animationDelay;
 	private Timer animationTimer;
 	int topNum, bottomNum;
+	JPanel menu;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = DcMotor.class.getResource(path);
@@ -48,37 +71,9 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 	}
 
 	public void init() {
-		JPanel menu = new JPanel(new BorderLayout());
-
-		JMenu fileMenu = new JMenu("About...");
-		fileMenu.setMnemonic('A');
-		JMenuItem credit = new JMenuItem("Credit");
-		credit.setMnemonic('C');
-		credit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				JOptionPane
-						.showMessageDialog(
-								DcMotor.this,
-								"Original idea and graphics are from the website\n"
-										+ "http://micro.magnet.fsu.edu/electromag/java/generator/dc.html",
-								"Credit", JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		fileMenu.add(credit);
-
-		JMenuItem exit = new JMenuItem("Exit");
-		exit.setMnemonic('x');
-		exit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				System.exit(0);
-			}
-		});
-		fileMenu.add(exit);
-
-		JMenuBar bar = new JMenuBar();
-		bar.add(fileMenu);
-		menu.add(bar, BorderLayout.WEST);
-		menu.setBorder(BorderFactory.createEtchedBorder());
+		
+		// Add a menu bar
+		prepareMenuBar();
 
 		topNum = 0;
 		bottomNum = 0;
@@ -145,6 +140,40 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		container.add(controlDisplay, BorderLayout.EAST);
 		animationTimer = new Timer(animationDelay, this);
 		animationTimer.start();
+	}
+
+	private void prepareMenuBar() {
+		menu = new JPanel(new BorderLayout());
+
+		JMenu fileMenu = new JMenu("About...");
+		fileMenu.setMnemonic('A');
+		JMenuItem credit = new JMenuItem("Credit");
+		credit.setMnemonic('C');
+		credit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				JOptionPane
+						.showMessageDialog(
+								DcMotor.this,
+								"Original idea and graphics are from the website\n"
+										+ "http://micro.magnet.fsu.edu/electromag/java/generator/dc.html",
+								"Credit", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		fileMenu.add(credit);
+
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.setMnemonic('x');
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.exit(0);
+			}
+		});
+		fileMenu.add(exit);
+
+		JMenuBar bar = new JMenuBar();
+		bar.add(fileMenu);
+		menu.add(bar, BorderLayout.WEST);
+		menu.setBorder(BorderFactory.createEtchedBorder());
 	}
 
 	public void stateChanged(ChangeEvent e) {

@@ -3,7 +3,8 @@ package my.vip.applets.transformer;
 import javax.swing.JFrame;
 
 /**
- * A TA project for the course Basic Electrical Enginering, under Vacation Internship Program (VIP).
+ * A project when I was working as a Teaching Assistant (TA) for the course Basic Electrical Enginering, 
+ * under Vacation Internship Program (VIP).
  * An applet to illustrate how a transformer works. Programmed in Java 1.4. 
  * 
  * @author dongsi.tuecuong@gmail.com
