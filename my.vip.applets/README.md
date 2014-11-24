@@ -1,18 +1,24 @@
 # Interactive Java applications/applets
 
-This Java project is my works in 2004 Vaction Internship Program (VIP), using then-new Java 1.4. It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
+This Java project is my works in 2004 Vacation Internship Program (VIP), using then-new Java 1.4. It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
 
 # Screenshots
 
-## Transformer demonstration
+## Transformer
 
-The AC current is animated in application.
+In this project, the interactive application shows the relationship of the two alternating currents (AC) voltage on the two sides of an ideal transformer.
+
+A user can change the primary and secondary windings as well as the primary (input) voltage. 
 
 ![alt text](https://dl.dropbox.com/s/bx1k0nlbcqvhak8/Transformer1.jpg "Transformer1") 
 
-![alt text](https://dl.dropbox.com/s/3nn2vxg00cvjn6b/Transformer2.jpg "Transformer1")
+![alt text](https://dl.dropbox.com/s/3nn2vxg00cvjn6b/Transformer2.jpg "Transformer2")
 
-## Lenz's Law demonstration
+The AC current is animated in application.
+
+## Lenz's Law
+
+In this project, an interactive application visually demonstrates the Lenz's law.
 
 The magnet can be interactively dragged around to generate the electrical current.
 
@@ -20,5 +26,20 @@ The magnet can be interactively dragged around to generate the electrical curren
 
 ![alt text](https://dl.dropbox.com/s/sio94onaadx717i/LenzLaw2.jpg "LenzLaw2")
 
- 
+## Direct Current (DC) Motor
 
+In this project, a simple DC motor circuit is shown.
+
+![alt text](https://dl.dropbox.com/s/l3vh1zxkzaytq2s/DcMotor1.jpg "DcMotor1") 
+
+The electric current's direction can be changed.
+
+![alt text](https://dl.dropbox.com/s/a0nouuyv61pcnkf/DcMotor2.jpg "DcMotor2")
+
+## Energy Flow of a DC Motor Circuit
+
+In this project, the components of power/energy loss in different DC motor circuit configurations (e.g., shunt, series) are shown.
+The animation is done using Adobe (then Macromedia) Flash instead of Java. The fla source file and supporting image files are checked in here for record.
+The project is done near the end of the three-month internship, when I was convinced that using Flash is better for such a animation-heavy project and took the risk to complete it.
+
+[SWF file](https://dl.dropbox.com/s/fja9kho6psbbx3i/EnergyFlow.swf)
