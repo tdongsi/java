@@ -48,17 +48,58 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 	 */
 	private final int BTM = 2;
 	
+	/**
+	 * 
+	 */
 	private JLabel top;
 	
+	/**
+	 * 
+	 */
 	private CustomLabel bottom;
-	ImageIcon[] topIcon;
-	ImageIcon[] bottomIcon;
-	JSlider wSlider;
-	JButton changePoles, pause, reset;
-	private int animationDelay;
+	
+	/**
+	 * 
+	 */
+	private ImageIcon[] topIcon;
+	
+	/**
+	 * 
+	 */
+	private ImageIcon[] bottomIcon;
+	
+	private JSlider wSlider;
+	private JButton changePoles, pause, reset;
+	
+	/**
+	 * Timer for animation
+	 */
 	private Timer animationTimer;
-	int topNum, bottomNum;
+	private int animationDelay;
+	
+	/**
+	 * Current frame number of the DC motor
+	 */
+	private int topNum;
+	/**
+	 * Current frame number of the electrical circuit
+	 */
+	private int bottomNum;
+	
+	/**
+	 * An area reserved for adding drop-down menus and their menu bar.
+	 */
 	JPanel menu;
+	
+	/**
+	 * 
+	 */
+	JPanel display;
+	
+	/**
+	 * 
+	 */
+	JPanel controlDisplay;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = DcMotor.class.getResource(path);
@@ -72,29 +113,29 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 
 	public void init() {
 		
+		// initialize states of the app
+		initializeStates();
+		
 		// Add a menu bar
 		prepareMenuBar();
 
-		topNum = 0;
-		bottomNum = 0;
-		animationDelay = 500 - 10 * WINIT;
-		topIcon = new ImageIcon[IMG];
-		bottomIcon = new ImageIcon[BTM];
-		for (int i = 0; i < topIcon.length; i++) {
-			topIcon[i] = createImageIcon("images/dcgen" + i + ".jpg");
-		}
-		for (int i = 0; i < bottomIcon.length; i++) {
-			bottomIcon[i] = createImageIcon("images/bottom" + i + ".jpg");
-		}
+		// Add a view
+		prepareViewPanel();
 
-		top = new JLabel(topIcon[0]);
-		bottom = new CustomLabel(bottomIcon[0]);
-		JPanel display = new JPanel(new BorderLayout());
-		display.setBackground(Color.white);
-		display.add(top, BorderLayout.CENTER);
-		display.add(bottom, BorderLayout.SOUTH);
-		display.setPreferredSize(new Dimension(150, 183));
+		prepareControlPanel();
 
+		Container container = getContentPane();
+		container.setLayout(new BorderLayout(20, 0));
+		container.setBackground(Color.white);
+		container.add(menu, BorderLayout.NORTH);
+		container.add(display, BorderLayout.CENTER);
+		container.add(controlDisplay, BorderLayout.EAST);
+		
+		animationTimer = new Timer(animationDelay, this);
+		animationTimer.start();
+	}
+
+	private void prepareControlPanel() {
 		changePoles = new JButton("Change direction");
 		changePoles.addActionListener(this);
 		pause = new JButton("Pause animation");
@@ -126,22 +167,44 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		control.add(buttonControl, BorderLayout.NORTH);
 		control.add(sliderControl, BorderLayout.CENTER);
 
-		JPanel controlDisplay = new JPanel(new BorderLayout());
+		controlDisplay = new JPanel(new BorderLayout());
 		controlDisplay.add(control, BorderLayout.CENTER);
 		controlDisplay.add(Box.createVerticalStrut(40), BorderLayout.NORTH);
 		controlDisplay.add(Box.createVerticalStrut(40), BorderLayout.SOUTH);
 		controlDisplay.setBackground(Color.white);
-
-		Container container = getContentPane();
-		container.setLayout(new BorderLayout(20, 0));
-		container.setBackground(Color.white);
-		container.add(menu, BorderLayout.NORTH);
-		container.add(display, BorderLayout.CENTER);
-		container.add(controlDisplay, BorderLayout.EAST);
-		animationTimer = new Timer(animationDelay, this);
-		animationTimer.start();
 	}
 
+	private void prepareViewPanel() {
+		top = new JLabel(topIcon[0]);
+		bottom = new CustomLabel(bottomIcon[0]);
+		display = new JPanel(new BorderLayout());
+		display.setBackground(Color.white);
+		display.add(top, BorderLayout.CENTER);
+		display.add(bottom, BorderLayout.SOUTH);
+		display.setPreferredSize(new Dimension(150, 183));
+	}
+
+	/**
+	 * Initialize the interal states of the application
+	 * and load the required frame images for animation. 
+	 */
+	private void initializeStates() {
+		topNum = 0;
+		bottomNum = 0;
+		animationDelay = 500 - 10 * WINIT;
+		topIcon = new ImageIcon[IMG];
+		bottomIcon = new ImageIcon[BTM];
+		for (int i = 0; i < topIcon.length; i++) {
+			topIcon[i] = createImageIcon("images/dcgen" + i + ".jpg");
+		}
+		for (int i = 0; i < bottomIcon.length; i++) {
+			bottomIcon[i] = createImageIcon("images/bottom" + i + ".jpg");
+		}
+	}
+
+	/**
+	 * Prepare the drop-down menus and their menu bar.
+	 */
 	private void prepareMenuBar() {
 		menu = new JPanel(new BorderLayout());
 
@@ -213,6 +276,7 @@ public class DcMotor extends JApplet implements ActionListener, ChangeListener {
 		window.pack();
 		window.setResizable(false);
 		window.setVisible(true);
+		
 		/*
 		 * System.out.println( "width: " + window.getContentPane().getWidth() +
 		 * " height: " + window.getContentPane().getHeight() );
