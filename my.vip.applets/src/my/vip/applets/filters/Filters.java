@@ -27,33 +27,113 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * @author tdongsi
+ *
+ */
 public class Filters extends JApplet implements ChangeListener, ActionListener,
 		AdjustmentListener {
-	JComboBox filterList;
-	JSlider freqSlider, rSlider, cSlider, lSlider;
-	JLabel filterLabel, rLabel, cLabel, lLabel, charLabel;
-	final int FMIN = 1, FMAX = 10, FINIT = 5;
-	final int RMIN = 10, RMAX = 100, RINIT = 50;
-	final int CMIN = 10, CMAX = 100, CINIT = 20;
-	final int LMIN = 50, LMAX = 850, LINIT = 200;
-	final double[] SQUARE = { 1.27324, 0.0, 0.42441, 0.0, 0.25465 };
-	final double[] SAWTOOTH = { 0.31830, 0.15915, 0.10610, 0.07958, 0.06366 };
-	FourierPanel inWave, outWave;
-	ComponentPanel inCmp[], outCmp[];
-	JButton square, sawtooth, pause, showLeft, showRight;
-	private static int animationDelay = 32;
+	/**
+	 * Drop-down menu of filters: lowpass, highpass, bandpass, bandstop
+	 */
+	private JComboBox filterList;
+	
+	/**
+	 * Sliders to set values of frequency, resistance, capacity, inductance  
+	 */
+	private JSlider freqSlider, rSlider, cSlider, lSlider;
+	
+	/**
+	 * Labels
+	 */
+	private JLabel filterLabel, rLabel, cLabel, lLabel, charLabel;
+	
+	/**
+	 * Min, max, initial values for the slider that controls frequency value 
+	 */
+	private final int FMIN = 1, FMAX = 10, FINIT = 5;
+	
+	/**
+	 * Min, max, initial values for the slider that controls resistance value 
+	 */
+	private final int RMIN = 10, RMAX = 100, RINIT = 50;
+	
+	/**
+	 * Min, max, initial values for the slider that controls capacitance value
+	 */
+	private final int CMIN = 10, CMAX = 100, CINIT = 20;
+	
+	/**
+	 * Min, max, initial values for the slider that controls inductance value
+	 */
+	private final int LMIN = 50, LMAX = 850, LINIT = 200;
+	
+	/**
+	 * Magnitudes of the component waves to create a square wave 
+	 */
+	private final double[] SQUARE = { 1.27324, 0.0, 0.42441, 0.0, 0.25465 };
+	
+	/**
+	 * Magnitudes of the component waves to create a saw-tooth wave
+	 */
+	private final double[] SAWTOOTH = { 0.31830, 0.15915, 0.10610, 0.07958, 0.06366 };
+	
+	/**
+	 * Panels to display input and output waves
+	 */
+	private FourierPanel inWave, outWave;
+	
+	/**
+	 * Panels to display the component waves and controls to change their amplitude and phase
+	 */
+	private ComponentPanel inCmp[], outCmp[];
+	
+	/**
+	 * Buttons
+	 */
+	private JButton square, sawtooth, pause, showLeft, showRight;
+	
+	/**
+	 * Timer for animation
+	 */
 	private Timer animationTimer;
+	private static int animationDelay = 32;
 
-	JScrollBar inBar, outBar;
-	JScrollPane inScroller, outScroller;
+	/**
+	 * Scroll bars for input and output component waves, respectively
+	 */
+	private JScrollBar inBar, outBar;
+	
+	/**
+	 * Panes associated with the above scroll bars
+	 */
+	private JScrollPane inScroller, outScroller;
 
 	private JPanel leftDeck, rightDeck;
 	private CardLayout cardLeft, cardRight;
 
-	protected int frequency;
+	/************************************
+	 * Internal states of the application
+	 ************************************/
+	
+	/**
+	 * Common frequency of the waves 
+	 */
+	private int frequency;
 	private int index;
-	protected double r, c, l;
+	
+	/**
+	 * Current values of resistance, capacitance, and inductance
+	 */
+	private double r, c, l;
+	
+	/**
+	 * The magnitudes 
+	 */
 	private double magResponse[] = new double[5];
+	/**
+	 * The phases
+	 */
 	private double phiResponse[] = new double[5];
 
 	protected static ImageIcon createImageIcon(String path) {
