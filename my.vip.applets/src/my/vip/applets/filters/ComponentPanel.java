@@ -10,33 +10,75 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+/**
+ * @author tdongsi
+ *
+ */
 class ComponentPanel extends JPanel {
+	/**
+	 * Sliders that set magnitude and phase values
+	 */
 	JSlider phiSlider, magSlider;
+	
+	/**
+	 * View panel that displays the sine wave
+	 */
 	SinePanel panel;
+	
+	/**
+	 * Variables for internal states: frequency, magnitude, and phase.
+	 */
 	double freq, mag, phi;
-	static final int PHIMAX = 180, PHIMIN = -180;
+	
+	/**
+	 * Max, min values of the slider that controls phase value
+	 */
+	private final int PHI_MAX = 180, PHI_MIN = -180;
+	
+	/**
+	 * Max, min values of the slider that controls magnitude value
+	 */
+	private final int MAG_MAX = 30, MAG_MIN = 0;
 
-	public ComponentPanel(String label, double mag1, double phi1, double freq1,
+	public ComponentPanel(String label, double magnitude, double phi, double freq,
 			Color c) {
-		phi = phi1;
-		mag = mag1;
-		freq = freq1;
-		int phiD = (int) (phi / Math.PI * 180);
+		this.phi = phi;
+		this.mag = magnitude;
+		this.freq = freq;
+		
+		JPanel controlPanel = prepareControlPanel();
+		JPanel displayPanel = prepareViewPanel(label, c);
 
-		phiSlider = new JSlider(JSlider.VERTICAL, PHIMIN, PHIMAX, phiD);
+		setLayout(new BorderLayout());
+		add(controlPanel, BorderLayout.WEST);
+		add(displayPanel, BorderLayout.CENTER);
+		update();
+	}
+
+	private JPanel prepareViewPanel(String label, Color c) {
+		JLabel title = new JLabel(label, JLabel.CENTER);
+		panel = new SinePanel(c);
+		JPanel displayPanel = new JPanel(new BorderLayout());
+		displayPanel.add(title, BorderLayout.NORTH);
+		displayPanel.add(panel, BorderLayout.CENTER);
+		return displayPanel;
+	}
+
+	private JPanel prepareControlPanel() {
+		int phiD = (int) (this.phi / Math.PI * 180);
+		phiSlider = new JSlider(JSlider.VERTICAL, PHI_MIN, PHI_MAX, phiD);
 		phiSlider.setMajorTickSpacing(90);
 		phiSlider.setPaintLabels(true);
 		phiSlider.setBorder(BorderFactory.createEtchedBorder());
 
-		magSlider = new JSlider(JSlider.VERTICAL, 0, 30, (int) mag);
+		magSlider = new JSlider(JSlider.VERTICAL, MAG_MIN, MAG_MAX, (int) mag);
 		Hashtable labelTable = new Hashtable();
 		labelTable.put(new Integer(0), new JLabel("0"));
 		labelTable.put(new Integer(30), new JLabel("Max"));
 		magSlider.setLabelTable(labelTable);
 		magSlider.setPaintLabels(true);
 		magSlider.setBorder(BorderFactory.createEtchedBorder());
-
-		JLabel title = new JLabel(label, JLabel.CENTER);
+		
 		JLabel phiLabel = new JLabel("Phase", JLabel.CENTER);
 		JLabel magLabel = new JLabel("Amp.", JLabel.CENTER);
 
@@ -51,16 +93,7 @@ class ComponentPanel extends JPanel {
 		controlPanel.setBorder(BorderFactory.createEtchedBorder());
 		controlPanel.add(phiPanel);
 		controlPanel.add(magPanel);
-
-		panel = new SinePanel(c);
-		JPanel displayPanel = new JPanel(new BorderLayout());
-		displayPanel.add(title, BorderLayout.NORTH);
-		displayPanel.add(panel, BorderLayout.CENTER);
-
-		setLayout(new BorderLayout());
-		add(controlPanel, BorderLayout.WEST);
-		add(displayPanel, BorderLayout.CENTER);
-		update();
+		return controlPanel;
 	}
 
 	public void update() {
