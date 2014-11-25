@@ -25,7 +25,7 @@ class SinePanel extends JPanel {
 	/**
 	 * Y coordinates of the sine wave drawn on the panel 
 	 */
-	private double[] yValues = new double[WIDTH];
+	private int[] yValues = new int[WIDTH];
 	
 	/**
 	 * Color of the sine wave 
@@ -36,7 +36,7 @@ class SinePanel extends JPanel {
 	 * Construct with default values
 	 */
 	public SinePanel() {
-		freq = 5.0 / 250;
+		freq = 5.0 / WIDTH;
 		phi = 0.0;
 		currentPhase = 0;
 		setyValues();
@@ -82,10 +82,11 @@ class SinePanel extends JPanel {
 	 * Draw the sine wave, given the Y-coordinates in yValues.
 	 */
 	private void drawSine(Graphics gr, int currentPhase) {
+		final int RESOLUTION = 120;
 		gr.setColor(color);
-		for (int i = 0; i <= 120; i++) {
-			gr.drawLine(i, (int) yValues[(i + currentPhase + WIDTH) % WIDTH], i + 1,
-					(int) yValues[(i + currentPhase + WIDTH+1) % WIDTH]);
+		for (int i = 0; i <= RESOLUTION; i++) {
+			gr.drawLine(i, yValues[(i + currentPhase + WIDTH) % WIDTH], i + 1,
+					yValues[(i + currentPhase + WIDTH+1) % WIDTH]);
 		}
 
 	}
@@ -97,7 +98,7 @@ class SinePanel extends JPanel {
 	 * @param freq
 	 */
 	public void setFreq(double freq) {
-		this.freq = freq / 250;
+		this.freq = freq / WIDTH;
 		setyValues();
 		repaint();
 	}
@@ -125,7 +126,7 @@ class SinePanel extends JPanel {
 			h = 53;
 		for (int i = 0; i < yValues.length; i++) {
 			double sin = Math.sin(i * w + phi);
-			yValues[i] = max * sin + h;
+			yValues[i] = (int)(max * sin + h);
 		}
 	}
 
