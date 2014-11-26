@@ -396,9 +396,11 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 
 	private void prepareHeaderOutput() {
 		output = new JPanel(new BorderLayout());
+		
 		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
 		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		outWave = new FourierPanel();
+		
 		output.setBackground(Color.white);
 		output.add(outLabel, BorderLayout.NORTH);
 		output.add(outWave, BorderLayout.CENTER);
@@ -406,11 +408,12 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 
 	private void prepareHeaderFilter() {
 		filter = new JPanel(new BorderLayout());
+		
+		// Create a slider to selecting the value of base frequency
 		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
 		freqSlider.addChangeListener(this);
 		freqSlider.setMajorTickSpacing(1);
 		freqSlider.setSnapToTicks(true);
-
 		freqSlider.setPaintLabels(true);
 		freqSlider.setBackground(Color.white);
 		JPanel freqPanel = new JPanel(new BorderLayout());
@@ -418,28 +421,34 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		JLabel freqLabel = new JLabel("  f kHz", JLabel.CENTER);
 		freqPanel.add(freqLabel, BorderLayout.WEST);
 		freqPanel.add(freqSlider, BorderLayout.CENTER);
-		
-		filter.add(freqPanel, BorderLayout.SOUTH);
 
-		filterLabel = new JLabel();
+		// Create a combo box for selecting the filter type
 		String[] filterString = { "No filter", "Lowpass filter",
 				"Highpass filter", "Bandpass filter", "Bandstop filter" };
 		filterList = new JComboBox(filterString);
 		filterList.addActionListener(this);
+
+		// Draw the filter circuit
+		filterLabel = new JLabel();
 		filterLabel.setHorizontalAlignment(JLabel.CENTER);
 		updateFilter(filterList.getSelectedIndex());
 		filterLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		filterLabel.setPreferredSize(new Dimension(200, 120));
+		
+		// Put the filter panel together
 		filter.setBackground(Color.white);
 		filter.add(filterLabel, BorderLayout.CENTER);
 		filter.add(filterList, BorderLayout.NORTH);
+		filter.add(freqPanel, BorderLayout.SOUTH);
 	}
 
 	private void prepareHeaderInput() {
 		input = new JPanel(new BorderLayout());
+		
 		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
 		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		inWave = new FourierPanel();
+		
 		input.setBackground(Color.white);
 		input.add(inLabel, BorderLayout.NORTH);
 		input.add(inWave, BorderLayout.CENTER);
@@ -577,20 +586,6 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
-	public static void main(String args[]) {
-		JFrame window = new JFrame("Filters demonstration");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		Filters applet = new Filters();
-		applet.init();
-		applet.start();
-		window.getContentPane().add(applet);
-		window.pack();
-		window.setResizable(false);
-		window.setVisible(true);
-		// System.out.println( "width: " + window.getWidth() + " height: " +
-		// window.getHeight() );
-	}
 
 	private double magResponse(int i, double freq) {
 		if (i == 1) {
@@ -635,6 +630,12 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
+	/**
+	 * Compute characteristic frequency of the filter, based on the filter circuit parameters.
+	 *  
+	 * @param i: index indicating filter type (e.g., lowpass, bandpass)
+	 * @return Characteristic frequency of the filter.
+	 */
 	private double charFreq(int i) {
 		if (i == 1 || i == 2) {
 			return 1 / (r * c * 1e-8 * Math.PI * 2);
