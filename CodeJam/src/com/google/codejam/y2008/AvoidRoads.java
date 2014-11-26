@@ -36,9 +36,6 @@ public class AvoidRoads {
 	}
 
 	public static long numWays(int width, int height, String[] bad) {
-		// TODO: Modify String[] bad such that c, d is top-right from a,b
-		
-//		numWaysStandard(width,height,Arrays.asList(bad));
 		
 		return numWaysFastRenamed(width,height,Arrays.asList(bad));
 	}

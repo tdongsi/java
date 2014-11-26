@@ -406,7 +406,7 @@ public class PluginGenerator {
 	 * Return a minimum server plugin-specification file.
 	 * According to IG SSL plug-in doc.
 	 * 
-	 * TODO: Maybe the more efficient way is to
+	 * Maybe the more efficient way is to
 	 * 1. implement a copy constructor for PluginGenerator (DO NOT use clone)
 	 * 2. pre-build the private static variable serverTemplate
 	 * 3. return a copy of the pre-built template in this method
