@@ -116,11 +116,17 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 	 * Header panel: containing input wave, the filter circuit, and the output wave
 	 */
 	private JPanel header;
+	private JPanel input;
+	private JPanel filter;
+	private JPanel output;
 	
 	/**
 	 * Body panel: containing input sinusoidal components, circuit parameters, and output sinusoidal components
 	 */
 	private JPanel body;
+	private JPanel leftPanel;
+	private JPanel centerPanel;
+	private JPanel rightPanel;
 
 	/************************************
 	 * Internal states of the application
@@ -189,84 +195,27 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		/*
 		 * LEFT 
 		 */
-		inCmp = new ComponentPanel[5];
-		JPanel inSet = new JPanel(new GridLayout(5, 1, 0, 2));
-		inSet.setPreferredSize(new Dimension(200, 625));
-
-		for (int i = 0; i < inCmp.length; i++) {
-			inCmp[i] = new ComponentPanel(inString[i], inWave.magnitude[i],
-					inWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
-			inCmp[i].magSlider.addChangeListener(this);
-			inCmp[i].phiSlider.addChangeListener(this);
-			inSet.add(inCmp[i]);
-		}
-
-		inScroller = new JScrollPane(inSet);
-		inScroller.setPreferredSize(new Dimension(200, 300));
-		inBar = inScroller.getVerticalScrollBar();
-		inBar.addAdjustmentListener(this);
-		showLeft = new JButton("Sinusoidal components");
-		showLeft.addActionListener(this);
-		
-		JPanel leftPanel = new JPanel(new BorderLayout(0, 5));
-		leftPanel.setBackground(Color.white);
-		
-		leftDeck = new JPanel();
-		cardLeft = new CardLayout();
-		leftDeck.setLayout(cardLeft);
-		JPanel blank = new JPanel(new BorderLayout());
-		blank.setBackground(Color.white);
-		JLabel leftBlank = new JLabel("Click above to view components",
-				JLabel.CENTER);
-		blank.add(leftBlank, BorderLayout.CENTER);
-		leftDeck.add(blank, "card one");
-		leftDeck.add(inScroller, "card two");
-
-		leftPanel.add(showLeft, BorderLayout.NORTH);
-		leftPanel.add(leftDeck, BorderLayout.CENTER);
+		prepareBodyLeft(inColor, inString);
 		
 		/*
 		 * RIGHT
 		 */
-		outCmp = new ComponentPanel[5];
-		JPanel outSet = new JPanel(new GridLayout(5, 1, 0, 2));
-		outSet.setPreferredSize(new Dimension(200, 625));
-
-		for (int i = 0; i < outCmp.length; i++) {
-			outCmp[i] = new ComponentPanel(inString[i], outWave.magnitude[i],
-					outWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
-			outCmp[i].magSlider.setEnabled(false);
-			outCmp[i].phiSlider.setEnabled(false);
-			outSet.add(outCmp[i]);
-		}
-
-		outScroller = new JScrollPane(outSet);
-		outScroller.setPreferredSize(new Dimension(200, 300));
-		outBar = outScroller.getVerticalScrollBar();
-		outBar.addAdjustmentListener(this);
-		showRight = new JButton("Sinusoidal components");
-		showRight.addActionListener(this);
-
-		JPanel rightPanel = new JPanel(new BorderLayout(0, 5));
-		rightPanel.setBackground(Color.white);
-		
-		rightDeck = new JPanel();
-		cardRight = new CardLayout();
-		rightDeck.setLayout(cardRight);
-		JPanel blank1 = new JPanel(new BorderLayout());
-		blank1.setBackground(Color.white);
-		JLabel rightBlank = new JLabel("Click above to view components",
-				JLabel.CENTER);
-		blank1.add(rightBlank, BorderLayout.CENTER);
-		rightDeck.add(blank1, "card one");
-		rightDeck.add(outScroller, "card two");
-		rightPanel.add(showRight, BorderLayout.NORTH);
-		rightPanel.add(rightDeck, BorderLayout.CENTER);
+		prepareBodyRight(inColor, inString);
 		
 		/*
 		 * CENTER
 		 */
-		JPanel centerPanel = new JPanel(new BorderLayout());
+		prepareBodyCenter();
+
+		body = new JPanel(new GridLayout(1, 3));
+		body.add(leftPanel);
+		body.add(centerPanel);
+		body.add(rightPanel);
+		body.setBackground(Color.white);
+	}
+
+	private void prepareBodyCenter() {
+		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.white);
 		
 		JPanel buttGroup = new JPanel(new BorderLayout());
@@ -354,23 +303,109 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 
 		centerPanel.add(pause, BorderLayout.SOUTH);
 		centerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
 
-		body = new JPanel(new GridLayout(1, 3));
-		body.add(leftPanel);
-		body.add(centerPanel);
-		body.add(rightPanel);
-		body.setBackground(Color.white);
+	private void prepareBodyRight(Color[] inColor, String[] inString) {
+		outCmp = new ComponentPanel[5];
+		JPanel outSet = new JPanel(new GridLayout(5, 1, 0, 2));
+		outSet.setPreferredSize(new Dimension(200, 625));
+
+		for (int i = 0; i < outCmp.length; i++) {
+			outCmp[i] = new ComponentPanel(inString[i], outWave.magnitude[i],
+					outWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
+			outCmp[i].magSlider.setEnabled(false);
+			outCmp[i].phiSlider.setEnabled(false);
+			outSet.add(outCmp[i]);
+		}
+
+		outScroller = new JScrollPane(outSet);
+		outScroller.setPreferredSize(new Dimension(200, 300));
+		outBar = outScroller.getVerticalScrollBar();
+		outBar.addAdjustmentListener(this);
+		showRight = new JButton("Sinusoidal components");
+		showRight.addActionListener(this);
+
+		rightPanel = new JPanel(new BorderLayout(0, 5));
+		rightPanel.setBackground(Color.white);
+		
+		rightDeck = new JPanel();
+		cardRight = new CardLayout();
+		rightDeck.setLayout(cardRight);
+		JPanel blank1 = new JPanel(new BorderLayout());
+		blank1.setBackground(Color.white);
+		JLabel rightBlank = new JLabel("Click above to view components",
+				JLabel.CENTER);
+		blank1.add(rightBlank, BorderLayout.CENTER);
+		rightDeck.add(blank1, "card one");
+		rightDeck.add(outScroller, "card two");
+		rightPanel.add(showRight, BorderLayout.NORTH);
+		rightPanel.add(rightDeck, BorderLayout.CENTER);
+	}
+
+	private void prepareBodyLeft(Color[] inColor, String[] inString) {
+		inCmp = new ComponentPanel[5];
+		JPanel inSet = new JPanel(new GridLayout(5, 1, 0, 2));
+		inSet.setPreferredSize(new Dimension(200, 625));
+
+		for (int i = 0; i < inCmp.length; i++) {
+			inCmp[i] = new ComponentPanel(inString[i], inWave.magnitude[i],
+					inWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
+			inCmp[i].magSlider.addChangeListener(this);
+			inCmp[i].phiSlider.addChangeListener(this);
+			inSet.add(inCmp[i]);
+		}
+
+		inScroller = new JScrollPane(inSet);
+		inScroller.setPreferredSize(new Dimension(200, 300));
+		inBar = inScroller.getVerticalScrollBar();
+		inBar.addAdjustmentListener(this);
+		showLeft = new JButton("Sinusoidal components");
+		showLeft.addActionListener(this);
+		
+		leftPanel = new JPanel(new BorderLayout(0, 5));
+		leftPanel.setBackground(Color.white);
+		
+		leftDeck = new JPanel();
+		cardLeft = new CardLayout();
+		leftDeck.setLayout(cardLeft);
+		JPanel blank = new JPanel(new BorderLayout());
+		blank.setBackground(Color.white);
+		JLabel leftBlank = new JLabel("Click above to view components",
+				JLabel.CENTER);
+		blank.add(leftBlank, BorderLayout.CENTER);
+		leftDeck.add(blank, "card one");
+		leftDeck.add(inScroller, "card two");
+
+		leftPanel.add(showLeft, BorderLayout.NORTH);
+		leftPanel.add(leftDeck, BorderLayout.CENTER);
 	}
 
 	private void prepareHeaderPanel() {
 		header = new JPanel(new GridLayout(1, 3));
-		JPanel input = new JPanel(new BorderLayout());
-		JPanel filter = new JPanel(new BorderLayout());
-		JPanel output = new JPanel(new BorderLayout());
+		
+		prepareHeaderInput();
+		
+		prepareHeaderFilter();
 
-		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
-		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		inWave = new FourierPanel();
+		prepareHeaderOutput();
+
+		header.add(input);
+		header.add(filter);
+		header.add(output);
+	}
+
+	private void prepareHeaderOutput() {
+		output = new JPanel(new BorderLayout());
+		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
+		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		outWave = new FourierPanel();
+		output.setBackground(Color.white);
+		output.add(outLabel, BorderLayout.NORTH);
+		output.add(outWave, BorderLayout.CENTER);
+	}
+
+	private void prepareHeaderFilter() {
+		filter = new JPanel(new BorderLayout());
 		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
 		freqSlider.addChangeListener(this);
 		freqSlider.setMajorTickSpacing(1);
@@ -383,9 +418,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		JLabel freqLabel = new JLabel("  f kHz", JLabel.CENTER);
 		freqPanel.add(freqLabel, BorderLayout.WEST);
 		freqPanel.add(freqSlider, BorderLayout.CENTER);
-		input.setBackground(Color.white);
-		input.add(inLabel, BorderLayout.NORTH);
-		input.add(inWave, BorderLayout.CENTER);
+		
 		filter.add(freqPanel, BorderLayout.SOUTH);
 
 		filterLabel = new JLabel();
@@ -400,17 +433,16 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		filter.setBackground(Color.white);
 		filter.add(filterLabel, BorderLayout.CENTER);
 		filter.add(filterList, BorderLayout.NORTH);
+	}
 
-		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
-		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		outWave = new FourierPanel();
-		output.setBackground(Color.white);
-		output.add(outLabel, BorderLayout.NORTH);
-		output.add(outWave, BorderLayout.CENTER);
-
-		header.add(input);
-		header.add(filter);
-		header.add(output);
+	private void prepareHeaderInput() {
+		input = new JPanel(new BorderLayout());
+		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
+		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		inWave = new FourierPanel();
+		input.setBackground(Color.white);
+		input.add(inLabel, BorderLayout.NORTH);
+		input.add(inWave, BorderLayout.CENTER);
 	}
 
 	/**
