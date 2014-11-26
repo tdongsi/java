@@ -147,11 +147,11 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 	/**
 	 * The magnitudes 
 	 */
-	private double magResponse[] = new double[5];
+	private double magResponse[] = new double[FourierPanel.HARMONIC_NUMBER];
 	/**
 	 * The phases
 	 */
-	private double phiResponse[] = new double[5];
+	private double phiResponse[] = new double[FourierPanel.HARMONIC_NUMBER];
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = Filters.class.getResource(path);
@@ -322,8 +322,9 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 	}
 
 	private void prepareBodyRight(Color[] inColor, String[] inString) {
-		outCmp = new ComponentPanel[5];
-		JPanel outSet = new JPanel(new GridLayout(5, 1, 0, 2));
+		// Add panels for harmonic components
+		outCmp = new ComponentPanel[FourierPanel.HARMONIC_NUMBER];
+		JPanel outSet = new JPanel(new GridLayout(FourierPanel.HARMONIC_NUMBER, 1, 0, 2));
 		outSet.setPreferredSize(new Dimension(200, 625));
 
 		for (int i = 0; i < outCmp.length; i++) {
@@ -338,6 +339,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		outScroller.setPreferredSize(new Dimension(200, 300));
 		outBar = outScroller.getVerticalScrollBar();
 		outBar.addAdjustmentListener(this);
+		
 		showRight = new JButton("Sinusoidal components");
 		showRight.addActionListener(this);
 
@@ -354,13 +356,15 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		blank1.add(rightBlank, BorderLayout.CENTER);
 		rightDeck.add(blank1, "card one");
 		rightDeck.add(outScroller, "card two");
+		
 		rightPanel.add(showRight, BorderLayout.NORTH);
 		rightPanel.add(rightDeck, BorderLayout.CENTER);
 	}
 
 	private void prepareBodyLeft(Color[] inColor, String[] inString) {
-		inCmp = new ComponentPanel[5];
-		JPanel inSet = new JPanel(new GridLayout(5, 1, 0, 2));
+		// Add panels for harmonic components
+		inCmp = new ComponentPanel[FourierPanel.HARMONIC_NUMBER];
+		JPanel inSet = new JPanel(new GridLayout(FourierPanel.HARMONIC_NUMBER, 1, 0, 2));
 		inSet.setPreferredSize(new Dimension(200, 625));
 
 		for (int i = 0; i < inCmp.length; i++) {
@@ -375,6 +379,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		inScroller.setPreferredSize(new Dimension(200, 300));
 		inBar = inScroller.getVerticalScrollBar();
 		inBar.addAdjustmentListener(this);
+		
 		showLeft = new JButton("Sinusoidal components");
 		showLeft.addActionListener(this);
 		
