@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 /**
+ * A panel for each sinusoidal harmonic component of a periodic electrical waveform.
+ * It contains sliders that shows and allows control of phase and magnitude values,
+ * and a view area that contains an animated sine wave for that harmonic component.
+ * 
  * @author tdongsi
  *
  */
@@ -39,6 +43,16 @@ class ComponentPanel extends JPanel {
 	 * Max, min values of the slider that controls magnitude value
 	 */
 	private final int MAG_MAX = 30, MAG_MIN = 0;
+	
+	/**
+	 * Control panel: with two sliders to control magnitude and phase.
+	 */
+	private JPanel controlPanel;
+	
+	/**
+	 * View panel: showing an animated sine wave.
+	 */
+	private JPanel displayPanel;
 
 	public ComponentPanel(String label, double magnitude, double phi, double freq,
 			Color c) {
@@ -46,8 +60,8 @@ class ComponentPanel extends JPanel {
 		this.mag = magnitude;
 		this.freq = freq;
 		
-		JPanel controlPanel = prepareControlPanel();
-		JPanel displayPanel = prepareViewPanel(label, c);
+		prepareControlPanel();
+		prepareViewPanel(label, c);
 
 		setLayout(new BorderLayout());
 		add(controlPanel, BorderLayout.WEST);
@@ -55,16 +69,16 @@ class ComponentPanel extends JPanel {
 		update();
 	}
 
-	private JPanel prepareViewPanel(String label, Color c) {
+	private void prepareViewPanel(String label, Color c) {
 		JLabel title = new JLabel(label, JLabel.CENTER);
 		panel = new SinePanel(c);
-		JPanel displayPanel = new JPanel(new BorderLayout());
+		
+		displayPanel = new JPanel(new BorderLayout());
 		displayPanel.add(title, BorderLayout.NORTH);
 		displayPanel.add(panel, BorderLayout.CENTER);
-		return displayPanel;
 	}
 
-	private JPanel prepareControlPanel() {
+	private void prepareControlPanel() {
 		int phiD = (int) (this.phi / Math.PI * 180);
 		phiSlider = new JSlider(JSlider.VERTICAL, PHI_MIN, PHI_MAX, phiD);
 		phiSlider.setMajorTickSpacing(90);
@@ -72,7 +86,7 @@ class ComponentPanel extends JPanel {
 		phiSlider.setBorder(BorderFactory.createEtchedBorder());
 
 		magSlider = new JSlider(JSlider.VERTICAL, MAG_MIN, MAG_MAX, (int) mag);
-		Hashtable labelTable = new Hashtable();
+		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put(new Integer(0), new JLabel("0"));
 		labelTable.put(new Integer(30), new JLabel("Max"));
 		magSlider.setLabelTable(labelTable);
@@ -89,11 +103,10 @@ class ComponentPanel extends JPanel {
 		magPanel.add(magLabel, BorderLayout.NORTH);
 		magPanel.add(magSlider, BorderLayout.CENTER);
 
-		JPanel controlPanel = new JPanel(new GridLayout(1, 2));
+		controlPanel = new JPanel(new GridLayout(1, 2));
 		controlPanel.setBorder(BorderFactory.createEtchedBorder());
 		controlPanel.add(phiPanel);
 		controlPanel.add(magPanel);
-		return controlPanel;
 	}
 
 	public void update() {
