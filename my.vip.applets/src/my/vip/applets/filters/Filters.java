@@ -111,6 +111,16 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 
 	private JPanel leftDeck, rightDeck;
 	private CardLayout cardLeft, cardRight;
+	
+	/**
+	 * Header panel: containing input wave, the filter circuit, and the output wave
+	 */
+	private JPanel header;
+	
+	/**
+	 * Body panel: containing input sinusoidal components, circuit parameters, and output sinusoidal components
+	 */
+	private JPanel body;
 
 	/************************************
 	 * Internal states of the application
@@ -155,65 +165,31 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 			magResponse[i] = 1.0;
 			phiResponse[i] = 0.0;
 		}
-		JPanel header = new JPanel(new GridLayout(1, 3));
-		JPanel body = new JPanel(new GridLayout(1, 3));
-		JPanel input = new JPanel(new BorderLayout());
-		JPanel filter = new JPanel(new BorderLayout());
-		JPanel output = new JPanel(new BorderLayout());
+		
+		prepareHeaderPanel();
 
-		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
-		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		inWave = new FourierPanel();
-		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
-		freqSlider.addChangeListener(this);
-		freqSlider.setMajorTickSpacing(1);
-		freqSlider.setSnapToTicks(true);
-		/*
-		 * Hashtable labelTable = new Hashtable(); for ( int i = FMIN; i <=
-		 * FMAX; i++ ) { labelTable.put( new Integer( i ), new JLabel( "" + i +
-		 * "0" ) ); } freqSlider.setLabelTable( labelTable );
-		 */
-		freqSlider.setPaintLabels(true);
-		freqSlider.setBackground(Color.white);
-		JPanel freqPanel = new JPanel(new BorderLayout());
-		freqPanel.setBackground(Color.white);
-		JLabel freqLabel = new JLabel("  f kHz", JLabel.CENTER);
-		freqPanel.add(freqLabel, BorderLayout.WEST);
-		freqPanel.add(freqSlider, BorderLayout.CENTER);
-		input.setBackground(Color.white);
-		input.add(inLabel, BorderLayout.NORTH);
-		input.add(inWave, BorderLayout.CENTER);
-		filter.add(freqPanel, BorderLayout.SOUTH);
+		prepareBodyPanel();
 
-		filterLabel = new JLabel();
-		String[] filterString = { "No filter", "Lowpass filter",
-				"Highpass filter", "Bandpass filter", "Bandstop filter" };
-		filterList = new JComboBox(filterString);
-		filterList.addActionListener(this);
-		filterLabel.setHorizontalAlignment(JLabel.CENTER);
-		updateFilter(filterList.getSelectedIndex());
-		filterLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		filterLabel.setPreferredSize(new Dimension(200, 120));
-		filter.setBackground(Color.white);
-		filter.add(filterLabel, BorderLayout.CENTER);
-		filter.add(filterList, BorderLayout.NORTH);
+		Container container = getContentPane();
+		container.add(header, BorderLayout.NORTH);
+		container.add(body, BorderLayout.CENTER);
+		
+		// Start animation
+		animationTimer = new Timer(animationDelay, this);
+		animationTimer.start();
+	}
 
-		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
-		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		outWave = new FourierPanel();
-		output.setBackground(Color.white);
-		output.add(outLabel, BorderLayout.NORTH);
-		output.add(outWave, BorderLayout.CENTER);
-
-		header.add(input);
-		header.add(filter);
-		header.add(output);
-
-		inCmp = new ComponentPanel[5];
+	private void prepareBodyPanel() {
+		
 		Color[] inColor = { Color.red, Color.orange, Color.magenta,
 				Color.green, Color.cyan };
 		String[] inString = { "Fundamental f", "1st harmonic 2f",
 				"2nd harmonic 3f", "3rd harmonic 4f", "4th harmonic 5f" };
+		
+		/*
+		 * LEFT 
+		 */
+		inCmp = new ComponentPanel[5];
 		JPanel inSet = new JPanel(new GridLayout(5, 1, 0, 2));
 		inSet.setPreferredSize(new Dimension(200, 625));
 
@@ -231,7 +207,27 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		inBar.addAdjustmentListener(this);
 		showLeft = new JButton("Sinusoidal components");
 		showLeft.addActionListener(this);
+		
+		JPanel leftPanel = new JPanel(new BorderLayout(0, 5));
+		leftPanel.setBackground(Color.white);
+		
+		leftDeck = new JPanel();
+		cardLeft = new CardLayout();
+		leftDeck.setLayout(cardLeft);
+		JPanel blank = new JPanel(new BorderLayout());
+		blank.setBackground(Color.white);
+		JLabel leftBlank = new JLabel("Click above to view components",
+				JLabel.CENTER);
+		blank.add(leftBlank, BorderLayout.CENTER);
+		leftDeck.add(blank, "card one");
+		leftDeck.add(inScroller, "card two");
 
+		leftPanel.add(showLeft, BorderLayout.NORTH);
+		leftPanel.add(leftDeck, BorderLayout.CENTER);
+		
+		/*
+		 * RIGHT
+		 */
 		outCmp = new ComponentPanel[5];
 		JPanel outSet = new JPanel(new GridLayout(5, 1, 0, 2));
 		outSet.setPreferredSize(new Dimension(200, 625));
@@ -251,27 +247,28 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		showRight = new JButton("Sinusoidal components");
 		showRight.addActionListener(this);
 
-		JPanel leftPanel = new JPanel(new BorderLayout(0, 5));
-		JPanel centerPanel = new JPanel(new BorderLayout());
 		JPanel rightPanel = new JPanel(new BorderLayout(0, 5));
-		leftPanel.setBackground(Color.white);
-		centerPanel.setBackground(Color.white);
 		rightPanel.setBackground(Color.white);
-
-		leftDeck = new JPanel();
-		cardLeft = new CardLayout();
-		leftDeck.setLayout(cardLeft);
-		JPanel blank = new JPanel(new BorderLayout());
-		blank.setBackground(Color.white);
-		JLabel leftBlank = new JLabel("Click above to view components",
+		
+		rightDeck = new JPanel();
+		cardRight = new CardLayout();
+		rightDeck.setLayout(cardRight);
+		JPanel blank1 = new JPanel(new BorderLayout());
+		blank1.setBackground(Color.white);
+		JLabel rightBlank = new JLabel("Click above to view components",
 				JLabel.CENTER);
-		blank.add(leftBlank, BorderLayout.CENTER);
-		leftDeck.add(blank, "card one");
-		leftDeck.add(inScroller, "card two");
-
-		leftPanel.add(showLeft, BorderLayout.NORTH);
-		leftPanel.add(leftDeck, BorderLayout.CENTER);
-
+		blank1.add(rightBlank, BorderLayout.CENTER);
+		rightDeck.add(blank1, "card one");
+		rightDeck.add(outScroller, "card two");
+		rightPanel.add(showRight, BorderLayout.NORTH);
+		rightPanel.add(rightDeck, BorderLayout.CENTER);
+		
+		/*
+		 * CENTER
+		 */
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBackground(Color.white);
+		
 		JPanel buttGroup = new JPanel(new BorderLayout());
 		buttGroup.setBackground(Color.white);
 		JPanel buttRow = new JPanel(new GridLayout(1, 2));
@@ -358,31 +355,69 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		centerPanel.add(pause, BorderLayout.SOUTH);
 		centerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
-		rightDeck = new JPanel();
-		cardRight = new CardLayout();
-		rightDeck.setLayout(cardRight);
-		JPanel blank1 = new JPanel(new BorderLayout());
-		blank1.setBackground(Color.white);
-		JLabel rightBlank = new JLabel("Click above to view components",
-				JLabel.CENTER);
-		blank1.add(rightBlank, BorderLayout.CENTER);
-		rightDeck.add(blank1, "card one");
-		rightDeck.add(outScroller, "card two");
-		rightPanel.add(showRight, BorderLayout.NORTH);
-		rightPanel.add(rightDeck, BorderLayout.CENTER);
-
+		body = new JPanel(new GridLayout(1, 3));
 		body.add(leftPanel);
 		body.add(centerPanel);
 		body.add(rightPanel);
 		body.setBackground(Color.white);
-
-		Container container = getContentPane();
-		container.add(header, BorderLayout.NORTH);
-		container.add(body, BorderLayout.CENTER);
-		animationTimer = new Timer(animationDelay, this);
-		animationTimer.start();
 	}
 
+	private void prepareHeaderPanel() {
+		header = new JPanel(new GridLayout(1, 3));
+		JPanel input = new JPanel(new BorderLayout());
+		JPanel filter = new JPanel(new BorderLayout());
+		JPanel output = new JPanel(new BorderLayout());
+
+		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
+		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		inWave = new FourierPanel();
+		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
+		freqSlider.addChangeListener(this);
+		freqSlider.setMajorTickSpacing(1);
+		freqSlider.setSnapToTicks(true);
+
+		freqSlider.setPaintLabels(true);
+		freqSlider.setBackground(Color.white);
+		JPanel freqPanel = new JPanel(new BorderLayout());
+		freqPanel.setBackground(Color.white);
+		JLabel freqLabel = new JLabel("  f kHz", JLabel.CENTER);
+		freqPanel.add(freqLabel, BorderLayout.WEST);
+		freqPanel.add(freqSlider, BorderLayout.CENTER);
+		input.setBackground(Color.white);
+		input.add(inLabel, BorderLayout.NORTH);
+		input.add(inWave, BorderLayout.CENTER);
+		filter.add(freqPanel, BorderLayout.SOUTH);
+
+		filterLabel = new JLabel();
+		String[] filterString = { "No filter", "Lowpass filter",
+				"Highpass filter", "Bandpass filter", "Bandstop filter" };
+		filterList = new JComboBox(filterString);
+		filterList.addActionListener(this);
+		filterLabel.setHorizontalAlignment(JLabel.CENTER);
+		updateFilter(filterList.getSelectedIndex());
+		filterLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		filterLabel.setPreferredSize(new Dimension(200, 120));
+		filter.setBackground(Color.white);
+		filter.add(filterLabel, BorderLayout.CENTER);
+		filter.add(filterList, BorderLayout.NORTH);
+
+		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
+		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		outWave = new FourierPanel();
+		output.setBackground(Color.white);
+		output.add(outLabel, BorderLayout.NORTH);
+		output.add(outWave, BorderLayout.CENTER);
+
+		header.add(input);
+		header.add(filter);
+		header.add(output);
+	}
+
+	/**
+	 * Load the right filter circuit image, based on index number
+	 * 
+	 * @param i
+	 */
 	private void updateFilter(int i) {
 		ImageIcon icon;
 		String[] filterName = { "None", "Lowpass", "Highpass", "Bandpass",
