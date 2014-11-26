@@ -127,6 +127,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 	private JPanel leftPanel;
 	private JPanel centerPanel;
 	private JPanel rightPanel;
+	private JPanel rlcControl;
 
 	/************************************
 	 * Internal states of the application
@@ -218,6 +219,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.white);
 		
+		// Add two buttons for special periodic waves, namely square and sawtooth
 		JPanel buttGroup = new JPanel(new BorderLayout());
 		buttGroup.setBackground(Color.white);
 		JPanel buttRow = new JPanel(new GridLayout(1, 2));
@@ -230,10 +232,38 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		buttRow.add(sawtooth);
 		buttGroup.add(buttLabel, BorderLayout.NORTH);
 		buttGroup.add(buttRow, BorderLayout.CENTER);
-		centerPanel.add(buttGroup, BorderLayout.NORTH);
 
-		JPanel rlcControl = new JPanel(new GridLayout(5, 1, 0, 10));
+		// Add a group of sliders for controlling filter parameters
+		prepareBodyCenterRlcControl();
+
+		// Add a button for pausing
+		pause = new JButton("Pause animation");
+		pause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (animationTimer.isRunning()) {
+					animationTimer.stop();
+					pause.setText("Resume animation");
+				} else {
+					animationTimer.start();
+					pause.setText("Pause animation");
+				}
+			}
+		});
+
+		centerPanel.add(buttGroup, BorderLayout.NORTH);
+		centerPanel.add(rlcControl, BorderLayout.CENTER);
+		centerPanel.add(pause, BorderLayout.SOUTH);
+		centerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+	}
+
+	private void prepareBodyCenterRlcControl() {
+		rlcControl = new JPanel(new GridLayout(5, 1, 0, 10));
 		rlcControl.setBackground(Color.white);
+		JLabel rlcTitle = new JLabel("Filter parameter control", JLabel.CENTER);
+		rlcTitle.setForeground(Color.blue);
+		rlcControl.add(rlcTitle);
+		
+		// Create label and slider for setting resistance
 		ImageIcon rIcon = createImageIcon("images/resistor.jpg");
 		rLabel = new JLabel("   R = " + RINIT + " ohm", rIcon, JLabel.CENTER);
 		rSlider = new JSlider(JSlider.HORIZONTAL, RMIN, RMAX, RINIT);
@@ -247,10 +277,9 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		rControl.setBackground(Color.white);
 		rControl.add(rLabel, BorderLayout.NORTH);
 		rControl.add(rSlider, BorderLayout.CENTER);
-		JLabel rlcTitle = new JLabel("Filter parameter control", JLabel.CENTER);
-		rlcTitle.setForeground(Color.blue);
-		rlcControl.add(rlcTitle);
 		rlcControl.add(rControl);
+		
+		// Create label and slider for setting capacitance
 		ImageIcon cIcon = createImageIcon("images/capacitor.jpg");
 		cLabel = new JLabel("   C = " + (double) CINIT / 100 + " microFarad",
 				cIcon, JLabel.CENTER);
@@ -267,6 +296,8 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		cControl.add(cSlider, BorderLayout.CENTER);
 		cSlider.setEnabled(false);
 		rlcControl.add(cControl);
+		
+		// Create label and slider for setting inductance
 		ImageIcon lIcon = createImageIcon("images/inductor.jpg");
 		lLabel = new JLabel("   L = " + (double) LINIT / 100 + " milliHenry",
 				lIcon, JLabel.CENTER);
@@ -283,26 +314,11 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		lControl.add(lSlider, BorderLayout.CENTER);
 		lSlider.setEnabled(false);
 		rlcControl.add(lControl);
+		
+		// Create a lable to show characteristic frequency of the filter
 		charLabel = new JLabel(" Characteristic frequency: " + charFreq(index)
 				+ " Hz", JLabel.CENTER);
 		rlcControl.add(charLabel);
-		centerPanel.add(rlcControl, BorderLayout.CENTER);
-
-		pause = new JButton("Pause animation");
-		pause.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (animationTimer.isRunning()) {
-					animationTimer.stop();
-					pause.setText("Resume animation");
-				} else {
-					animationTimer.start();
-					pause.setText("Pause animation");
-				}
-			}
-		});
-
-		centerPanel.add(pause, BorderLayout.SOUTH);
-		centerPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 	}
 
 	private void prepareBodyRight(Color[] inColor, String[] inString) {
