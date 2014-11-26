@@ -218,8 +218,8 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		inSet.setPreferredSize(new Dimension(200, 625));
 
 		for (int i = 0; i < inCmp.length; i++) {
-			inCmp[i] = new ComponentPanel(inString[i], inWave.mag[i],
-					inWave.phi[i], (double) FINIT * (i + 1), inColor[i]);
+			inCmp[i] = new ComponentPanel(inString[i], inWave.magnitude[i],
+					inWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
 			inCmp[i].magSlider.addChangeListener(this);
 			inCmp[i].phiSlider.addChangeListener(this);
 			inSet.add(inCmp[i]);
@@ -237,8 +237,8 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		outSet.setPreferredSize(new Dimension(200, 625));
 
 		for (int i = 0; i < outCmp.length; i++) {
-			outCmp[i] = new ComponentPanel(inString[i], outWave.mag[i],
-					outWave.phi[i], (double) FINIT * (i + 1), inColor[i]);
+			outCmp[i] = new ComponentPanel(inString[i], outWave.magnitude[i],
+					outWave.phase[i], (double) FINIT * (i + 1), inColor[i]);
 			outCmp[i].magSlider.setEnabled(false);
 			outCmp[i].phiSlider.setEnabled(false);
 			outSet.add(outCmp[i]);
@@ -484,18 +484,18 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 					inCmp[i].mag = (double) value;
 					inCmp[i].update();
 					inWave.setMagnitude(i, (double) value);
-					outWave.setMagnitude(i, magResponse[i] * inWave.mag[i]);
-					outCmp[i].magSlider.setValue((int) outWave.mag[i]);
-					outCmp[i].mag = outWave.mag[i];
+					outWave.setMagnitude(i, magResponse[i] * inWave.magnitude[i]);
+					outCmp[i].magSlider.setValue((int) outWave.magnitude[i]);
+					outCmp[i].mag = outWave.magnitude[i];
 					outCmp[i].update();
 				} else if (temp == inCmp[i].phiSlider) {
 					int value = inCmp[i].phiSlider.getValue();
 					inCmp[i].phi = (double) value;
 					inCmp[i].update();
 					inWave.setPhi(i, (double) value);
-					outWave.setPhi(i, inWave.phi[i] + phiResponse[i]);
-					outCmp[i].phiSlider.setValue((int) outWave.phi[i]);
-					outCmp[i].phi = outWave.phi[i];
+					outWave.setPhi(i, inWave.phase[i] + phiResponse[i]);
+					outCmp[i].phiSlider.setValue((int) outWave.phase[i]);
+					outCmp[i].phi = outWave.phase[i];
 					outCmp[i].update();
 				}
 			}
@@ -582,13 +582,13 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		for (int i = 0; i < magResponse.length; i++) {
 			magResponse[i] = magResponse(index, (double) ((i + 1) * frequency));
 			phiResponse[i] = phiResponse(index, (double) ((i + 1) * frequency));
-			outWave.setMagnitude(i, magResponse[i] * inWave.mag[i]);
-			outWave.setPhi(i, inWave.phi[i] + phiResponse[i]);
-			outCmp[i].magSlider.setValue((int) outWave.mag[i]);
-			outCmp[i].mag = outWave.mag[i];
+			outWave.setMagnitude(i, magResponse[i] * inWave.magnitude[i]);
+			outWave.setPhi(i, inWave.phase[i] + phiResponse[i]);
+			outCmp[i].magSlider.setValue((int) outWave.magnitude[i]);
+			outCmp[i].mag = outWave.magnitude[i];
 			outCmp[i].update();
-			outCmp[i].phiSlider.setValue((int) outWave.phi[i]);
-			outCmp[i].phi = outWave.phi[i];
+			outCmp[i].phiSlider.setValue((int) outWave.phase[i]);
+			outCmp[i].phi = outWave.phase[i];
 			outCmp[i].update();
 		}
 	}

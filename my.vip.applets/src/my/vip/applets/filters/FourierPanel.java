@@ -6,25 +6,59 @@ import java.awt.Graphics;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+/**
+ * A panel that draws an animated periodic waveform (e.g., square, sawtooth),
+ * using additive synthesis of a periodic wave with a specified number of harmonics
+ * based on Fourier transform.
+ * 
+ * @author tdongsi
+ *
+ */
 class FourierPanel extends JPanel {
-	private double freq;
 	private int currentPhase;
-	protected double[] mag;
-	protected double[] phi;
-	private double[] yValue = new double[250];
+	/**
+	 * Frequency scale factor.
+	 */
+	private int SCALE = SinePanel.WIDTH;
+	
+	/**
+	 * Number of harmonics for additive synthesis of a periodic wave.
+	 */
+	public static final int HARMONIC_NUMBER = 5;
+	
+	/**
+	 * Current base frequency
+	 */
+	private double frequency;
+	
+	/**
+	 * Current magnitudes of all harmonics 
+	 * 
+	 * TODO: Make them private?
+	 */
+	double[] magnitude;
+	
+	/**
+	 * Current phases of all harmonics
+	 * 
+	 * TODO: Make them private?
+	 */
+	double[] phase;
+	
+	private int[] yValues = new int[SCALE];
 
+	/**
+	 * Initialize to show an animated sine wave
+	 */
 	public FourierPanel() {
-		mag = new double[5];
-		mag[0] = 20.0;
-		mag[1] = mag[2] = mag[3] = mag[4] = 0.0;
-		phi = new double[5];
-		for (int i = 0; i < phi.length; i++) {
-			phi[i] = 0.0;
-		}
+		magnitude = new double[HARMONIC_NUMBER];
+		magnitude[0] = 20.0; // only one component
+		phase = new double[HARMONIC_NUMBER];
 
 		currentPhase = 0;
-		freq = 5.0 / 250.0;
-		setyValue();
+		frequency = 5.0 / SCALE;
+		setyValues();
+		
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.black));
 	}
@@ -32,54 +66,78 @@ class FourierPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		drawSin(g, currentPhase);
-		currentPhase = (currentPhase - 2) % 250;
+		drawWave(g, currentPhase);
+		currentPhase = (currentPhase - 2) % SCALE;
 	}
 
-	public void setFreq(double freq1) {
-		freq = freq1 / 250;
-		setyValue();
+	/**
+	 * Change the base frequency
+	 * 
+	 * @param freq
+	 */
+	public void setFreq(double freq) {
+		frequency = freq / SCALE;
+		setyValues();
 		repaint();
 	}
 
-	public void setMagnitude(int index, double max1) {
-		mag[index] = max1;
-		setyValue();
+	/**
+	 * Change the magnitude value of the specified harmonic.
+	 */
+	public void setMagnitude(int index, double magnitude) {
+		this.magnitude[index] = magnitude;
+		setyValues();
 		repaint();
 	}
 
-	public void setPhi(int index, double phi1) {
-		phi[index] = phi1;
-		setyValue();
+	/**
+	 * Change the phase value of the specified harmonic.
+	 */
+	public void setPhi(int index, double phi) {
+		this.phase[index] = phi;
+		setyValues();
 		repaint();
 	}
 
-	private void drawSin(Graphics gr, int currentPhase) {
+	/**
+	 * Draw the periodic wave, given the Y-coordinates in yValues.
+	 */
+	private void drawWave(Graphics gr, int currentPhase) {
 		gr.setColor(Color.blue);
 		for (int i = 0; i <= 230; i++) {
-			gr.drawLine(i, (int) yValue[(i + currentPhase + 250) % 250], i + 1,
-					(int) yValue[(i + currentPhase + 251) % 250]);
+			gr.drawLine(i, (int) yValues[(i + currentPhase + SCALE) % SCALE], i + 1,
+					(int) yValues[(i + currentPhase + SCALE+1) % SCALE]);
 		}
 
 	}
 
-	private void setyValue() {
-		double w = 2 * Math.PI * freq;
+	/**
+	 * Compute the y values of the periodic wave as x going from 0 to length.
+	 */
+	private void setyValues() {
+		int HEIGHT = 160; // default height
+		double w = 2 * Math.PI * frequency;
+		
 		int h = this.getHeight() / 2;
 		// System.out.println( "h: " + h );
 		if (h == 0)
-			h = 80;
-		for (int i = 0; i < yValue.length; i++) {
-			yValue[i] = h;
-			for (int j = 0; j < mag.length; j++) {
-				double sin = Math.sin((j + 1) * w * i + phi[j]);
-				yValue[i] += mag[j] * sin;
+			h = HEIGHT/2;
+		
+		for (int i = 0; i < yValues.length; i++) {
+			double temp = h;
+			// Add all harmonics
+			for (int j = 0; j < magnitude.length; j++) {
+				double sin = Math.sin((j + 1) * w * i + phase[j]);
+				temp += magnitude[j] * sin;
 			}
-			if (yValue[i] <= 0) {
-				yValue[i] = 1;
-			} else if (yValue[i] >= 160) {
-				yValue[i] = 159;
+			
+			if (temp <= 0) {
+				yValues[i] = 1;
+			} else if (temp >= HEIGHT) {
+				yValues[i] = HEIGHT-1;
 			}
+			
+			yValues[i] = (int) temp;
 		}
 	}
 
