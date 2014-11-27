@@ -28,11 +28,17 @@ The magnet can be interactively dragged around to generate the electrical curren
 
 ## Filters
 
-In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Check out the first picture below to refresh your EE knowledge.
+In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Check out the first picture below to refresh your Electrical Engineering knowledge.
 
 ![alt text](https://dl.dropbox.com/s/bnr5ilsy1ridxtk/Filters.jpg "Filters") 
 
-Using this Java application/applet, one can manipulate a few harmonic components to create different input wave. Special periodic waves such as square and sawtooth waves can be pre-loaded.
+Using this Java application/applet, one can:
+* select different passive analog filters (e.g., lowpass, bandpass) and immediately see each filter's effect on input.
+* manipulate phase and magnitude of a few harmonic components to create different input wave.
+* OR use pre-programmed special periodic waves such as square and sawtooth waves.
+* adjust the base frequency and see its effect on output wave.
+* adjust the parameters of the filter circuit, namely resistance, capacitance, and inductance of the circuit.
+* see the computed characteristic frequency and see its effect on the filter output.
 
 ![alt text](https://dl.dropbox.com/s/9uik8b3q8xzo5xf/Filters1.jpg "Filters1") 
 
