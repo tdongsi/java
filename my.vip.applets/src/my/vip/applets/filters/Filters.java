@@ -494,16 +494,26 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
+	/* 
+	 * Define actions for different action events, coming from different GUI sources
+	 * 
+	 * (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
-		Object temp = e.getSource();
-		if (temp == animationTimer) {
+		Object source = e.getSource();
+		
+		// If it is the timer, repaint all the panels
+		if (source == animationTimer) {
 			inWave.repaint();
 			outWave.repaint();
 			for (int i = 0; i < inCmp.length; i++) {
 				inCmp[i].panel.repaint();
 				outCmp[i].panel.repaint();
 			}
-		} else if (temp == filterList) {
+			
+			// If it is from the drop-down menu
+		} else if (source == filterList) {
 			index = filterList.getSelectedIndex();
 			updateFilter(index);
 			if (index == 1 || index == 2) {
@@ -519,27 +529,44 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 			charLabel.setText(" Characteristic frequency: "
 					+ (int) charFreq(index) + " Hz");
 			updateOut();
-		} else if (temp == square) {
+			
+			// If it is from the "Square" (Special waves) button
+		} else if (source == square) {
 			for (int i = 0; i < inCmp.length; i++) {
 				inCmp[i].magSlider.setValue((int) (22 * SQUARE[i]));
 				inCmp[i].phiSlider.setValue(0);
 			}
-		} else if (temp == sawtooth) {
+			
+			// From the "Sawtooth" (Special waves) button
+		} else if (source == sawtooth) {
 			for (int i = 0; i < inCmp.length; i++) {
 				inCmp[i].magSlider.setValue((int) (90 * SAWTOOTH[i]));
 				inCmp[i].phiSlider.setValue(0);
 			}
-		} else if (temp == showRight) {
+			
+			// From the right button "Sinusoidal components"
+		} else if (source == showRight) {
 			cardRight.next(rightDeck);
-		} else if (temp == showLeft) {
+			
+			// From the left button "Sinusoidal components"
+		} else if (source == showLeft) {
 			cardLeft.next(leftDeck);
 		}
 
 	}
 
+	/* 
+	 * Define different actions for different sliders
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+	 */
 	public void stateChanged(ChangeEvent e) {
-		JSlider temp = (JSlider) e.getSource();
-		if (temp == freqSlider) {
+		JSlider source = (JSlider) e.getSource();
+		
+		if (source == freqSlider) {
+			// From frequency slider ("f kHz")
+			
 			frequency = freqSlider.getValue();
 			inWave.setFreq((double) frequency);
 			outWave.setFreq((double) frequency);
@@ -550,7 +577,10 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 				outCmp[i].update();
 			}
 			updateOut();
-		} else if (temp == rSlider) {
+			
+		} else if (source == rSlider) {
+			// From resistance slider
+			
 			r = (double) rSlider.getValue();
 			rLabel.setText("   R = " + r + " ohm");
 			charLabel.setText(" Characteristic frequency: "
@@ -558,7 +588,10 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 			if (index != 0) {
 				updateOut();
 			}
-		} else if (temp == cSlider) {
+			
+		} else if (source == cSlider) {
+			// From capacitance slider
+			
 			c = (double) cSlider.getValue();
 			cLabel.setText("   C = " + c / 100 + " microFarad");
 			charLabel.setText(" Characteristic frequency: "
@@ -566,7 +599,10 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 			if (index != 0) {
 				updateOut();
 			}
-		} else if (temp == lSlider) {
+			
+		} else if (source == lSlider) {
+			// From inductance slider
+			
 			l = (double) lSlider.getValue();
 			lLabel.setText("   L = " + l / 100 + " milliHenry");
 			charLabel.setText(" Characteristic frequency: "
@@ -574,9 +610,12 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 			if (index != 0) {
 				updateOut();
 			}
+			
 		} else {
+			// From one of sliders in ComponentPanel instances
+			
 			for (int i = 0; i < inCmp.length; i++) {
-				if (temp == inCmp[i].magSlider) {
+				if (source == inCmp[i].magSlider) {
 					int value = inCmp[i].magSlider.getValue();
 					inCmp[i].mag = (double) value;
 					inCmp[i].update();
@@ -585,7 +624,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 					outCmp[i].magSlider.setValue((int) outWave.magnitude[i]);
 					outCmp[i].mag = outWave.magnitude[i];
 					outCmp[i].update();
-				} else if (temp == inCmp[i].phiSlider) {
+				} else if (source == inCmp[i].phiSlider) {
 					int value = inCmp[i].phiSlider.getValue();
 					inCmp[i].phi = (double) value;
 					inCmp[i].update();
@@ -594,11 +633,16 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 					outCmp[i].phiSlider.setValue((int) outWave.phase[i]);
 					outCmp[i].phi = outWave.phase[i];
 					outCmp[i].update();
-				}
-			}
-		}
+				} // end if
+			} // end for
+		} // end else
 	}
 
+	/* Make the two scroll-bars aligned with each other
+	 * 
+	 * (non-Javadoc)
+	 * @see java.awt.event.AdjustmentListener#adjustmentValueChanged(java.awt.event.AdjustmentEvent)
+	 */
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		if (e.getSource() == inBar) {
 			outBar.setValue(inBar.getValue());
@@ -607,8 +651,14 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
-
-	private double magResponse(int i, double freq) {
+	/**
+	 * Pure physics: compute magnitude response, based on frequency and filter configuration 
+	 * 
+	 * @param i: id of the filter configuration (e.g., 1 for low pass)
+	 * @param freq: frequency value
+	 * @return
+	 */
+	private double computeMagnitudeResponse(int i, double freq) {
 		if (i == 1) {
 			double w = Math.PI * 20.0 * freq;
 			return 1.0 / Math.sqrt(1 + Math.pow(w * c * r * 1e-6, 2.00));
@@ -631,7 +681,14 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
-	private double phiResponse(int i, double freq) {
+	/**
+	 * Pure physics: compute phase response, based on frequency and filter configuration 
+	 * 
+	 * @param i: id of the filter configuration (e.g., 1 for low pass)
+	 * @param freq: frequency value
+	 * @return
+	 */
+	private double computePhaseResponse(int i, double freq) {
 		if (i == 1) {
 			double w = Math.PI * 20.0 * freq;
 			return -(180 * Math.atan(w * c * 1e-6 * r) / Math.PI);
@@ -667,10 +724,13 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 		}
 	}
 
+	/**
+	 * Compute the phase and magnitude response and update the output waves.
+	 */
 	private void updateOut() {
 		for (int i = 0; i < magResponse.length; i++) {
-			magResponse[i] = magResponse(index, (double) ((i + 1) * frequency));
-			phiResponse[i] = phiResponse(index, (double) ((i + 1) * frequency));
+			magResponse[i] = computeMagnitudeResponse(index, (double) ((i + 1) * frequency));
+			phiResponse[i] = computePhaseResponse(index, (double) ((i + 1) * frequency));
 			outWave.setMagnitude(i, magResponse[i] * inWave.magnitude[i]);
 			outWave.setPhi(i, inWave.phase[i] + phiResponse[i]);
 			outCmp[i].magSlider.setValue((int) outWave.magnitude[i]);
