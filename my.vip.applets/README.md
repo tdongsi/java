@@ -57,7 +57,8 @@ The electric current's direction can be changed.
 ## Energy Flow of a DC Motor Circuit
 
 In this project, the components of power/energy loss in different DC motor circuit configurations (e.g., shunt, series) are shown.
-The animation is done using Adobe (then Macromedia) Flash instead of Java. The fla source file and supporting image files are checked in here for record.
+
+NOTE: The animation is done using Adobe (then Macromedia) Flash instead of Java. The fla source file and supporting image files are checked in here for record.
 
 The project is done near the end of the three-month internship, when I was able to convince my supervising professor that using Flash is better for such a animation-heavy project and took the risk to complete it.
 
