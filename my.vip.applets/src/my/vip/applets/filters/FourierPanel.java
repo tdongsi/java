@@ -33,15 +33,11 @@ class FourierPanel extends JPanel {
 	
 	/**
 	 * Current magnitudes of all harmonics 
-	 * 
-	 * TODO: Make them private?
 	 */
 	double[] magnitude;
 	
 	/**
 	 * Current phases of all harmonics
-	 * 
-	 * TODO: Make them private?
 	 */
 	double[] phase;
 	
