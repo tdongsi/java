@@ -26,6 +26,18 @@ The magnet can be interactively dragged around to generate the electrical curren
 
 ![alt text](https://dl.dropbox.com/s/sio94onaadx717i/LenzLaw2.jpg "LenzLaw2")
 
+## Filters
+
+In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Check out the first picture below to refresh your EE knowledge.
+
+![alt text](https://dl.dropbox.com/s/bnr5ilsy1ridxtk/Filters.jpg "Filters") 
+
+Using this Java application/applet, one can manipulate a few harmonic components to create different input wave. Special periodic waves such as square and sawtooth waves can be pre-loaded.
+
+![alt text](https://dl.dropbox.com/s/9uik8b3q8xzo5xf/Filters1.jpg "Filters1") 
+
+![alt text](https://dl.dropbox.com/s/ktn4el7v84ogs4t/Filters2.jpg "Filters2") 
+
 ## Direct Current (DC) Motor
 
 In this project, a simple DC motor circuit is shown.
