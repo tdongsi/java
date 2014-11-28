@@ -3,87 +3,147 @@ package my.vip.applets.fr;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+/**
+ * A simple panel with a colored sine wave drawn on it.
+ * 
+ * @author tdongsi
+ *
+ */
 class SinePanel extends JPanel {
-	private double freq, max, phi;
+	public static final int SCALE = 250;
+	public static final int WIDTH = 200;
+	public static final int HEIGHT = 120;
+	
 	private int currentPhase;
-	private double[] yValue = new double[250];
+	
+	/**
+	 * Internal states for frequency, magnitude, and phase of the sine wave
+	 */
+	private double freq, mag, phi;
+	
+	/**
+	 * Y coordinates of the sine wave drawn on the panel 
+	 */
+	private int[] yValues = new int[SCALE];
+	
+	/**
+	 * Color of the sine wave 
+	 */
 	private Color color;
 
+	/**
+	 * Construct with default values
+	 */
 	public SinePanel() {
-		freq = 5.0 / 250;
+		freq = 5.0 / SCALE;
 		phi = 0.0;
 		currentPhase = 0;
-		max = 50.0;
-		setyValue();
+		mag = 50.0; // initial magnitude
+		setyValues();
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.black));
-		setPreferredSize(new Dimension(200, 150));
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		color = Color.red;
 	}
 
+	/**
+	 * Specified the color of the sine wave
+	 * 
+	 * @param c
+	 */
 	public SinePanel(Color c) {
 		this();
 		color = c;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 * 
+	 * Override to add a sine wave
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		drawSin(g, currentPhase);
-		currentPhase = (currentPhase - 2) % 250;
+		drawSine(g, currentPhase);
+		currentPhase = (currentPhase - 2) % SCALE;
 	}
 
-	public void setMagnitude(double max1) {
-		max = max1;
-		setyValue();
+	/**
+	 * Change the magnitude of the sine wave.
+	 * 
+	 * @param magnitude
+	 */
+	public void setMagnitude(double magnitude) {
+		this.mag = magnitude;
+		setyValues();
 		repaint();
 	}
 
-	private void drawSin(Graphics gr, int currentPhase) {
+	/**
+	 * Draw the sine wave, given the Y-coordinates in yValues.
+	 */
+	private void drawSine(Graphics gr, int currentPhase) {
 		gr.setColor(color);
-		for (int i = 0; i <= 200; i++) {
-			gr.drawLine(i, (int) yValue[(i + currentPhase + 250) % 250], i + 1,
-					(int) yValue[(i + currentPhase + 251) % 250]);
+		for (int i = 0; i <= WIDTH; i++) {
+			gr.drawLine(i, yValues[(i + currentPhase + SCALE) % SCALE], i + 1,
+					yValues[(i + currentPhase + SCALE+1) % SCALE]);
 		}
 
 	}
 
-	public void actionPerformed(ActionEvent event) {
+
+	/**
+	 * Change the frequency, i.e. wavelength, of the sine wave. 
+	 * 
+	 * @param freq
+	 */
+	public void setFreq(double freq) {
+		this.freq = freq / SCALE;
+		setyValues();
 		repaint();
 	}
 
-	public void setFreq(double freq1) {
-		freq = freq1 / 250;
-		setyValue();
+	/**
+	 * Change the phase of the sine wave.
+	 * 
+	 * @param phi
+	 */
+	public void setPhi(double phi) {
+		this.phi = phi;
+		setyValues();
 		repaint();
 	}
 
-	public void setPhi(double phi1) {
-		phi = phi1;
-		setyValue();
-		repaint();
-	}
-
-	private void setyValue() {
+	/**
+	 * Compute the y values of the sine wave as x going from 0 to length.
+	 */
+	private void setyValues() {
+		// Wave length
 		double w = 2 * Math.PI * freq;
+		
 		int h = this.getHeight() / 2;
 		if (h == 0)
-			h = 75;
-		for (int i = 0; i < yValue.length; i++) {
+			h = HEIGHT/2;
+		for (int i = 0; i < yValues.length; i++) {
 			double sin = Math.sin(i * w + phi);
-			yValue[i] = max * sin + h;
+			yValues[i] = (int)(mag * sin + h);
 		}
 	}
-
+	
+	/**
+	 * Getter for magnitude
+	 */
 	public double getMagnitude() {
-		return max;
+		return mag;
 	}
 
+	/**
+	 * Getter for phase
+	 */
 	public double getPhi() {
 		return phi;
 	}
