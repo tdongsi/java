@@ -19,7 +19,7 @@ class FourierPanel extends JPanel {
 	/**
 	 * Frequency scale factor.
 	 */
-	private int SCALE = SinePanel.WIDTH;
+	private int SCALE = SinePanel.SCALE;
 	
 	/**
 	 * Number of harmonics for additive synthesis of a periodic wave.
