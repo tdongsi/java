@@ -286,7 +286,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			inWave.setFreq((double) frequency);
 			outWave.setFreq((double) frequency);
 			updateOut();
-			freqRes.setFreq(freqSlider.getValue());
+			freqRes.setFrequency(freqSlider.getValue());
 			freqField.setValue(new Integer(10 * value));
 			freqField.setText(String.valueOf(10 * value));
 		} else if (temp == rSlider) {
@@ -297,7 +297,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			if (index != 0) {
 				updateOut();
 			}
-			freqRes.setR(r);
+			freqRes.setResistance(r);
 		} else if (temp == cSlider) {
 			c = (double) cSlider.getValue();
 			cLabel.setText("   C = " + c / 100 + " microFarad");
@@ -306,7 +306,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			if (index != 0) {
 				updateOut();
 			}
-			freqRes.setC(c);
+			freqRes.setCapacitance(c);
 		} else if (temp == lSlider) {
 			l = (double) lSlider.getValue();
 			lLabel.setText("   L = " + l / 100 + " milliHenry");
@@ -315,7 +315,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			if (index != 0) {
 				updateOut();
 			}
-			freqRes.setL(l);
+			freqRes.setInductance(l);
 		}
 	}
 
