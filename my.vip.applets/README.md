@@ -26,14 +26,33 @@ The magnet can be interactively dragged around to generate the electrical curren
 
 ![alt text](https://dl.dropbox.com/s/sio94onaadx717i/LenzLaw2.jpg "LenzLaw2")
 
-## Filters
+## Frequency Response
 
 In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Check out the first picture below to refresh your Electrical Engineering knowledge.
 
 ![alt text](https://dl.dropbox.com/s/bnr5ilsy1ridxtk/Filters.jpg "Filters") 
 
 Using this Java application/applet, one can:
-* select different passive analog filters (e.g., lowpass, bandpass) and immediately see each filter's effect on input.
+* select different passive analog filters (e.g., lowpass, bandpass) and immediately see each filter's effect on the sinusoidal input.
+* see the visualized frequency response, with the actual frequency response vs. ideal frequency response.
+* adjust the base frequency and see its effect on output wave.
+* see the computed characteristic frequency and see its relation to the filter output.
+* adjust the parameters of the filter circuit, namely resistance, capacitance, and inductance of the circuit and see its effect on the frequency response.
+
+![alt text](https://dl.dropbox.com/s/w9w99o6dn93jhbx/Fr1.jpg "Fr1") 
+
+![alt text](https://dl.dropbox.com/s/v8ck6mvjj4lxsdy/Fr2.jpg "Fr2")
+
+## Filters
+
+In this project, the true effect of the passive analog filters in practical applications will be demonstrated. In practice, most analog signals will come as arbitrary (periodic) waves, instead of sinusoidal waves. 
+We demonstrate that by examining the effect of different passive analog filters on different periodic waves, such as square and sawtooth waves. 
+Additionally, we examine the additive synthesis of periodic waves with a number of sinusoidal harmonics. 
+We also demonstrate the effect of the analog filters on the input wave as addition of effects on individual sinusoidal harmonics. 
+
+Using this interactive application, one can:
+
+* select different passive analog filters (e.g., lowpass, bandpass) and immediately see each filter's effect on input wave.
 * manipulate phase and magnitude of a few harmonic components to create different input wave.
 * OR use pre-programmed special periodic waves such as square and sawtooth waves.
 * adjust the base frequency and see its effect on output wave.
