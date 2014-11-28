@@ -27,12 +27,12 @@ class FrequencyPanel extends JPanel {
 	/**
 	 * Plot points for actual frequency response
 	 */
-	private double[] actualResponse = new double[SCALE];
+	private int[] actualResponse = new int[SCALE];
 	
 	/**
 	 * Plot points for ideal frequency response
 	 */
-	private double[] idealResponse = new double[SCALE];
+	private int[] idealResponse = new int[SCALE];
 	
 	/**
 	 * Internal variables for the circuit's resistance, inductance, and capacitance. 
@@ -99,19 +99,21 @@ class FrequencyPanel extends JPanel {
 		// Draw ideal frequency response
 		gr.setColor(Color.magenta);
 		for (int i = 0; i < actualResponse.length - 1; i++) {
-			gr.drawLine(i + 5, (int) idealResponse[i], i + 6,
-					(int) idealResponse[i + 1]);
+			gr.drawLine(i + 5, idealResponse[i], i + 6,
+					idealResponse[i + 1]);
 		}
 		gr.drawLine(20, 315, 40, 315);
 		gr.drawString("Ideal response", 45, 320);
-		gr.setColor(Color.blue);
-		for (int i = 0; i < actualResponse.length - 1; i++) {
-			gr.drawLine(i + 5, (int) actualResponse[i], i + 6, (int) actualResponse[i + 1]);
-		}
-		gr.drawLine(150, 315, 170, 315);
 		
 		// Draw actual frequency response
+		gr.setColor(Color.blue);
+		for (int i = 0; i < actualResponse.length - 1; i++) {
+			gr.drawLine(i + 5, actualResponse[i], i + 6, actualResponse[i + 1]);
+		}
+		gr.drawLine(150, 315, 170, 315);
 		gr.drawString("Actual response", 180, 320);
+		
+		// Draw line indicating the current frequency
 		gr.setColor(Color.red);
 		int temp = (frequency - 100) / 10;
 		if (temp == 0)
@@ -132,8 +134,12 @@ class FrequencyPanel extends JPanel {
 	 */
 	private void computeFrequencyResponse() {
 		for (int i = 0; i < actualResponse.length; i++) {
-			actualResponse[i] = 305 - 300 * computeMagnitudeResponse(index, i * 10 + 100);
-			if (actualResponse[i] > sqrt2) {
+			// Actual frequency response
+			double temp = 305 - 300 * computeMagnitudeResponse(index, i * 10 + 100);
+			actualResponse[i] = (int) temp;
+			
+			// Ideal frequency response
+			if (temp > sqrt2) {
 				idealResponse[i] = 305;
 			} else {
 				idealResponse[i] = 5;

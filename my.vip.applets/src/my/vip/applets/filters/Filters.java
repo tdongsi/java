@@ -656,7 +656,7 @@ public class Filters extends JApplet implements ChangeListener, ActionListener,
 	 * 
 	 * @param i: id of the filter configuration (e.g., 1 for low pass)
 	 * @param freq: frequency value
-	 * @return
+	 * @return magnitude factor
 	 */
 	private double computeMagnitudeResponse(int i, double freq) {
 		if (i == 1) {
