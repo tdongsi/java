@@ -31,26 +31,37 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
+/**
+ * In this implementation, an interactive application demonstrates different passive analog filters, 
+ * namely lowpass, highpass, bandpass, bandstop filters. 
+ * Their ideal frequency response and actual frequency response will be demonstrated.
+ * 
+ * @author tdongsi
+ *
+ */
 public class FrequencyResponse extends JApplet implements ChangeListener,
 		ActionListener, PropertyChangeListener {
-	JComboBox filterList;
-	JSlider freqSlider, rSlider, cSlider, lSlider;
-	JLabel filterLabel, rLabel, cLabel, lLabel, charLabel;
-	JFormattedTextField freqField;
-	final int FMIN = 100, FMAX = 4100, FINIT = 500;
-	final int RMIN = 10, RMAX = 100, RINIT = 50;
-	final int CMIN = 10, CMAX = 100, CINIT = 20;
-	final int LMIN = 50, LMAX = 850, LINIT = 200;
-	SinePanel inWave, outWave;
+	private JComboBox filterList;
+	private JSlider freqSlider, rSlider, cSlider, lSlider;
+	private JLabel filterLabel, rLabel, cLabel, lLabel, charLabel;
+	private JFormattedTextField freqField;
+	private final int FMIN = 100, FMAX = 4100, FINIT = 500;
+	private final int RMIN = 10, RMAX = 100, RINIT = 50;
+	private final int CMIN = 10, CMAX = 100, CINIT = 20;
+	private final int LMIN = 50, LMAX = 850, LINIT = 200;
+	private SinePanel inWave, outWave;
 	private static int animationDelay = 32;
 	private Timer animationTimer;
 
-	protected int frequency;
+	private int frequency;
 	private int index;
-	protected double r, c, l;
-	JButton pause;
+	private double r, c, l;
+	private JButton pause;
 
-	FrequencyPanel freqRes;
+	/**
+	 * A panel with actual and ideal frequency response drawn on it.
+	 */
+	private FrequencyPanel frequencyResponse;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = FrequencyResponse.class.getResource(path);
@@ -80,10 +91,12 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
 		freqSlider.addChangeListener(this);
 		freqSlider.setMajorTickSpacing(100);
+		
 		Hashtable labelTable = new Hashtable();
 		for (int i = FMIN; i <= FMAX; i += 500) {
 			labelTable.put(new Integer(i), new JLabel("" + i + "0"));
 		}
+		
 		freqSlider.setLabelTable(labelTable);
 		freqSlider.setPaintLabels(true);
 		freqSlider.setBackground(Color.white);
@@ -201,7 +214,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		lControl.add(lSlider, BorderLayout.CENTER);
 		lSlider.setEnabled(false);
 		rlcControl.add(lControl);
-		charLabel = new JLabel(" Characteristic frequency: " + charFreq(index)
+		charLabel = new JLabel(" Characteristic frequency: " + computeCharacteristicFrequency(index)
 				+ " Hz", JLabel.CENTER);
 		rlcControl.add(charLabel);
 		centerPanel.add(rlcControl, BorderLayout.CENTER);
@@ -223,8 +236,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 
 		body.add(centerPanel, BorderLayout.WEST);
 		JPanel display = new JPanel(new BorderLayout());
-		freqRes = new FrequencyPanel();
-		display.add(freqRes, BorderLayout.CENTER);
+		frequencyResponse = new FrequencyPanel();
+		display.add(frequencyResponse, BorderLayout.CENTER);
 		display.add(freqPanel, BorderLayout.SOUTH);
 		body.add(display, BorderLayout.CENTER);
 		body.setBackground(Color.white);
@@ -271,9 +284,9 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 				lSlider.setEnabled(false);
 			}
 			charLabel.setText("Characteristic frequency: "
-					+ (int) charFreq(index) + " Hz");
-			updateOut();
-			freqRes.setIndex(index);
+					+ (int) computeCharacteristicFrequency(index) + " Hz");
+			updateOutput();
+			frequencyResponse.setIndex(index);
 		}
 
 	}
@@ -285,37 +298,37 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			frequency = value / 100;
 			inWave.setFreq((double) frequency);
 			outWave.setFreq((double) frequency);
-			updateOut();
-			freqRes.setFrequency(freqSlider.getValue());
+			updateOutput();
+			frequencyResponse.setFrequency(freqSlider.getValue());
 			freqField.setValue(new Integer(10 * value));
 			freqField.setText(String.valueOf(10 * value));
 		} else if (temp == rSlider) {
 			r = (double) rSlider.getValue();
 			rLabel.setText("   R = " + r + " ohm");
 			charLabel.setText(" Characteristic frequency: "
-					+ (int) charFreq(index) + " Hz");
+					+ (int) computeCharacteristicFrequency(index) + " Hz");
 			if (index != 0) {
-				updateOut();
+				updateOutput();
 			}
-			freqRes.setResistance(r);
+			frequencyResponse.setResistance(r);
 		} else if (temp == cSlider) {
 			c = (double) cSlider.getValue();
 			cLabel.setText("   C = " + c / 100 + " microFarad");
 			charLabel.setText(" Characteristic frequency: "
-					+ (int) charFreq(index) + " Hz");
+					+ (int) computeCharacteristicFrequency(index) + " Hz");
 			if (index != 0) {
-				updateOut();
+				updateOutput();
 			}
-			freqRes.setCapacitance(c);
+			frequencyResponse.setCapacitance(c);
 		} else if (temp == lSlider) {
 			l = (double) lSlider.getValue();
 			lLabel.setText("   L = " + l / 100 + " milliHenry");
 			charLabel.setText(" Characteristic frequency: "
-					+ (int) charFreq(index) + " Hz");
+					+ (int) computeCharacteristicFrequency(index) + " Hz");
 			if (index != 0) {
-				updateOut();
+				updateOutput();
 			}
-			freqRes.setInductance(l);
+			frequencyResponse.setInductance(l);
 		}
 	}
 
@@ -328,23 +341,6 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 				}
 			}
 		}
-	}
-
-	public static void main(String args[]) {
-		JFrame window = new JFrame("Frequency response of filters");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		FrequencyResponse applet = new FrequencyResponse();
-		applet.init();
-		applet.start();
-		window.getContentPane().add(applet);
-		window.pack();
-		window.setResizable(false);
-		window.setVisible(true);
-		// System.out.println( "width: " + window.getWidth() + " height: " +
-		// window.getHeight() );
-		// System.out.println( "width: " + applet.temp.getWidth() + " height: "
-		// + applet.temp.getHeight() );
 	}
 
 	private double magResponse(int i, double freq) {
@@ -390,7 +386,14 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		}
 	}
 
-	private double charFreq(int i) {
+	/**
+	 * Compute the characteristic frequency of the filter, based on the current
+	 * resistance, capacitance, and inductance as internal variables.
+	 * 
+	 * @param i: index for the type of filter circuit
+	 * @return
+	 */
+	private double computeCharacteristicFrequency(int i) {
 		if (i == 1 || i == 2) {
 			return 1 / (r * c * 1e-8 * Math.PI * 2);
 		} else if (i == 3 || i == 4) {
@@ -400,7 +403,10 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		}
 	}
 
-	private void updateOut() {
+	/**
+	 * Update and re-draw the output wave
+	 */
+	private void updateOutput() {
 		outWave.setMagnitude(inWave.getMagnitude()
 				* magResponse(index, frequency));
 		outWave.setPhi(inWave.getPhi() + phiResponse(index, frequency));
