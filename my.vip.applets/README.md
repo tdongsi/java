@@ -1,6 +1,6 @@
 # Interactive Java applications/applets
 
-This Java project is my works in 2004 Vacation Internship Program (VIP), using then-new Java 1.4. It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
+This Eclipse project contains my past works in an internship, using then-new Java 1.4. It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
 
 # Screenshots
 
