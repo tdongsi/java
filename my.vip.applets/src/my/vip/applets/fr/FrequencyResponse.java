@@ -41,22 +41,87 @@ import javax.swing.text.NumberFormatter;
  */
 public class FrequencyResponse extends JApplet implements ChangeListener,
 		ActionListener, PropertyChangeListener {
+	/**
+	 * Drop-down menu of filters: lowpass, highpass, bandpass, bandstop
+	 */
 	private JComboBox filterList;
+	
+	/**
+	 * Sliders to set values of frequency, resistance, capacity, inductance, respectively.
+	 */
 	private JSlider freqSlider, rSlider, cSlider, lSlider;
+	
+	/**
+	 * Labels
+	 */
 	private JLabel filterLabel, rLabel, cLabel, lLabel, charLabel;
+	
+	/**
+	 * Input text field for frequency value.
+	 */
 	private JFormattedTextField freqField;
+	
+	/**
+	 * Min, max, initial values for the slider that controls frequency value 
+	 */
 	private final int FMIN = 100, FMAX = 4100, FINIT = 500;
+	
+	/**
+	 * Min, max, initial values for the slider that controls resistance value 
+	 */
 	private final int RMIN = 10, RMAX = 100, RINIT = 50;
+	
+	/**
+	 * Min, max, initial values for the slider that controls capacitance value
+	 */
 	private final int CMIN = 10, CMAX = 100, CINIT = 20;
+	
+	/**
+	 * Min, max, initial values for the slider that controls inductance value
+	 */
 	private final int LMIN = 50, LMAX = 850, LINIT = 200;
+	
+	/**
+	 * Panels to display input and output waves
+	 */
 	private SinePanel inWave, outWave;
+	
+	/**
+	 * Timer for animation
+	 */
 	private static int animationDelay = 32;
 	private Timer animationTimer;
 
+	/**
+	 * Current value of frequency
+	 */
 	private int frequency;
+	
+	/**
+	 * ID of the current filter. E.g., 1 for lowpass filter. 
+	 */
 	private int index;
+	
+	/**
+	 * Current values of resistance, capacitance, and inductance
+	 */
 	private int r, c, l;
+	
+	/**
+	 * Pause button
+	 */
 	private JButton pause;
+	
+	
+	/**
+	 * Header panel: containing input wave, the filter circuit, and the output wave
+	 */
+	private JPanel header;
+	
+	/**
+	 * Body panel: containing circuit parameters and their controls, as well as frequency responses
+	 */
+	private JPanel body;
 
 	/**
 	 * A panel with actual and ideal frequency response drawn on it.
@@ -79,8 +144,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		l = LINIT;
 		frequency = FINIT / 100;
 
-		JPanel header = new JPanel(new GridLayout(1, 3, 10, 0));
-		JPanel body = new JPanel(new BorderLayout(5, 0));
+		header = new JPanel(new GridLayout(1, 3, 10, 0));
 		JPanel input = new JPanel(new BorderLayout());
 		JPanel filter = new JPanel(new BorderLayout());
 		JPanel output = new JPanel(new BorderLayout());
@@ -159,6 +223,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		header.add(filter);
 		header.add(output);
 		header.setBackground(Color.white);
+		
+		body = new JPanel(new BorderLayout(5, 0));
 
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.white);
