@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 /**
  * For displaying images of the magnet and a black metal ring.
  * For computing and displaying the "magnetic field" by the magnet.
+ * 
  * @author tdongsi
  *
  */

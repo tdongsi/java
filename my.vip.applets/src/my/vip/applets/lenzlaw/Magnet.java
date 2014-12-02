@@ -7,7 +7,8 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 /**
- * For displaying the magnet
+ * For displaying the magnet plus the lines representing the magnetic field.
+ * 
  * @author tdongsi
  *
  */
@@ -77,7 +78,7 @@ class Magnet extends Rectangle {
 	/**
 	 * Compute the coordinates of the flux lines.
 	 * This code is ported from a C++ code.
-	 * NOTE on June 2013: The mathematics in this method (from 2004) is beyond me now.
+	 * NOTE on June 2013: I could not recall the mathematics in this method (from 2004).
 	 */
 	private void formLine() {
 		

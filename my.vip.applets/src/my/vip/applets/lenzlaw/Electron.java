@@ -12,8 +12,8 @@ import java.awt.Rectangle;
  *
  */
 public class Electron extends Rectangle {
-	int xc, yc;
-	double angle;
+	private int xc, yc;
+	private double radian;
 
 	public Electron(int x, int y, int width, int height)
 	{
@@ -23,11 +23,16 @@ public class Electron extends Rectangle {
 		translate((int)(Math.random() * 360D));
 	}
 
-	public void translate(int i)
+	/**
+	 * Moving the electron in approximate ellipse, bounded by the rectangle this class extends.
+	 * 
+	 * @param degree angle in degree
+	 */
+	public void translate(int degree)
 	{
-		angle += ( i * Math.PI ) / 180D;
-		x = (int)( xc + Math.cos(angle) * width);
-		y = (int)( yc + Math.sin(angle) * height);
+		radian += ( degree * Math.PI ) / 180D;
+		x = (int)( xc + Math.cos(radian) * width);
+		y = (int)( yc + Math.sin(radian) * height);
 	}
 
 	public void paint(Graphics g) {

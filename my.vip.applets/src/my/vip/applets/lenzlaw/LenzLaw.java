@@ -7,8 +7,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A TA project for the course Basic Electrical Enginering, under Vacation Internship Program (VIP).
- * An applet/application to illustrate the Lenz's Law. Programmed in Java 1.4.
+ * A Java project for the course Basic Electrical Enginering, under an Internship Program.
+ * An applet/application to illustrate the Lenz's Law. Originally programmed in Java 1.4.
  *  
  * @author dongsi.tuecuong@gmail.com
  *
