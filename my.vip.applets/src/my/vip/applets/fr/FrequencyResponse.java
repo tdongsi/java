@@ -117,6 +117,9 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 	 * Header panel: containing input wave, the filter circuit, and the output wave
 	 */
 	private JPanel header;
+	private JPanel input;
+	private JPanel filter;
+	private JPanel output;
 	
 	/**
 	 * Body panel: containing circuit parameters and their controls, as well as frequency responses
@@ -144,14 +147,24 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		l = LINIT;
 		frequency = FINIT / 100;
 
-		header = new JPanel(new GridLayout(1, 3, 10, 0));
-		JPanel input = new JPanel(new BorderLayout());
-		JPanel filter = new JPanel(new BorderLayout());
-		JPanel output = new JPanel(new BorderLayout());
+		prepareHeaderPanel();
+		
+		prepareBodyPanel();
 
-		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
-		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		inWave = new SinePanel(Color.blue);
+		Container container = getContentPane();
+		container.setLayout(new BorderLayout(0, 10));
+		container.setBackground(Color.white);
+		container.add(header, BorderLayout.NORTH);
+		container.add(body, BorderLayout.CENTER);
+		
+		// Start animation
+		animationTimer = new Timer(animationDelay, this);
+		animationTimer.start();
+	}
+
+	private void prepareBodyPanel() {
+		body = new JPanel(new BorderLayout(5, 0));
+		
 		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
 		freqSlider.addChangeListener(this);
 		freqSlider.setMajorTickSpacing(100);
@@ -195,36 +208,6 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		freqPanel.add(freqLabel, BorderLayout.WEST);
 		freqPanel.add(freqSlider, BorderLayout.CENTER);
 		freqPanel.add(freqField, BorderLayout.EAST);
-		input.setBackground(Color.white);
-		input.add(inLabel, BorderLayout.NORTH);
-		input.add(inWave, BorderLayout.CENTER);
-
-		filterLabel = new JLabel();
-		String[] filterString = { "No filter", "Lowpass filter",
-				"Highpass filter", "Bandpass filter", "Bandstop filter" };
-		filterList = new JComboBox(filterString);
-		filterList.addActionListener(this);
-		filterLabel.setHorizontalAlignment(JLabel.CENTER);
-		updateFilter(filterList.getSelectedIndex());
-		filterLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		filterLabel.setPreferredSize(new Dimension(200, 120));
-		filter.setBackground(Color.white);
-		filter.add(filterLabel, BorderLayout.CENTER);
-		filter.add(filterList, BorderLayout.NORTH);
-
-		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
-		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		outWave = new SinePanel(Color.blue);
-		output.setBackground(Color.white);
-		output.add(outLabel, BorderLayout.NORTH);
-		output.add(outWave, BorderLayout.CENTER);
-
-		header.add(input);
-		header.add(filter);
-		header.add(output);
-		header.setBackground(Color.white);
-		
-		body = new JPanel(new BorderLayout(5, 0));
 
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.white);
@@ -307,14 +290,72 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		display.add(freqPanel, BorderLayout.SOUTH);
 		body.add(display, BorderLayout.CENTER);
 		body.setBackground(Color.white);
+	}
 
-		Container container = getContentPane();
-		container.setLayout(new BorderLayout(0, 10));
-		container.setBackground(Color.white);
-		container.add(header, BorderLayout.NORTH);
-		container.add(body, BorderLayout.CENTER);
-		animationTimer = new Timer(animationDelay, this);
-		animationTimer.start();
+	private void prepareHeaderPanel() {
+		header = new JPanel(new GridLayout(1, 3, 10, 0));
+		
+		prepareHeaderInput();
+
+		prepareHeaderFilter();
+
+		prepareHeaderOutput();
+
+		header.add(input);
+		header.add(filter);
+		header.add(output);
+		header.setBackground(Color.white);
+	}
+
+	private void prepareHeaderOutput() {
+		output = new JPanel(new BorderLayout());
+		
+		// Label
+		JLabel outLabel = new JLabel("Output", JLabel.CENTER);
+		outLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		// Panel with animated sine wave
+		outWave = new SinePanel(Color.blue);
+		
+		output.setBackground(Color.white);
+		output.add(outLabel, BorderLayout.NORTH);
+		output.add(outWave, BorderLayout.CENTER);
+	}
+
+	private void prepareHeaderFilter() {
+		
+		// Label
+		filterLabel = new JLabel();
+		filterLabel.setHorizontalAlignment(JLabel.CENTER);
+		filterLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		filterLabel.setPreferredSize(new Dimension(200, 120));
+		
+		// Drop-down menu for a list of filters
+		String[] filterString = { "No filter", "Lowpass filter",
+				"Highpass filter", "Bandpass filter", "Bandstop filter" };
+		filterList = new JComboBox<String>(filterString);
+		filterList.addActionListener(this);
+		updateFilter(filterList.getSelectedIndex());
+		
+		filter = new JPanel(new BorderLayout());
+		filter.setBackground(Color.white);
+		filter.add(filterLabel, BorderLayout.CENTER);
+		filter.add(filterList, BorderLayout.NORTH);
+	}
+
+	private void prepareHeaderInput() {
+		input = new JPanel(new BorderLayout());
+		
+		// Label
+		JLabel inLabel = new JLabel("Input", JLabel.CENTER);
+		inLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		// Panel with animated sine wave
+		inWave = new SinePanel(Color.blue);
+		
+		input.setBackground(Color.white);
+		input.add(inLabel, BorderLayout.NORTH);
+		input.add(inWave, BorderLayout.CENTER);
 	}
 
 	/**
