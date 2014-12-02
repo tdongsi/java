@@ -125,6 +125,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 	 * Body panel: containing circuit parameters and their controls, as well as frequency responses
 	 */
 	private JPanel body;
+	private JPanel freqPanel;
+	private JPanel rlcControl;
 
 	/**
 	 * A panel with actual and ideal frequency response drawn on it.
@@ -165,55 +167,47 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 	private void prepareBodyPanel() {
 		body = new JPanel(new BorderLayout(5, 0));
 		
-		freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
-		freqSlider.addChangeListener(this);
-		freqSlider.setMajorTickSpacing(100);
-		
-		Hashtable labelTable = new Hashtable();
-		for (int i = FMIN; i <= FMAX; i += 500) {
-			labelTable.put(new Integer(i), new JLabel("" + i + "0"));
-		}
-		
-		freqSlider.setLabelTable(labelTable);
-		freqSlider.setPaintLabels(true);
-		freqSlider.setBackground(Color.white);
+		// Prepare JPanel freqPanel
+		prepareFrequencyControl();
 
-		java.text.NumberFormat numberFormat = java.text.NumberFormat
-				.getIntegerInstance();
-		NumberFormatter formatter = new NumberFormatter(numberFormat);
-		formatter.setMinimum(new Integer(FMIN * 10));
-		formatter.setMaximum(new Integer(FMAX * 10));
-		freqField = new JFormattedTextField(formatter);
-		freqField.setValue(new Integer(FINIT * 10));
-		freqField.setColumns(4);
-		freqField.addPropertyChangeListener(this);
-		freqField.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "check");
-		freqField.getActionMap().put("check", new AbstractAction() {
+		// Prepare JPanel rlcControl
+		prepareCircuitControl();
+		
+		// Pause button
+		pause = new JButton("Pause animation");
+		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!freqField.isEditValid()) {
-					Toolkit.getDefaultToolkit().beep();
-					freqField.selectAll();
-				} else
-					try {
-						freqField.commitEdit();
-					} catch (java.text.ParseException exc) {
-					}
+				if (animationTimer.isRunning()) {
+					animationTimer.stop();
+					pause.setText("Resume animation");
+				} else {
+					animationTimer.start();
+					pause.setText("Pause animation");
+				}
 			}
 		});
-
-		JPanel freqPanel = new JPanel(new BorderLayout());
-		freqPanel.setBackground(Color.white);
-		JLabel freqLabel = new JLabel(" f Hz", JLabel.CENTER);
-		freqPanel.add(freqLabel, BorderLayout.WEST);
-		freqPanel.add(freqSlider, BorderLayout.CENTER);
-		freqPanel.add(freqField, BorderLayout.EAST);
-
+		
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBackground(Color.white);
+		centerPanel.add(rlcControl, BorderLayout.CENTER);
+		centerPanel.add(pause, BorderLayout.SOUTH);
 
-		JPanel rlcControl = new JPanel(new GridLayout(5, 1, 0, 10));
-		rlcControl.setBackground(Color.white);
+		JPanel display = new JPanel(new BorderLayout());
+		frequencyResponse = new FrequencyPanel();
+		display.add(frequencyResponse, BorderLayout.CENTER);
+		display.add(freqPanel, BorderLayout.SOUTH);
+		
+		body.add(centerPanel, BorderLayout.WEST);
+		body.add(display, BorderLayout.CENTER);
+		body.setBackground(Color.white);
+	}
+
+	/**
+	 * Prepare sliders and associated labels
+	 * for setting resistance, capacitance, and inductance for the filter circuits
+	 */
+	private void prepareCircuitControl() {
+		// Resistance slider and its associated label
 		ImageIcon rIcon = createImageIcon("images/resistor.jpg");
 		rLabel = new JLabel("   R = " + RINIT + " ohm", rIcon, JLabel.CENTER);
 		rSlider = new JSlider(JSlider.HORIZONTAL, RMIN, RMAX, RINIT);
@@ -227,10 +221,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		rControl.setBackground(Color.white);
 		rControl.add(rLabel, BorderLayout.NORTH);
 		rControl.add(rSlider, BorderLayout.CENTER);
-		JLabel rlcTitle = new JLabel("Circuit parameter control", JLabel.CENTER);
-		rlcTitle.setForeground(Color.blue);
-		rlcControl.add(rlcTitle);
-		rlcControl.add(rControl);
+		
+		// Capacitance slider and its associated label
 		ImageIcon cIcon = createImageIcon("images/capacitor.jpg");
 		cLabel = new JLabel("   C = " + (double) CINIT / 100 + " microFarad",
 				cIcon, JLabel.CENTER);
@@ -246,7 +238,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		cControl.add(cLabel, BorderLayout.NORTH);
 		cControl.add(cSlider, BorderLayout.CENTER);
 		cSlider.setEnabled(false);
-		rlcControl.add(cControl);
+		
+		// Inductance slider and its associated label
 		ImageIcon lIcon = createImageIcon("images/inductor.jpg");
 		lLabel = new JLabel("   L = " + (double) LINIT / 100 + " milliHenry",
 				lIcon, JLabel.CENTER);
@@ -262,34 +255,79 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		lControl.add(lLabel, BorderLayout.NORTH);
 		lControl.add(lSlider, BorderLayout.CENTER);
 		lSlider.setEnabled(false);
-		rlcControl.add(lControl);
+		
+		// Label for characteristic frequency
 		charLabel = new JLabel(" Characteristic frequency: " + computeCharacteristicFrequency(index)
 				+ " Hz", JLabel.CENTER);
+		
+		rlcControl = new JPanel(new GridLayout(5, 1, 0, 10));
+		rlcControl.setBackground(Color.white);
+		JLabel rlcTitle = new JLabel("Circuit parameter control", JLabel.CENTER);
+		rlcTitle.setForeground(Color.blue);
+		rlcControl.add(rlcTitle);
+		rlcControl.add(rControl);
+		rlcControl.add(cControl);
+		rlcControl.add(lControl);
 		rlcControl.add(charLabel);
-		centerPanel.add(rlcControl, BorderLayout.CENTER);
+	}
 
-		pause = new JButton("Pause animation");
-		pause.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (animationTimer.isRunning()) {
-					animationTimer.stop();
-					pause.setText("Resume animation");
-				} else {
-					animationTimer.start();
-					pause.setText("Pause animation");
-				}
+	/**
+	 * Prepare a slider and a text field in a JPanel
+	 * for setting frequency value.
+	 */
+	private void prepareFrequencyControl() {
+		
+		// The slider to set frequency value
+		{
+			freqSlider = new JSlider(JSlider.HORIZONTAL, FMIN, FMAX, FINIT);
+			freqSlider.addChangeListener(this);
+			freqSlider.setMajorTickSpacing(100);
+			
+			Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+			for (int i = FMIN; i <= FMAX; i += 500) {
+				labelTable.put(i, new JLabel("" + i + "0"));
 			}
-		});
+			
+			freqSlider.setLabelTable(labelTable);
+			freqSlider.setPaintLabels(true);
+			freqSlider.setBackground(Color.white);
+		}
 
-		centerPanel.add(pause, BorderLayout.SOUTH);
+		// The text field to set frequency value
+		{
+			java.text.NumberFormat numberFormat = java.text.NumberFormat
+					.getIntegerInstance();
+			NumberFormatter formatter = new NumberFormatter(numberFormat);
+			formatter.setMinimum(new Integer(FMIN * 10));
+			formatter.setMaximum(new Integer(FMAX * 10));
+			
+			freqField = new JFormattedTextField(formatter);
+			freqField.setValue(new Integer(FINIT * 10));
+			freqField.setColumns(4);
+			freqField.addPropertyChangeListener(this);
+			freqField.getInputMap().put(
+					KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "check");
+			freqField.getActionMap().put("check", new AbstractAction() {
+				public void actionPerformed(ActionEvent e) {
+					if (!freqField.isEditValid()) {
+						Toolkit.getDefaultToolkit().beep();
+						freqField.selectAll();
+					} else
+						try {
+							freqField.commitEdit();
+						} catch (java.text.ParseException exc) {
+						}
+				}
+			});
+		}
 
-		body.add(centerPanel, BorderLayout.WEST);
-		JPanel display = new JPanel(new BorderLayout());
-		frequencyResponse = new FrequencyPanel();
-		display.add(frequencyResponse, BorderLayout.CENTER);
-		display.add(freqPanel, BorderLayout.SOUTH);
-		body.add(display, BorderLayout.CENTER);
-		body.setBackground(Color.white);
+		// Put them together in a JPanel named freqPanel
+		freqPanel = new JPanel(new BorderLayout());
+		freqPanel.setBackground(Color.white);
+		JLabel freqLabel = new JLabel(" f Hz", JLabel.CENTER);
+		freqPanel.add(freqLabel, BorderLayout.WEST);
+		freqPanel.add(freqSlider, BorderLayout.CENTER);
+		freqPanel.add(freqField, BorderLayout.EAST);
 	}
 
 	private void prepareHeaderPanel() {
