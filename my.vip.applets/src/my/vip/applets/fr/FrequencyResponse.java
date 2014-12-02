@@ -55,7 +55,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 
 	private int frequency;
 	private int index;
-	private double r, c, l;
+	private int r, c, l;
 	private JButton pause;
 
 	/**
@@ -74,9 +74,9 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 	}
 
 	public void init() {
-		r = (double) RINIT;
-		c = (double) CINIT;
-		l = (double) LINIT;
+		r = RINIT;
+		c = CINIT;
+		l = LINIT;
 		frequency = FINIT / 100;
 
 		JPanel header = new JPanel(new GridLayout(1, 3, 10, 0));
@@ -251,6 +251,11 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		animationTimer.start();
 	}
 
+	/**
+	 * Load the right filter circuit image, based on index number
+	 * 
+	 * @param i: id of the filter (e.g., 1 for lowpass filter) and also index of image.
+	 */
 	private void updateFilter(int i) {
 		ImageIcon icon;
 		String[] filterName = { "None", "Lowpass", "Highpass", "Bandpass",
@@ -296,14 +301,14 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		if (temp == freqSlider) {
 			int value = freqSlider.getValue();
 			frequency = value / 100;
-			inWave.setFreq((double) frequency);
-			outWave.setFreq((double) frequency);
+			inWave.setFrequency((double) frequency);
+			outWave.setFrequency((double) frequency);
 			updateOutput();
 			frequencyResponse.setFrequency(freqSlider.getValue());
 			freqField.setValue(new Integer(10 * value));
 			freqField.setText(String.valueOf(10 * value));
 		} else if (temp == rSlider) {
-			r = (double) rSlider.getValue();
+			r = rSlider.getValue();
 			rLabel.setText("   R = " + r + " ohm");
 			charLabel.setText(" Characteristic frequency: "
 					+ (int) computeCharacteristicFrequency(index) + " Hz");
@@ -312,7 +317,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			}
 			frequencyResponse.setResistance(r);
 		} else if (temp == cSlider) {
-			c = (double) cSlider.getValue();
+			c = cSlider.getValue();
 			cLabel.setText("   C = " + c / 100 + " microFarad");
 			charLabel.setText(" Characteristic frequency: "
 					+ (int) computeCharacteristicFrequency(index) + " Hz");
@@ -321,7 +326,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			}
 			frequencyResponse.setCapacitance(c);
 		} else if (temp == lSlider) {
-			l = (double) lSlider.getValue();
+			l = lSlider.getValue();
 			lLabel.setText("   L = " + l / 100 + " milliHenry");
 			charLabel.setText(" Characteristic frequency: "
 					+ (int) computeCharacteristicFrequency(index) + " Hz");
@@ -343,21 +348,26 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		}
 	}
 
-	private double magResponse(int i, double freq) {
+	/**
+	 * Pure physics: compute magnitude response, based on frequency and filter configuration 
+	 * 
+	 * @param i: id of the filter configuration (e.g., 1 for low pass)
+	 * @param freq: frequency value
+	 * @return magnitude factor
+	 */
+	private double computeMagnitudeResponse(int i, double freq) {
+		double w = Math.PI * 20.0 * freq;
+		
 		if (i == 1) {
-			double w = Math.PI * 20.0 * freq;
 			return 1.0 / Math.sqrt(1 + Math.pow(w * c * r * 1e-6, 2.00));
 		} else if (i == 2) {
-			double w = Math.PI * 20.0 * freq;
 			return w * c * r * 1e-6
 					/ Math.sqrt(1 + Math.pow(w * c * r * 1e-6, 2.00));
 		} else if (i == 3) {
-			double w = Math.PI * 20.0 * freq;
 			return Math.abs((w * r * c * 1e-6))
 					/ Math.sqrt(Math.pow(1 - l * c * 1e-9 * w * w, 2.0)
 							+ Math.pow(c * 1e-6 * w * r, 2.0));
 		} else if (i == 4) {
-			double w = Math.PI * 20.0 * freq;
 			return Math.abs((1 - l * c * 1e-9 * w * w))
 					/ Math.sqrt(Math.pow(1 - l * c * 1e-9 * w * w, 2.0)
 							+ Math.pow(w * r * c * 1e-6, 2.00));
@@ -366,19 +376,24 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		}
 	}
 
-	private double phiResponse(int i, double freq) {
+	/**
+	 * Pure physics: compute phase response, based on frequency and filter configuration 
+	 * 
+	 * @param i: id of the filter configuration (e.g., 1 for low pass)
+	 * @param freq: frequency value
+	 * @return phase shift
+	 */
+	private double computePhaseResponse(int i, double freq) {
+		double w = Math.PI * 20.0 * freq;
+		
 		if (i == 1) {
-			double w = Math.PI * 20.0 * freq;
 			return -(180 * Math.atan(w * c * 1e-6 * r) / Math.PI);
 		} else if (i == 2) {
-			double w = Math.PI * 20.0 * freq;
 			return 90 - (180 * Math.atan(w * c * 1e-6 * r) / Math.PI);
 		} else if (i == 3) {
-			double w = Math.PI * 20.0 * freq;
 			return 90 - (180 * Math.atan(w * c * 1e-6 * r
 					/ (1 - l * c * 1e-9 * w * w)) / Math.PI);
 		} else if (i == 4) {
-			double w = Math.PI * 20.0 * freq;
 			return -(180 * Math.atan(w * c * 1e-6 * r
 					/ (1 - l * c * 1e-9 * w * w)) / Math.PI);
 		} else {
@@ -408,8 +423,8 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 	 */
 	private void updateOutput() {
 		outWave.setMagnitude(inWave.getMagnitude()
-				* magResponse(index, frequency));
-		outWave.setPhi(inWave.getPhi() + phiResponse(index, frequency));
+				* computeMagnitudeResponse(index, frequency));
+		outWave.setPhase(inWave.getPhase() + computePhaseResponse(index, frequency));
 	}
 
 }

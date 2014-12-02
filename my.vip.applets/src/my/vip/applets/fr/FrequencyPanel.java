@@ -37,7 +37,7 @@ class FrequencyPanel extends JPanel {
 	/**
 	 * Internal variables for the circuit's resistance, inductance, and capacitance. 
 	 */
-	private double r, l, c;
+	private int r, l, c;
 	
 	/**
 	 * Cut off point
@@ -50,9 +50,9 @@ class FrequencyPanel extends JPanel {
 	public FrequencyPanel() {
 		frequency = 500;
 		index = 0;
-		r = 50.0;
-		c = 20.0;
-		l = 200.0;
+		r = 50;
+		c = 20;
+		l = 200;
 		computeFrequencyResponse();
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.black));
@@ -63,8 +63,8 @@ class FrequencyPanel extends JPanel {
 		drawFrequencyResponse(g);
 	}
 
-	public void setFrequency(double frequency) {
-		this.frequency = (int) frequency;
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
 		repaint();
 	}
 
@@ -74,19 +74,19 @@ class FrequencyPanel extends JPanel {
 		repaint();
 	}
 
-	public void setResistance(double resistance) {
+	public void setResistance(int resistance) {
 		r = resistance;
 		computeFrequencyResponse();
 		repaint();
 	}
 
-	public void setCapacitance(double capacitance) {
+	public void setCapacitance(int capacitance) {
 		c = capacitance;
 		computeFrequencyResponse();
 		repaint();
 	}
 
-	public void setInductance(double inductance) {
+	public void setInductance(int inductance) {
 		l = inductance;
 		computeFrequencyResponse();
 		repaint();
@@ -155,20 +155,18 @@ class FrequencyPanel extends JPanel {
 	 * @return magnitude factor
 	 */
 	private double computeMagnitudeResponse(int i, int freq) {
+		double w = Math.PI * 0.2 * freq;
+		
 		if (i == 1) {
-			double w = Math.PI * 0.2 * freq;
 			return 1.0 / Math.sqrt(1 + Math.pow(w * c * r * 1e-6, 2.00));
 		} else if (i == 2) {
-			double w = Math.PI * 0.2 * freq;
 			return w * c * r * 1e-6
 					/ Math.sqrt(1 + Math.pow(w * c * r * 1e-6, 2.00));
 		} else if (i == 3) {
-			double w = Math.PI * 0.2 * freq;
 			return Math.abs((w * r * c * 1e-6))
 					/ Math.sqrt(Math.pow(1 - l * c * 1e-9 * w * w, 2.0)
 							+ Math.pow(c * 1e-6 * w * r, 2.0));
 		} else if (i == 4) {
-			double w = Math.PI * 0.2 * freq;
 			return Math.abs((1 - l * c * 1e-9 * w * w))
 					/ Math.sqrt(Math.pow(1 - l * c * 1e-9 * w * w, 2.0)
 							+ Math.pow(w * r * c * 1e-6, 2.00));

@@ -101,7 +101,7 @@ class SinePanel extends JPanel {
 	 * 
 	 * @param freq
 	 */
-	public void setFreq(double freq) {
+	public void setFrequency(double freq) {
 		this.freq = freq / SCALE;
 		setyValues();
 		repaint();
@@ -112,7 +112,7 @@ class SinePanel extends JPanel {
 	 * 
 	 * @param phi
 	 */
-	public void setPhi(double phi) {
+	public void setPhase(double phi) {
 		this.phi = phi;
 		setyValues();
 		repaint();
@@ -144,7 +144,7 @@ class SinePanel extends JPanel {
 	/**
 	 * Getter for phase
 	 */
-	public double getPhi() {
+	public double getPhase() {
 		return phi;
 	}
 
