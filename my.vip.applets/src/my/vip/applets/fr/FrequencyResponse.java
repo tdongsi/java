@@ -417,15 +417,19 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 
 	public void actionPerformed(ActionEvent e) {
 		Object temp = e.getSource();
+		
 		if (temp == animationTimer) {
 			inWave.repaint();
 			outWave.repaint();
+			
 		} else if (temp == filterList) {
+			// GUI event from the drop-down menu
+			
 			index = filterList.getSelectedIndex();
 			updateFilter(index);
 			if (index == 1 || index == 2) {
 				cSlider.setEnabled(true);
-				lSlider.setEnabled(false);
+				lSlider.setEnabled(false); // inductor is not in lowpass and highpass filter
 			} else if (index > 2) {
 				cSlider.setEnabled(true);
 				lSlider.setEnabled(true);
@@ -441,8 +445,15 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 
 	}
 
+	/* 
+	 * Process GUI events from different sliders
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+	 */
 	public void stateChanged(ChangeEvent e) {
 		JSlider temp = (JSlider) e.getSource();
+		
 		if (temp == freqSlider) {
 			int value = freqSlider.getValue();
 			frequency = value / 100;
@@ -452,6 +463,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 			frequencyResponse.setFrequency(freqSlider.getValue());
 			freqField.setValue(new Integer(10 * value));
 			freqField.setText(String.valueOf(10 * value));
+			
 		} else if (temp == rSlider) {
 			r = rSlider.getValue();
 			rLabel.setText("   R = " + r + " ohm");
@@ -461,6 +473,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 				updateOutput();
 			}
 			frequencyResponse.setResistance(r);
+			
 		} else if (temp == cSlider) {
 			c = cSlider.getValue();
 			cLabel.setText("   C = " + c / 100 + " microFarad");
@@ -470,6 +483,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 				updateOutput();
 			}
 			frequencyResponse.setCapacitance(c);
+			
 		} else if (temp == lSlider) {
 			l = lSlider.getValue();
 			lLabel.setText("   L = " + l / 100 + " milliHenry");
@@ -479,9 +493,16 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 				updateOutput();
 			}
 			frequencyResponse.setInductance(l);
+			
 		}
 	}
 
+	/* 
+	 * Process GUI event from the input text box.
+	 * 
+	 * (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getSource() == freqField) {
 			if ("value".equals(e.getPropertyName())) {
