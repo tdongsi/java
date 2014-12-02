@@ -149,15 +149,15 @@ class MyPanel extends JPanel {
 							magnet.x += xTrans;
 							magnet.y += yTrans;
 							for (int a = 0; a < magnet.getLineNumber(); a++) {
-								for (int b = 0; b < magnet.getDotInLine()[a]; b++) {
-									magnet.getxTempAxis()[a][b] = magnet.getxAxis()[a][b] + magnet.x;
-									if ( magnet.getxTempAxis()[a][b] < 0 || magnet.getxTempAxis()[a][b] > MyPanel.WIDTH) {
-										magnet.getxTempAxis()[a][b] = 0;
+								for (int b = 0; b < magnet.dotInLine[a]; b++) {
+									magnet.xTempAxis[a][b] = magnet.xAxis[a][b] + magnet.x;
+									if ( magnet.xTempAxis[a][b] < 0 || magnet.xTempAxis[a][b] > MyPanel.WIDTH) {
+										magnet.xTempAxis[a][b] = 0;
 									}
 
-									magnet.getyTempAxis()[a][b] = magnet.getyAxis()[a][b] + magnet.y;
-									if ( magnet.getyTempAxis()[a][b] < 0 || magnet.getyTempAxis()[a][b] > MyPanel.HEIGHT) {
-										magnet.getyTempAxis()[a][b] = 0;
+									magnet.yTempAxis[a][b] = magnet.yAxis[a][b] + magnet.y;
+									if ( magnet.yTempAxis[a][b] < 0 || magnet.yTempAxis[a][b] > MyPanel.HEIGHT) {
+										magnet.yTempAxis[a][b] = 0;
 									}
 								}
 							}
@@ -262,18 +262,18 @@ class MyPanel extends JPanel {
 
 			x1 = x2 = 0;
 
-			for ( int j = 0; j <  magnet.getDotInLine()[i]; j++ ) {
-				if ( magnet.getyTempAxis()[i][j] < bottomLim &&
-						magnet.getyTempAxis()[i][j] > topLim ) {
-					x1 = magnet.getxTempAxis()[i][j];
+			for ( int j = 0; j <  magnet.dotInLine[i]; j++ ) {
+				if ( magnet.yTempAxis[i][j] < bottomLim &&
+						magnet.yTempAxis[i][j] > topLim ) {
+					x1 = magnet.xTempAxis[i][j];
 					break;
 				}
 			}
 
-			for ( int j = magnet.getDotInLine()[i] - 1; j >=  0; j-- ) {
-				if ( magnet.getyTempAxis()[i][j] < bottomLim &&
-						magnet.getyTempAxis()[i][j] > topLim ) {
-					x2 = magnet.getxTempAxis()[i][j];
+			for ( int j = magnet.dotInLine[i] - 1; j >=  0; j-- ) {
+				if ( magnet.yTempAxis[i][j] < bottomLim &&
+						magnet.yTempAxis[i][j] > topLim ) {
+					x2 = magnet.xTempAxis[i][j];
 					if ( Math.abs( x1 - x2 ) > safeDis )
 						break;
 					else

@@ -31,11 +31,11 @@ class Magnet extends Rectangle {
 	private double temp[][];
 	
 	// Arrays for plotting the flux lines
-	private int dotInLine[];
-	private int xAxis[][];
-	private int yAxis[][];
-	private int xTempAxis[][];
-	private int yTempAxis[][];
+	int dotInLine[];
+	int xAxis[][];
+	int yAxis[][];
+	int xTempAxis[][];
+	int yTempAxis[][];
 	
 	/**
 	 * Position of the top left corner
@@ -52,6 +52,14 @@ class Magnet extends Rectangle {
 	 */
 	private int initX, initY;
 
+	/**
+	 * Constructor with specified position (x, y) and dimension (width, height)
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	public Magnet(int x, int y, int width, int height) {
 		super( x, y, width, height);
 		int screenWidth = (int)(1.5 * MyPanel.WIDTH);
@@ -59,6 +67,7 @@ class Magnet extends Rectangle {
 		spacingWidth = 5;
 		spacingHeight = 5;
 		
+		// For generating the magnetic flux lines
 		M = screenWidth / spacingWidth;
 		N = screenHeight / spacingHeight;
 		temp = new double[M][N];
@@ -72,7 +81,7 @@ class Magnet extends Rectangle {
 		magnet = createImageIcon( "images/magnet.jpg" );
 		initX = super.x;
 		initY = super.y;
-		formLine();
+		generateFluxLines();
 	}
 
 	/**
@@ -80,23 +89,23 @@ class Magnet extends Rectangle {
 	 * This code is ported from a C++ code.
 	 * NOTE on June 2013: I could not recall the mathematics in this method (from 2004).
 	 */
-	private void formLine() {
+	private void generateFluxLines() {
 		
 		// Initialize
 		double coef = 1.2D;
-		int count = 20;
-		int[] a = new int[ count ];
-		int[] b = new int[ count ];
-		double[] c = new double[ count ];
+		int COUNT = 20;
+		int[] a = new int[ COUNT ];
+		int[] b = new int[ COUNT ];
+		double[] c = new double[ COUNT ];
 		
-		for (int i = 0; i < count; i++) {
-			if ( i < count/2 ) {
+		for (int i = 0; i < COUNT; i++) {
+			if ( i < COUNT/2 ) {
 				a[ i ] = xTopLeft;
-				b[ i ] = yTopLeft + (int)( (double)HEIGHT * i / (double)(count/2 - 1));
+				b[ i ] = yTopLeft + (int)( (double)HEIGHT * i / (double)(COUNT/2 - 1));
 				c[ i ] = coef;
 			} else {
 				a[ i ] = xTopLeft + WIDTH;
-				b[ i ] = yTopLeft + (int)( (double)HEIGHT * (i - count/2) / (double)( count/2 - 1));
+				b[ i ] = yTopLeft + (int)( (double)HEIGHT * (i - COUNT/2) / (double)( COUNT/2 - 1));
 				c[ i ] = -coef;
 			}
 		}
@@ -105,7 +114,7 @@ class Magnet extends Rectangle {
 		for ( int i = 0; i < M; i++ ) {
 			for (int j = 0; j < N; j++ ) {
 				double d1 = 0.0;
-				for (int k = 0; k < count; k++ ) {
+				for (int k = 0; k < COUNT; k++ ) {
 					double d2 = i * spacingWidth - a[ k ];
 					double d3 = j * spacingHeight - b[ k ];
 					d1 += (double)2 * c[ k ] * Math.log( d2*d2 + d3*d3);
@@ -122,15 +131,15 @@ class Magnet extends Rectangle {
 					int e = k * spacingWidth + (int)( d * spacingWidth);
 					if ( k * spacingWidth < e && e <= (k+1) * spacingWidth ) {
 						m++;
-						getxAxis()[i][m] = e - xTopLeft;
-						getyAxis()[i][m] = j * spacingHeight - yTopLeft;
-						getxTempAxis()[i][m] = getxAxis()[i][m] + initX;
-						if ( getxTempAxis()[i][m] < 0 || getxTempAxis()[i][m] > MyPanel.WIDTH ) {
-							getxTempAxis()[i][m] = 0;
+						xAxis[i][m] = e - xTopLeft;
+						yAxis[i][m] = j * spacingHeight - yTopLeft;
+						xTempAxis[i][m] = xAxis[i][m] + initX;
+						if ( xTempAxis[i][m] < 0 || xTempAxis[i][m] > MyPanel.WIDTH ) {
+							xTempAxis[i][m] = 0;
 						}
-						getyTempAxis()[i][m] = getyAxis()[i][m] + initY;
-						if ( getyTempAxis()[i][m] < 0 || getyTempAxis()[i][m] > MyPanel.HEIGHT ) {
-							getyTempAxis()[i][m] = 0;
+						yTempAxis[i][m] = yAxis[i][m] + initY;
+						if ( yTempAxis[i][m] < 0 || yTempAxis[i][m] > MyPanel.HEIGHT ) {
+							yTempAxis[i][m] = 0;
 						} 
 					}
 				}
@@ -142,20 +151,20 @@ class Magnet extends Rectangle {
 					int e = k * spacingHeight + (int) ( d * spacingHeight);
 					if ( k * spacingHeight < e && e <= (k+1) * spacingHeight ) {
 						m++;
-						getxAxis()[i][m] = j * spacingWidth - xTopLeft;
-						getyAxis()[i][m] = e - yTopLeft;
-						getxTempAxis()[i][m] = getxAxis()[i][m] + initX;
-						if ( getxTempAxis()[i][m] < 0 || getxTempAxis()[i][m] > MyPanel.WIDTH ) {
-							getxTempAxis()[i][m] = 0;
+						xAxis[i][m] = j * spacingWidth - xTopLeft;
+						yAxis[i][m] = e - yTopLeft;
+						xTempAxis[i][m] = xAxis[i][m] + initX;
+						if ( xTempAxis[i][m] < 0 || xTempAxis[i][m] > MyPanel.WIDTH ) {
+							xTempAxis[i][m] = 0;
 						}
-						getyTempAxis()[i][m] = getyAxis()[i][m] + initY;
-						if ( getyTempAxis()[i][m] < 0 || getyTempAxis()[i][m] > MyPanel.HEIGHT ) {
-							getyTempAxis()[i][m] = 0;
+						yTempAxis[i][m] = yAxis[i][m] + initY;
+						if ( yTempAxis[i][m] < 0 || yTempAxis[i][m] > MyPanel.HEIGHT ) {
+							yTempAxis[i][m] = 0;
 						} 
 					}
 				}
 			}
-			getDotInLine()[i] = m;
+			dotInLine[i] = m;
 		}	
 
 	}
@@ -167,8 +176,8 @@ class Magnet extends Rectangle {
 		// draw the flux lines
 		g.setColor( Color.blue );
 		for (int i = 0; i < lineNumber; i++ ) {
-			for (int j = 0; j < getDotInLine()[i]; j++) {
-				g.drawLine( getxTempAxis()[i][j], getyTempAxis()[i][j], getxTempAxis()[i][j], getyTempAxis()[i][j] );
+			for (int j = 0; j < dotInLine[i]; j++) {
+				g.drawLine( xTempAxis[i][j], yTempAxis[i][j], xTempAxis[i][j], yTempAxis[i][j] );
 			}
 		}
 
@@ -189,30 +198,16 @@ class Magnet extends Rectangle {
 		}
 	}
 
+	/**
+	 * Getter method
+	 */
 	public int getSpacingWidth() {
 		return spacingWidth;
 	}
 
-	public int[] getDotInLine() {
-		return dotInLine;
-	}
-
-	public int[][] getxTempAxis() {
-		return xTempAxis;
-	}
-
-	public int[][] getyTempAxis() {
-		return yTempAxis;
-	}
-
-	public int[][] getxAxis() {
-		return xAxis;
-	}
-
-	public int[][] getyAxis() {
-		return yAxis;
-	}
-
+	/**
+	 * Getter method
+	 */
 	public int getLineNumber() {
 		return lineNumber;
 	}
