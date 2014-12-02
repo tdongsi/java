@@ -19,46 +19,77 @@ import javax.swing.JPanel;
  *
  */
 class MyPanel extends JPanel {
+	/**
+	 * Fixed width of the panel
+	 */
 	public final static int WIDTH = 500;
+	/**
+	 * Fixed height of the panel
+	 */
 	public final static int HEIGHT = 500;
 	
-	protected Magnet magnet;
-	protected Ring top, bottom;
-	final int ringPos = 75;
+	/**
+	 * The mangnet object to be drawn in the panel
+	 */
+	Magnet magnet;
+	/**
+	 * The top and bottom of the black ring
+	 */
+	Ring top, bottom;
+	/**
+	 * The fixed position of the ring (only size is changed)
+	 */
+	private final int RING_POSITION = 75;
+	
 	int xTemp = 0, yTemp = 0;
 	Image screen;
 	Graphics gr;
 	int w, h;
 
-	private int currentFlux, lastFlux; //count flux lines through the ring
+	/**
+	 * For counting flux lines through the ring and its difference
+	 */
+	private int currentFlux, lastFlux;
+	/**
+	 * Change in magnetic flux lines.
+	 */
 	private int fluxDiff;
-	final int yLimitLeft = ringPos + Ring.RING_HEIGHT;
-	final int yLimitRight = MyPanel.HEIGHT - Magnet.HEIGHT;
+	
+	// Internal limits
+	final int yLimitTop = RING_POSITION + Ring.RING_HEIGHT;
+	final int yLimitBottom = MyPanel.HEIGHT - Magnet.HEIGHT;
 	final int xLimitRight = MyPanel.WIDTH - Magnet.WIDTH;
 	private int leftLim, rightLim, topLim, bottomLim, safeDis;
 
-	//add arrows and electrons
+	// add arrows and electrons
 	private int alpha;
+	/**
+	 * Array of yellow electrons
+	 */
 	protected Electron current[];
+	
+	/**
+	 * Array of blue arrows running in circle. 
+	 */
 	protected Arrow arrow[];
 
 	public MyPanel() {
 		magnet = new Magnet( ( MyPanel.WIDTH - Magnet.WIDTH ) / 2, (MyPanel.HEIGHT - Magnet.HEIGHT) / 2,
 				Magnet.WIDTH, Magnet.HEIGHT );
-		top = new Ring( "back", ringPos - Ring.RING_HEIGHT, MyPanel.WIDTH );
-		bottom = new Ring( "front", ringPos, MyPanel.WIDTH);
+		top = new Ring( "back", RING_POSITION - Ring.RING_HEIGHT, MyPanel.WIDTH );
+		bottom = new Ring( "front", RING_POSITION, MyPanel.WIDTH);
 		currentFlux = 0;
 		lastFlux = 0;
 		alpha = 0;
+		
 		current = new Electron[80];
-		arrow = new Arrow[4];
-
 		for ( int i = 0; i < current.length; i++ ) {
-			current[i] = new Electron( MyPanel.WIDTH/2, ringPos, Ring.RING_WIDTH/2 -10, Ring.RING_HEIGHT-10);
+			current[i] = new Electron( MyPanel.WIDTH/2, RING_POSITION, Ring.RING_WIDTH/2 -10, Ring.RING_HEIGHT-10);
 		}
-
+		
+		arrow = new Arrow[4];
 		for ( int i = 0; i < arrow.length; i++ ) {
-			arrow[i] = new Arrow( MyPanel.WIDTH/2 + Ring.RING_WIDTH/ (i>=2? 2 : -2), ringPos, 50, 50, 90 + 180 * (i%2));
+			arrow[i] = new Arrow( MyPanel.WIDTH/2 + Ring.RING_WIDTH/ (i>=2? 2 : -2), RING_POSITION, 50, 50, 90 + 180 * (i%2));
 		}
 
 		leftLim = bottom.x + 15;
@@ -102,10 +133,10 @@ class MyPanel extends JPanel {
 							xTrans = i - xTemp;
 							yTrans = j - yTemp;
 
-							if ( magnet.y < yLimitLeft ) {
+							if ( magnet.y < yLimitTop ) {
 								yTrans = 10;
 							}
-							if ( magnet.y > yLimitRight ) {
+							if ( magnet.y > yLimitBottom ) {
 								yTrans = -10;
 							}
 							if ( magnet.x > xLimitRight ) {
@@ -141,6 +172,12 @@ class MyPanel extends JPanel {
 				);
 	}
 
+	/* 
+	 * Overload to pain different rectangles in the JPanel 
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	public void paintComponent( Graphics g ) {
 		super.paintComponent( g );
 		w = getWidth();
@@ -153,8 +190,8 @@ class MyPanel extends JPanel {
 
 		if ( alpha != 0 ) {
 			gr.setColor( Color.blue );
-			gr.drawOval( (MyPanel.WIDTH - top.width)/2 - 50, ringPos - 50, 100, 100);
-			gr.drawOval( (MyPanel.WIDTH + top.width)/2 - 50, ringPos - 50, 100, 100);
+			gr.drawOval( (MyPanel.WIDTH - top.width)/2 - 50, RING_POSITION - 50, 100, 100);
+			gr.drawOval( (MyPanel.WIDTH + top.width)/2 - 50, RING_POSITION - 50, 100, 100);
 
 			for (int i = 0; i < arrow.length; i++ ) {
 				arrow[i].translate( (isIncrease()? -1 : 1) * alpha, i < 2);
@@ -262,7 +299,10 @@ class MyPanel extends JPanel {
 		return flux;
 	}
 
-	public void updateLim() {
+	/**
+	 * Update left and right limits
+	 */
+	public void updateLimits() {
 		leftLim = bottom.x + 15;
 		rightLim = bottom.x + bottom.width - 15;
 	}

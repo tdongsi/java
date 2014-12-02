@@ -14,23 +14,39 @@ import javax.swing.event.ChangeListener;
  *
  */
 public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListener {
-	MyPanel panel;
-	JTextField fluxField, changeField;
-	JSlider slider;
-	final int R_MIN = 2, R_MAX = 8;
+	/**
+	 * The main panel with the magnet, the ring and magnetic field being drawn
+	 */
+	private MyPanel panel;
+	/**
+	 * Text fields for status of magnetic flux
+	 */
+	private JTextField fluxField, changeField;
+	/**
+	 * Slider to change the size of the ring
+	 */
+	private JSlider slider;
+	/**
+	 * Min, max value for the slider
+	 */
+	private final int R_MIN = 2, R_MAX = 8;
+	
+	// sub-panels in the application
+	private JPanel menu;
+	private JPanel status;
 
 	public void init() {
 
-		// Add a menu bar
-		JPanel menu = prepareMenuBar();
+		// Prepare a menu bar
+		prepareMenuBar();
 
 		// Add the main canvas
 		panel = new MyPanel();
 		panel.setBackground( Color.white );
 		panel.addMouseMotionListener( this );
 
-		// Add a control panel
-		JPanel status = prepareControlPanel();
+		// Prepare a control panel
+		prepareControlPanel();
 
 		Container container = getContentPane();
 		container.setBackground(Color.white);
@@ -41,12 +57,10 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 
 	/**
 	 * Add a control panel with sliders and status readings
-	 * 
-	 * @return a JPanel that represents the control panel
 	 */
-	private JPanel prepareControlPanel() {
+	private void prepareControlPanel() {
 		
-		JPanel status = new JPanel( new GridLayout( 3, 2 ) );
+		status = new JPanel( new GridLayout( 3, 2 ) );
 		
 		JLabel flux = new JLabel( "Magnetic flux lines through the ring  ", JLabel.RIGHT);
 		flux.setAlignmentX( Component.RIGHT_ALIGNMENT );
@@ -63,6 +77,7 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 		status.add( change );
 		status.add( changeField );
 
+		// Add slider to change the size of the ring
 		JLabel radius = new JLabel( "Change the size of the ring  ", JLabel.RIGHT);
 		radius.setAlignmentX( Component.RIGHT_ALIGNMENT );
 		slider = new JSlider( JSlider.HORIZONTAL, R_MIN, R_MAX, Ring.RING_WIDTH / 50 );
@@ -70,18 +85,14 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 		slider.setSnapToTicks( true );
 		status.add( radius );
 		status.add( slider );
-		
-		return status;
 	}
 
 	/**
 	 * Add a menu bar with File menu with About and Exit items.
-	 * 
-	 * @return a JPanel that represents the menu bar
 	 */
-	private JPanel prepareMenuBar() {
+	private void prepareMenuBar() {
 		// Add File menu droplist with About and Exit button.
-		JPanel menu = new JPanel(new BorderLayout());
+		menu = new JPanel(new BorderLayout());
 
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.setMnemonic('F');
@@ -91,8 +102,7 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JOptionPane.showMessageDialog(LenzLaw.this,
-						"Written by Tue-Cuong Dong-Si\n"
-								+ "Summer May 2004", "About",
+						"Written by Tue-Cuong Dong-Si\n", "About",
 								JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -111,8 +121,6 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 		bar.add(fileMenu);
 		menu.add(bar, BorderLayout.WEST);
 		menu.setBorder(BorderFactory.createEtchedBorder());
-		
-		return menu;
 	}
 
 	public void mouseMoved( MouseEvent e ) {
@@ -136,9 +144,10 @@ public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListe
 	 */
 	public void stateChanged( ChangeEvent e ) {
 		int w = 50 * slider.getValue();
+		
 		panel.top.setWidth( w );
 		panel.bottom.setWidth( w );
-		panel.updateLim();
+		panel.updateLimits();
 
 		for ( int i = 0; i < panel.current.length; i++ ) {
 			panel.current[i].ringChanged( w );

@@ -45,7 +45,7 @@ class Magnet extends Rectangle {
 	/**
 	 * Graphic file for this magnet
 	 */
-	ImageIcon magnet;
+	private ImageIcon magnet;
 
 	/**
 	 * Initial position
