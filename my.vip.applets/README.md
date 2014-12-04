@@ -28,7 +28,7 @@ The magnet can be interactively dragged around to generate the electrical curren
 
 ## Frequency Response
 
-In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Their ideal frequency response and actual frequency response will be demonstrated. Check out the picture below to refresh your Electrical Engineering knowledge.
+In this project, an interactive application demonstrates different passive analog filters, namely lowpass, highpass, bandpass, bandstop filters. Their ideal frequency response and actual frequency response will be demonstrated. Check out the picture below, extracted from a textbook, to refresh your Electrical Engineering knowledge.
 
 ![alt text](https://dl.dropbox.com/s/bnr5ilsy1ridxtk/Filters.jpg "Filters") 
 
