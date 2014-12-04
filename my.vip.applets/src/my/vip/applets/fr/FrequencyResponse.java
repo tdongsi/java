@@ -371,7 +371,7 @@ public class FrequencyResponse extends JApplet implements ChangeListener,
 		// Drop-down menu for a list of filters
 		String[] filterString = { "No filter", "Lowpass filter",
 				"Highpass filter", "Bandpass filter", "Bandstop filter" };
-		filterList = new JComboBox<String>(filterString);
+		filterList = new JComboBox(filterString);
 		filterList.addActionListener(this);
 		updateFilter(filterList.getSelectedIndex());
 		
