@@ -2,6 +2,10 @@ package my.vip.applets.impedance;
 
 import javax.swing.JFrame;
 
+/**
+ * @author tdongsi
+ *
+ */
 public class MainApp {
 
 	public static void main(String args[]) {

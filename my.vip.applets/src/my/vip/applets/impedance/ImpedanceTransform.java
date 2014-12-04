@@ -27,6 +27,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
+/**
+ * @author tdongsi
+ *
+ */
 class ImpedanceTransform extends JApplet implements ItemListener,
 		ChangeListener {
 	private final String[] sourceLabel = { "R", "V" };
@@ -252,7 +256,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ twoDigits.format(vs));
 			updateLabel();
 		} else if (temp == reLoadSlider) {
-			loadValue[0].setRe((double) reLoadSlider.getValue());
+			loadValue[0].setReal((double) reLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
 			updateLabel();
@@ -261,7 +265,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ ratioLabel[rSliderValue] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		} else if (temp == reSourceSlider) {
-			sourceValue[0].setRe((double) reSourceSlider.getValue());
+			sourceValue[0].setReal((double) reSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
 			updateLabel();
@@ -270,7 +274,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ ratioLabel[rSliderValue] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		} else if (temp == reVoltSlider) {
-			sourceValue[1].setRe((double) reVoltSlider.getValue());
+			sourceValue[1].setReal((double) reVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
 			updateLabel();
@@ -279,7 +283,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ ratioLabel[rSliderValue] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		} else if (temp == imLoadSlider) {
-			loadValue[0].setIm((double) imLoadSlider.getValue());
+			loadValue[0].setImaginary((double) imLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
 			updateLabel();
@@ -288,7 +292,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ ratioLabel[rSliderValue] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		} else if (temp == imSourceSlider) {
-			sourceValue[0].setIm((double) imSourceSlider.getValue());
+			sourceValue[0].setImaginary((double) imSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
 			updateLabel();
@@ -297,7 +301,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 					+ ratioLabel[rSliderValue] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		} else if (temp == imVoltSlider) {
-			sourceValue[1].setIm((double) imVoltSlider.getValue());
+			sourceValue[1].setImaginary((double) imVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
 			updateLabel();
@@ -334,7 +338,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		double ratio = stepRatio();
 		Complex load = Complex.multiply(loadValue[0], ratio * ratio);
 		Complex totalImp = Complex.add(load, sourceValue[0]);
-		vp = sourceValue[1].getMag() * load.getMag() / totalImp.getMag();
+		vp = sourceValue[1].getMagnitude() * load.getMagnitude() / totalImp.getMagnitude();
 		vs = vp / stepRatio();
 	}
 

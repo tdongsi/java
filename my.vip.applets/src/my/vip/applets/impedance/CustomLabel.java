@@ -7,6 +7,10 @@ import java.awt.Graphics;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
+/**
+ * @author tdongsi
+ *
+ */
 class CustomLabel extends JLabel {
 	private String[] label;
 	private Complex[] value;
@@ -52,8 +56,8 @@ class CustomLabel extends JLabel {
 
 	public void setValue(Complex[] value1) {
 		for (int i = 0; i < value.length; i++) {
-			value[i].setRe(value1[i].getRe());
-			value[i].setIm(value1[i].getIm());
+			value[i].setReal(value1[i].getReal());
+			value[i].setImaginary(value1[i].getImaginary());
 		}
 		repaint();
 	}
