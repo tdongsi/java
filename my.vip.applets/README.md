@@ -20,11 +20,28 @@ The AC current is animated in application.
 
 In this project, an interactive application visually demonstrates the Lenz's law.
 
-The magnet can be interactively dragged around to generate the electrical current.
+The magnet can be interactively dragged around to generate the electrical current. 
+In particular, to demonstrate how an alternating current is generated in a generator or a transformer, one can use this application and drag the magnet back and forth against the black ring.
 
 ![alt text](https://dl.dropbox.com/s/ysnk6hz8v9l53mn/LenzLaw1.jpg "LenzLaw1") 
 
 ![alt text](https://dl.dropbox.com/s/sio94onaadx717i/LenzLaw2.jpg "LenzLaw2")
+
+## Impedance transform
+
+In this project, an interactive application demonstrates how to eliminate an ideal transformer in a circuit for impedance computation. The idea is to shift impedance to one side of the transformer, either primary or secondary.
+
+![alt text](https://dl.dropbox.com/s/cogf6rfhvamxnty/Impedance1.jpg "Impedance1") 
+
+The original circuit with transformer.
+
+![alt text](https://dl.dropbox.com/s/zuipem7ma4bp1jy/Impedance2.jpg "Impedance2")
+
+The equivalent circuit after shifting impedance to the secondary (load) side.
+
+![alt text](https://dl.dropbox.com/s/xz9amo9yib3kj6d/Impedance3.jpg "Impedance3")
+
+The equivalent circuit after shifting impedance to the primary (source) side. 
 
 ## Frequency Response
 
