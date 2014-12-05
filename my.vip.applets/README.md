@@ -1,8 +1,10 @@
 # Interactive Java applications/applets
 
-This Eclipse project contains my past works in an internship, using then-new Java 1.4. It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
+This Eclipse project contains my past works in an internship, using then-new Java 1.4. 
+It contains several interactive Java applications/applets that demonstrate Electrical Engineering concepts.
+All these Java implementations can be either run as stand-alone Java applications or deployed as Java applets viewed in web browsers (with minor adjustments).
 
-# Screenshots
+# Summary and Screenshots
 
 ## Transformer
 
