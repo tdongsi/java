@@ -3,7 +3,7 @@ package my.vip.applets.fr;
 import javax.swing.JFrame;
 
 /**
- * In this application, an interactive application demonstrates different passive analog filters, 
+ * In this project, an interactive application demonstrates different passive analog filters, 
  * namely lowpass, highpass, bandpass, bandstop filters. 
  * Their ideal frequency response and actual frequency response will be demonstrated.
  * 

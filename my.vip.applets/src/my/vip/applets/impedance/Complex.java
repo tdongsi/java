@@ -12,6 +12,9 @@ class Complex {
 	private double re, im;
 	private double mag, arg;
 
+	/**
+	 * Initialize to zero.
+	 */
 	public Complex() {
 		this.re = 0.0;
 		this.im = 0.0;
@@ -19,12 +22,23 @@ class Complex {
 		this.arg = 0.0;
 	}
 
+	/**
+	 * Initialize to a real number.
+	 * 
+	 * @param real
+	 */
 	public Complex(double real) {
 		this.re = real;
 		this.im = 0.0;
 		toPolar();
 	}
 
+	/**
+	 * Initialize to a complex number.
+	 * 
+	 * @param real
+	 * @param imaginary
+	 */
 	public Complex(double real, double imaginary) {
 		this.re = real;
 		this.im = imaginary;
@@ -68,14 +82,10 @@ class Complex {
 		return mag;
 	}
 
-	public double getArgument() {
-		return arg * 180 / Math.PI;
-	}
-
 	public String toString() {
 		DecimalFormat twoDigits = new DecimalFormat("0.0");
 
-		return " " + twoDigits.format(re) + " + j" + twoDigits.format(im);
+		return twoDigits.format(re) + " + j" + twoDigits.format(im);
 	}
 
 	static public Complex add(Complex num1, Complex num2) {
