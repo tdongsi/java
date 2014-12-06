@@ -8,14 +8,14 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 
 /**
+ * Extend JLabel to display multiple Complex numbers on it.
+ * 
  * @author tdongsi
  *
  */
 class CustomLabel extends JLabel {
-	private String[] label;
+	private LabelData[] label;
 	private Complex[] value;
-	private int[] xPos;
-	private int[] yPos;
 	private int number;
 
 	public CustomLabel() {
@@ -29,49 +29,22 @@ class CustomLabel extends JLabel {
 	public CustomLabel(Icon image, int iNumber) {
 		super(image);
 		this.number = iNumber;
-		label = new String[number];
 		value = new Complex[number];
 		for (int i = 0; i < value.length; i++) {
 			value[i] = new Complex();
 		}
-		xPos = new int[number];
-		yPos = new int[number];
 	}
 
-	public CustomLabel(Icon image, int num1, String[] label1, Complex[] value1,
-			int[] xPos1, int[] yPos1) {
-		this(image, num1);
-		setLabel(label1);
-		setValue(value1);
-		setxPos(xPos1);
-		setyPos(yPos1);
+	public CustomLabel(Icon image, int iNumber, LabelData[] labels, Complex[] values) {
+		this(image, iNumber);
+		setLabel(labels);
+		setValue(values);
 	}
 
-	public void setLabel(String[] label1) {
-		for (int i = 0; i < label.length; i++) {
-			label[i] = label1[i];
-		}
-		repaint();
-	}
-
-	public void setValue(Complex[] value1) {
+	public void setValue(Complex[] iValue) {
 		for (int i = 0; i < value.length; i++) {
-			value[i].setReal(value1[i].getReal());
-			value[i].setImaginary(value1[i].getImaginary());
-		}
-		repaint();
-	}
-
-	public void setxPos(int[] xPos1) {
-		for (int i = 0; i < xPos.length; i++) {
-			xPos[i] = xPos1[i];
-		}
-		repaint();
-	}
-
-	public void setyPos(int[] yPos1) {
-		for (int i = 0; i < yPos.length; i++) {
-			yPos[i] = yPos1[i];
+			value[i].setReal(iValue[i].getReal());
+			value[i].setImaginary(iValue[i].getImaginary());
 		}
 		repaint();
 	}
@@ -82,9 +55,33 @@ class CustomLabel extends JLabel {
 		gr.setFont(new Font("Arial", Font.PLAIN, 10));
 		for (int i = 0; i < number; i++) {
 			gr.setColor(Color.black);
-			gr.drawString(label[i] + " = " + value[i].toString(), xPos[i],
-					yPos[i]);
+			gr.drawString(label[i].text + " = " + value[i].toString(), label[i].xPos, label[i].yPos);
 		}
+	}
+	
+	private void setLabel(LabelData[] label) {
+		this.label = label;
+		repaint();
+	}
+	
+	static class LabelData {
+		final private String text;
+		final private int xPos;
+		final private int yPos;
+		
+		/**
+		 * @param label
+		 * @param value
+		 * @param xPos
+		 * @param yPos
+		 */
+		public LabelData(String label, int xPos, int yPos) {
+			super();
+			this.text = label;
+			this.xPos = xPos;
+			this.yPos = yPos;
+		}
+		
 	}
 
 }

@@ -33,29 +33,45 @@ import javax.swing.event.ChangeListener;
  */
 class ImpedanceTransform extends JApplet implements ItemListener,
 		ChangeListener {
-	private final String[] sourceLabel = { "R", "V" };
 	private Complex[] sourceValue = { new Complex(1000.0), new Complex(1000.0) };
-	private final int[] sourcexPos = { 45, 35 };
-	private final int[] sourceyPos = { 35, 70 };
-	private final String[] loadLabel = { "R" };
 	private Complex[] loadValue = { new Complex(1000.0) };
-	private final int[] loadxPos = { 20 };
-	private final int[] loadyPos = { 70 };
+	
+	private final CustomLabel.LabelData rSourceData = new CustomLabel.LabelData("R", 45, 35);
+	private final CustomLabel.LabelData vSourceData = new CustomLabel.LabelData("V", 35, 70);
+	private final CustomLabel.LabelData rLoadData = new CustomLabel.LabelData("R", 20, 70);
+	private CustomLabel.LabelData[] sourceLabel = {rSourceData, vSourceData};
+	private CustomLabel.LabelData[] loadLabel = {rLoadData};
+	
 	private final String[] label = { "View from source", "Normal view",
 			"View from load" };
 	private final boolean[] buttonSelect = { false, true, false };
 	private final int RMIN = 0, RMAX = 18, RINIT = 9;
 	private final int IMIN = 50, IMAX = 1000, IINIT = 1000;
 	private final int VMIN = 0, VMAX = 1000, VINIT = 1000;
+	/**
+	 * Labels and value mapping for slider that controls transformer's primary/secondary winding ratio.
+	 */
 	private final String[] ratioLabel = { "1:10", "1:9", "1:8", "1:7", "1:6",
 			"1:5", "1:4", "1:3", "1:2", "1:1", "2:1", "3:1", "4:1", "5:1",
 			"6:1", "7:1", "8:1", "9:1", "10:1" };
 	private final int[] ratioMap = { -10, -9, -8, -7, -6, -5, -4, -3, -2, 1, 2,
 			3, 4, 5, 6, 7, 8, 9, 10 };
 
+	/**
+	 * Labels in Normal view: source side, transformer, load side.
+	 */
 	CustomLabel sourceNormal, transNormal, loadNormal;
+	/**
+	 * Labels in Source view: source side, load side.
+	 */
 	CustomLabel sourceSource, loadSource;
+	/**
+	 * Labels in Load view: source side, load side.
+	 */
 	CustomLabel sourceLoad, loadLoad;
+	/**
+	 * Images for circuit of source side, transformer, and circuit for load side.
+	 */
 	ImageIcon sourceIcon, transIcon, loadIcon;
 	JPanel diagram;
 	CardLayout cardManager;
@@ -91,31 +107,25 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		sourceIcon = createImageIcon("images/Source.jpg");
 		transIcon = createImageIcon("images/Transformer.jpg");
 		loadIcon = createImageIcon("images/Load.jpg");
-		sourceNormal = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue,
-				sourcexPos, sourceyPos);
+		sourceNormal = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
 		transNormal = new CustomLabel(transIcon);
-		loadNormal = new CustomLabel(loadIcon, 1, loadLabel, loadValue,
-				loadxPos, loadyPos);
+		loadNormal = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
 		normal.add(sourceNormal);
 		normal.add(transNormal);
 		normal.add(loadNormal);
 
 		JPanel fromSource = new JPanel(new GridLayout(1, 3));
 		fromSource.setBackground(Color.white);
-		sourceSource = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue,
-				sourcexPos, sourceyPos);
-		loadSource = new CustomLabel(loadIcon, 1, loadLabel, loadValue,
-				loadxPos, loadyPos);
+		sourceSource = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
+		loadSource = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
 		fromSource.add(sourceSource);
 		fromSource.add(loadSource);
 		fromSource.add(Box.createHorizontalStrut(100));
 
 		JPanel fromLoad = new JPanel(new GridLayout(1, 3));
 		fromLoad.setBackground(Color.white);
-		sourceLoad = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue,
-				sourcexPos, sourceyPos);
-		loadLoad = new CustomLabel(loadIcon, 1, loadLabel, loadValue, loadxPos,
-				loadyPos);
+		sourceLoad = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
+		loadLoad = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
 		fromLoad.add(Box.createHorizontalStrut(100));
 		fromLoad.add(sourceLoad);
 		fromLoad.add(loadLoad);
