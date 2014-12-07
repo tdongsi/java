@@ -28,25 +28,54 @@ import javax.swing.event.ChangeListener;
 
 
 /**
+ * In this implementation, an interactive application demonstrates how to eliminate
+ * an ideal transformer in a circuit for impedance computation. The idea is
+ * to shift impedance to one side of the transformer, either primary or secondary.
+ * 
  * @author tdongsi
  *
  */
 class ImpedanceTransform extends JApplet implements ItemListener,
 		ChangeListener {
+	/**
+	 * Initial value for source impedance and voltage
+	 */
 	private Complex[] sourceValue = { new Complex(1000.0), new Complex(1000.0) };
+	/**
+	 * Initial value for load impedance
+	 */
 	private Complex[] loadValue = { new Complex(1000.0) };
 	
+	/**
+	 * Information for labels
+	 */
 	private final CustomLabel.LabelData rSourceData = new CustomLabel.LabelData("R", 45, 35);
 	private final CustomLabel.LabelData vSourceData = new CustomLabel.LabelData("V", 35, 70);
 	private final CustomLabel.LabelData rLoadData = new CustomLabel.LabelData("R", 20, 70);
 	private CustomLabel.LabelData[] sourceLabel = {rSourceData, vSourceData};
 	private CustomLabel.LabelData[] loadLabel = {rLoadData};
 	
+	/**
+	 * Labels for radio buttons at bottom.
+	 */
 	private final String[] label = { "View from source", "Normal view",
 			"View from load" };
+	/**
+	 * States for radio buttons.
+	 */
 	private final boolean[] buttonSelect = { false, true, false };
+	
+	/**
+	 * Min, max, initial values for the slider that controls transformer's winding ratio
+	 */
 	private final int RMIN = 0, RMAX = 18, RINIT = 9;
+	/**
+	 * Min, max, initial values for the slider that controls impedance (real and imaginary) values.
+	 */
 	private final int IMIN = 50, IMAX = 1000, IINIT = 1000;
+	/**
+	 * Min, max, initial values for the slider that controls voltage (real and imaginary) values.
+	 */
 	private final int VMIN = 0, VMAX = 1000, VINIT = 1000;
 	/**
 	 * Labels and value mapping for slider that controls transformer's primary/secondary winding ratio.
@@ -54,8 +83,8 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	private final String[] ratioLabel = { "1:10", "1:9", "1:8", "1:7", "1:6",
 			"1:5", "1:4", "1:3", "1:2", "1:1", "2:1", "3:1", "4:1", "5:1",
 			"6:1", "7:1", "8:1", "9:1", "10:1" };
-	private final int[] ratioMap = { -10, -9, -8, -7, -6, -5, -4, -3, -2, 1, 2,
-			3, 4, 5, 6, 7, 8, 9, 10 };
+	private final double[] ratioMap = { 1.0/10, 1.0/9, 1.0/8, 1.0/7, 1.0/6, 1.0/5, 1.0/4, 1.0/3, 1.0/2, 1.0, 2.0,
+			3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
 
 	/**
 	 * Labels in Normal view: source side, transformer, load side.
@@ -78,11 +107,24 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	JRadioButton[] radioButton = new JRadioButton[3];
 	ButtonGroup radioGroup;
 
-	JSlider ratioSlider, reSourceSlider, reLoadSlider, reVoltSlider;
+	/**
+	 * Slider to specify winding ratio (primary/secondary) of the transformer.
+	 */
+	JSlider ratioSlider;
+	/**
+	 * Sliders for real parts of source impedance, load impedance, and source voltage. 
+	 */
+	JSlider reSourceSlider, reLoadSlider, reVoltSlider;
+	/**
+	 * Sliders for imaginary parts of source impedance, load impedance, and source voltage. 
+	 */
 	JSlider imSourceSlider, imLoadSlider, imVoltSlider;
+	
 	JLabel ratio;
+	/**
+	 * Voltage at primary and secondary winding, respectively
+	 */
 	double vp, vs;
-	int rSliderValue;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = ImpedanceTransform.class.getResource(path);
@@ -97,7 +139,6 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	public void init() {
 		vp = 500.0;
 		vs = 500.0;
-		rSliderValue = RINIT;
 		diagram = new JPanel();
 		cardManager = new CardLayout();
 		diagram.setLayout(cardManager);
@@ -250,81 +291,104 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		container.add(checkBox, BorderLayout.SOUTH);
 	}
 
+	/* 
+	 * Specify GUI action when changing JRadioButton
+	 * 
+	 * (non-Javadoc)
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
 	public void itemStateChanged(ItemEvent e) {
 		JRadioButton temp = (JRadioButton) e.getSource();
 		cardManager.show(diagram, temp.getText());
 	}
 
+	/* 
+	 * Specify GUI actions when changing JSlider's 
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+	 */
 	public void stateChanged(ChangeEvent e) {
 		DecimalFormat twoDigits = new DecimalFormat("0.00");
 		Object temp = e.getSource();
 		if (temp == ratioSlider) {
-			rSliderValue = ratioSlider.getValue();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
-			updateLabel();
+			computeImpedanceTransform();
+			
 		} else if (temp == reLoadSlider) {
 			loadValue[0].setReal((double) reLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
+			
 		} else if (temp == reSourceSlider) {
 			sourceValue[0].setReal((double) reSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
+			
 		} else if (temp == reVoltSlider) {
 			sourceValue[1].setReal((double) reVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
+			
 		} else if (temp == imLoadSlider) {
 			loadValue[0].setImaginary((double) imLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
+			
 		} else if (temp == imSourceSlider) {
 			sourceValue[0].setImaginary((double) imSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
+			
 		} else if (temp == imVoltSlider) {
 			sourceValue[1].setImaginary((double) imVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			updateLabel();
+			computeImpedanceTransform();
 			calculateVpVs();
 			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[rSliderValue] + "            " + "Vs: "
+					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
 					+ twoDigits.format(vs));
 		}
 
 	}
 
-	private void updateLabel() {
-		double ratio = stepRatio();
+	/**
+	 * Compute impedance transform and update the labels.
+	 * Compute load impedance in Sourcve view and source impedance in Load view,
+	 * based on the current circuit parameters.
+	 * Update the corresponding labels accordingly.
+	 */
+	private void computeImpedanceTransform() {
+		double ratio = ratioMap[ratioSlider.getValue()];
 
 		Complex[] tempValueSource = { Complex.multiply(loadValue[0], ratio
 				* ratio) }; // Source view
@@ -335,21 +399,18 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		sourceLoad.setValue(tempValueLoad);
 	}
 
-	private double stepRatio() {
-		int i = ratioMap[rSliderValue];
-		if (i > 0) {
-			return (double) i;
-		} else {
-			return -1.0 / (double) i;
-		}
-	}
-
+	/**
+	 * Pure physics: compute voltage at primary widing (Vp) and secondary winding (Vs)
+	 * based on the current circuit parameters (voltage source, source impedance, load impedance)
+	 */
 	private void calculateVpVs() {
-		double ratio = stepRatio();
+		double ratio = ratioMap[ratioSlider.getValue()];
+		
 		Complex load = Complex.multiply(loadValue[0], ratio * ratio);
 		Complex totalImp = Complex.add(load, sourceValue[0]);
+		
 		vp = sourceValue[1].getMagnitude() * load.getMagnitude() / totalImp.getMagnitude();
-		vs = vp / stepRatio();
+		vs = vp / ratioMap[ratioSlider.getValue()];
 	}
 
 }
