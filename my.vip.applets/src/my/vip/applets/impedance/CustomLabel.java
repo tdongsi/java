@@ -14,8 +14,17 @@ import javax.swing.JLabel;
  *
  */
 class CustomLabel extends JLabel {
+	/**
+	 * Text and positions associated with each complex numbers
+	 */
 	private LabelData[] label;
+	/**
+	 * Complex numbers.
+	 */
 	private Complex[] value;
+	/**
+	 * Number of complex numbers.
+	 */
 	private int number;
 
 	public CustomLabel() {
@@ -41,6 +50,9 @@ class CustomLabel extends JLabel {
 		setValue(values);
 	}
 
+	/**
+	 * Update complex numbers to be displayed
+	 */
 	public void setValue(Complex[] iValue) {
 		for (int i = 0; i < value.length; i++) {
 			value[i].setReal(iValue[i].getReal());
@@ -64,6 +76,9 @@ class CustomLabel extends JLabel {
 		repaint();
 	}
 	
+	/**
+	 * Text and positions associated with each complex numbers
+	 */
 	static class LabelData {
 		final private String text;
 		final private int xPos;

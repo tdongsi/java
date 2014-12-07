@@ -130,7 +130,9 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	 */
 	double vp, vs;
 	
-	JPanel diagram;
+	JPanel circuitView;
+	JPanel impedanceControl;
+	JPanel voltageControl;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = ImpedanceTransform.class.getResource(path);
@@ -158,8 +160,64 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 				JLabel.CENTER);
 		transformerLabel.setForeground(Color.red);
 
-		JPanel impPanel = new JPanel(new GridLayout(1, 2, 40, 0));
+		prepareImpedanceControl();
 
+		prepareVoltageControl();
+
+		JPanel main = new JPanel(new BorderLayout());
+		main.setBackground(Color.white);
+		main.add(transformerLabel, BorderLayout.NORTH);
+		main.add(circuitView, BorderLayout.CENTER);
+		main.add(impedanceControl, BorderLayout.SOUTH);
+
+		JPanel higherMain = new JPanel(new BorderLayout());
+		higherMain.add(main, BorderLayout.CENTER);
+		higherMain.add(voltageControl, BorderLayout.WEST);
+
+		Container container = getContentPane();
+		container.setLayout(new BorderLayout(0, 10));
+		container.setBackground(Color.white);
+		container.add(ratioSlider, BorderLayout.NORTH);
+		container.add(higherMain, BorderLayout.CENTER);
+		container.add(checkBox, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Prepare sliders to control real and imaginary parts of source voltage.
+	 */
+	private void prepareVoltageControl() {
+		voltageControl = new JPanel(new GridLayout(1, 2));
+		
+		JPanel reVoltPan = new JPanel(new BorderLayout());
+		JPanel imVoltPan = new JPanel(new BorderLayout());
+		JLabel reVoltLab = new JLabel("Re  ", JLabel.CENTER);
+		JLabel imVoltLab = new JLabel("Im  ", JLabel.CENTER);
+		
+		reVoltSlider = new JSlider(JSlider.VERTICAL, VMIN, VMAX, VINIT);
+		imVoltSlider = new JSlider(JSlider.VERTICAL, -VMAX, VMAX, 0);
+		reVoltSlider.addChangeListener(this);
+		imVoltSlider.addChangeListener(this);
+		
+		reVoltPan.add(reVoltLab, BorderLayout.NORTH);
+		reVoltPan.add(reVoltSlider, BorderLayout.CENTER);
+		imVoltPan.add(imVoltLab, BorderLayout.NORTH);
+		imVoltPan.add(imVoltSlider, BorderLayout.CENTER);
+		
+		voltageControl.add(reVoltPan);
+		voltageControl.add(imVoltPan);
+		voltageControl.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+				"Voltage", TitledBorder.CENTER, TitledBorder.TOP));
+		voltageControl.setPreferredSize(new Dimension(60, 130));
+	}
+
+	/**
+	 * Prepare sliders to control real and imaginary parts of source and load impedances.
+	 */
+	private void prepareImpedanceControl() {
+		impedanceControl = new JPanel(new GridLayout(1, 2, 40, 0));
+
+		// Source impedance control
 		JPanel sourcePanel = new JPanel(new GridLayout(2, 1));
 		JPanel reSourcePan = new JPanel(new BorderLayout());
 		JPanel imSourcePan = new JPanel(new BorderLayout());
@@ -181,6 +239,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 				" Source impedance (ohm) ", TitledBorder.CENTER,
 				TitledBorder.TOP));
 
+		// Load impedance control
 		JPanel loadPanel = new JPanel(new GridLayout(2, 1));
 		JPanel reLoadPan = new JPanel(new BorderLayout());
 		JPanel imLoadPan = new JPanel(new BorderLayout());
@@ -203,54 +262,17 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 						" Load impedance (ohm) ",
 						TitledBorder.CENTER, TitledBorder.TOP));
 
-		impPanel.add(sourcePanel);
-		impPanel.add(loadPanel);
-
-		JPanel voltPanel = new JPanel(new GridLayout(1, 2));
-		JPanel reVoltPan = new JPanel(new BorderLayout());
-		JPanel imVoltPan = new JPanel(new BorderLayout());
-		JLabel reVoltLab = new JLabel("Re  ", JLabel.CENTER);
-		JLabel imVoltLab = new JLabel("Im  ", JLabel.CENTER);
-		reVoltSlider = new JSlider(JSlider.VERTICAL, VMIN, VMAX, VINIT);
-		imVoltSlider = new JSlider(JSlider.VERTICAL, -VMAX, VMAX, 0);
-		reVoltSlider.addChangeListener(this);
-		imVoltSlider.addChangeListener(this);
-		reVoltPan.add(reVoltLab, BorderLayout.NORTH);
-		reVoltPan.add(reVoltSlider, BorderLayout.CENTER);
-		imVoltPan.add(imVoltLab, BorderLayout.NORTH);
-		imVoltPan.add(imVoltSlider, BorderLayout.CENTER);
-		voltPanel.add(reVoltPan);
-		voltPanel.add(imVoltPan);
-		voltPanel.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-				"Voltage", TitledBorder.CENTER, TitledBorder.TOP));
-		voltPanel.setPreferredSize(new Dimension(60, 130));
-
-		JPanel main = new JPanel(new BorderLayout());
-		main.setBackground(Color.white);
-		main.add(transformerLabel, BorderLayout.NORTH);
-		main.add(diagram, BorderLayout.CENTER);
-		main.add(impPanel, BorderLayout.SOUTH);
-
-		JPanel higherMain = new JPanel(new BorderLayout());
-		higherMain.add(main, BorderLayout.CENTER);
-		higherMain.add(voltPanel, BorderLayout.WEST);
-
-		Container container = getContentPane();
-		container.setLayout(new BorderLayout(0, 10));
-		container.setBackground(Color.white);
-		container.add(ratioSlider, BorderLayout.NORTH);
-		container.add(higherMain, BorderLayout.CENTER);
-		container.add(checkBox, BorderLayout.SOUTH);
+		impedanceControl.add(sourcePanel);
+		impedanceControl.add(loadPanel);
 	}
 
 	/**
 	 * Prepare the circuit layout for different views.
 	 */
 	private void prepareCircuitViews() {
-		diagram = new JPanel();
+		circuitView = new JPanel();
 		cardManager = new CardLayout();
-		diagram.setLayout(cardManager);
+		circuitView.setLayout(cardManager);
 		
 		sourceIcon = createImageIcon("images/Source.jpg");
 		transIcon = createImageIcon("images/Transformer.jpg");
@@ -284,10 +306,10 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		fromLoad.add(sourceLoad);
 		fromLoad.add(loadLoad);
 
-		diagram.add(fromSource, label[0]);
-		diagram.add(normal, label[1]);
-		diagram.add(fromLoad, label[2]);
-		cardManager.show(diagram, label[1]);
+		circuitView.add(fromSource, label[0]);
+		circuitView.add(normal, label[1]);
+		circuitView.add(fromLoad, label[2]);
+		cardManager.show(circuitView, label[1]);
 	}
 
 	/**
@@ -336,7 +358,7 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	 */
 	public void itemStateChanged(ItemEvent e) {
 		JRadioButton temp = (JRadioButton) e.getSource();
-		cardManager.show(diagram, temp.getText());
+		cardManager.show(circuitView, temp.getText());
 	}
 
 	/* 
