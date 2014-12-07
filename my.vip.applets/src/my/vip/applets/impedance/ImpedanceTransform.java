@@ -56,16 +56,6 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	private CustomLabel.LabelData[] loadLabel = {rLoadData};
 	
 	/**
-	 * Labels for radio buttons at bottom.
-	 */
-	private final String[] label = { "View from source", "Normal view",
-			"View from load" };
-	/**
-	 * States for radio buttons.
-	 */
-	private final boolean[] buttonSelect = { false, true, false };
-	
-	/**
 	 * Min, max, initial values for the slider that controls transformer's winding ratio
 	 */
 	private final int RMIN = 0, RMAX = 18, RINIT = 9;
@@ -102,10 +92,24 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	 * Images for circuit of source side, transformer, and circuit for load side.
 	 */
 	ImageIcon sourceIcon, transIcon, loadIcon;
-	JPanel diagram;
+	
+	
+	/**
+	 * Radio buttons to control "View from Source", "Normal view", "View from load"
+	 */
 	CardLayout cardManager;
 	JRadioButton[] radioButton = new JRadioButton[3];
 	ButtonGroup radioGroup;
+	JPanel checkBox;
+	/**
+	 * Labels for radio buttons at bottom.
+	 */
+	private final String[] label = { "View from source", "Normal view",
+			"View from load" };
+	/**
+	 * States for radio buttons.
+	 */
+	private final boolean[] buttonSelect = { false, true, false };
 
 	/**
 	 * Slider to specify winding ratio (primary/secondary) of the transformer.
@@ -120,11 +124,13 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	 */
 	JSlider imSourceSlider, imLoadSlider, imVoltSlider;
 	
-	JLabel ratio;
+	JLabel transformerLabel;
 	/**
 	 * Voltage at primary and secondary winding, respectively
 	 */
 	double vp, vs;
+	
+	JPanel diagram;
 
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = ImpedanceTransform.class.getResource(path);
@@ -139,73 +145,18 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	public void init() {
 		vp = 500.0;
 		vs = 500.0;
-		diagram = new JPanel();
-		cardManager = new CardLayout();
-		diagram.setLayout(cardManager);
+		
+		prepareCircuitViews();
 
-		JPanel normal = new JPanel(new GridLayout(1, 3));
-		normal.setBackground(Color.white);
-		sourceIcon = createImageIcon("images/Source.jpg");
-		transIcon = createImageIcon("images/Transformer.jpg");
-		loadIcon = createImageIcon("images/Load.jpg");
-		sourceNormal = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
-		transNormal = new CustomLabel(transIcon);
-		loadNormal = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
-		normal.add(sourceNormal);
-		normal.add(transNormal);
-		normal.add(loadNormal);
+		prepareViewControl();
 
-		JPanel fromSource = new JPanel(new GridLayout(1, 3));
-		fromSource.setBackground(Color.white);
-		sourceSource = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
-		loadSource = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
-		fromSource.add(sourceSource);
-		fromSource.add(loadSource);
-		fromSource.add(Box.createHorizontalStrut(100));
+		prepareTransformerControl();
 
-		JPanel fromLoad = new JPanel(new GridLayout(1, 3));
-		fromLoad.setBackground(Color.white);
-		sourceLoad = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
-		loadLoad = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
-		fromLoad.add(Box.createHorizontalStrut(100));
-		fromLoad.add(sourceLoad);
-		fromLoad.add(loadLoad);
-
-		diagram.add(fromSource, label[0]);
-		diagram.add(normal, label[1]);
-		diagram.add(fromLoad, label[2]);
-		cardManager.show(diagram, label[1]);
-
-		JPanel checkBox = new JPanel(new GridLayout(1, 3));
-		checkBox.setBackground(Color.white);
-		checkBox.setPreferredSize(new Dimension(200, 60));
-		radioGroup = new ButtonGroup();
-		for (int i = 0; i < radioButton.length; i++) {
-			radioButton[i] = new JRadioButton(label[i], buttonSelect[i]);
-			radioButton[i].setBackground(Color.white);
-			checkBox.add(radioButton[i]);
-			radioButton[i].addItemListener(this);
-			radioGroup.add(radioButton[i]);
-		}
-
-		ratioSlider = new JSlider(JSlider.HORIZONTAL, RMIN, RMAX, RINIT);
-		// ratioSlider.setBackground( Color.white );
-		ratioSlider.addChangeListener(this);
-		Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
-		for (int i = RMIN; i <= RMAX; i++) {
-			labelTable.put(new Integer(i), new JLabel(ratioLabel[i]));
-		}
-		ratioSlider.setLabelTable(labelTable);
-		ratioSlider.setPaintLabels(true);
-		Border lowEtched = BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED);
-		ratioSlider.setBorder(BorderFactory.createTitledBorder(lowEtched,
-				"Winding ratio", TitledBorder.CENTER, TitledBorder.TOP));
-		ratioSlider.setSnapToTicks(true);
-
-		ratio = new JLabel("Vp: " + vp + "            " + ratioLabel[RINIT]
-				+ "            " + "Vs: " + vs, JLabel.CENTER);
-		ratio.setForeground(Color.red);
+		transformerLabel = new JLabel(
+				String.format("Vp: %.2f            %s            Vs: %.2f",
+				vp, ratioLabel[RINIT], vs), 
+				JLabel.CENTER);
+		transformerLabel.setForeground(Color.red);
 
 		JPanel impPanel = new JPanel(new GridLayout(1, 2, 40, 0));
 
@@ -225,7 +176,8 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		sourcePanel.add(reSourcePan);
 		sourcePanel.add(imSourcePan);
 		sourcePanel.setPreferredSize(new Dimension(200, 60));
-		sourcePanel.setBorder(BorderFactory.createTitledBorder(lowEtched,
+		sourcePanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
 				" Source impedance (ohm) ", TitledBorder.CENTER,
 				TitledBorder.TOP));
 
@@ -246,7 +198,9 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		loadPanel.add(imLoadPan);
 		loadPanel.setPreferredSize(new Dimension(200, 60));
 		loadPanel.setBorder(BorderFactory
-				.createTitledBorder(lowEtched, " Load impedance (ohm) ",
+				.createTitledBorder(
+						BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
+						" Load impedance (ohm) ",
 						TitledBorder.CENTER, TitledBorder.TOP));
 
 		impPanel.add(sourcePanel);
@@ -267,21 +221,20 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		imVoltPan.add(imVoltSlider, BorderLayout.CENTER);
 		voltPanel.add(reVoltPan);
 		voltPanel.add(imVoltPan);
-		voltPanel.setBorder(BorderFactory.createTitledBorder(lowEtched,
+		voltPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
 				"Voltage", TitledBorder.CENTER, TitledBorder.TOP));
 		voltPanel.setPreferredSize(new Dimension(60, 130));
 
 		JPanel main = new JPanel(new BorderLayout());
 		main.setBackground(Color.white);
-		main.add(ratio, BorderLayout.NORTH);
+		main.add(transformerLabel, BorderLayout.NORTH);
 		main.add(diagram, BorderLayout.CENTER);
 		main.add(impPanel, BorderLayout.SOUTH);
 
 		JPanel higherMain = new JPanel(new BorderLayout());
 		higherMain.add(main, BorderLayout.CENTER);
 		higherMain.add(voltPanel, BorderLayout.WEST);
-		// higherMain.setBorder( BorderFactory.createLineBorder( Color.black )
-		// );
 
 		Container container = getContentPane();
 		container.setLayout(new BorderLayout(0, 10));
@@ -289,6 +242,90 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 		container.add(ratioSlider, BorderLayout.NORTH);
 		container.add(higherMain, BorderLayout.CENTER);
 		container.add(checkBox, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Prepare the circuit layout for different views.
+	 */
+	private void prepareCircuitViews() {
+		diagram = new JPanel();
+		cardManager = new CardLayout();
+		diagram.setLayout(cardManager);
+		
+		sourceIcon = createImageIcon("images/Source.jpg");
+		transIcon = createImageIcon("images/Transformer.jpg");
+		loadIcon = createImageIcon("images/Load.jpg");
+
+		// Normal view
+		JPanel normal = new JPanel(new GridLayout(1, 3));
+		normal.setBackground(Color.white);
+		sourceNormal = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
+		transNormal = new CustomLabel(transIcon);
+		loadNormal = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
+		normal.add(sourceNormal);
+		normal.add(transNormal);
+		normal.add(loadNormal);
+
+		// View from Source
+		JPanel fromSource = new JPanel(new GridLayout(1, 3));
+		fromSource.setBackground(Color.white);
+		sourceSource = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
+		loadSource = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
+		fromSource.add(sourceSource);
+		fromSource.add(loadSource);
+		fromSource.add(Box.createHorizontalStrut(100));
+
+		// View from Load
+		JPanel fromLoad = new JPanel(new GridLayout(1, 3));
+		fromLoad.setBackground(Color.white);
+		sourceLoad = new CustomLabel(sourceIcon, 2, sourceLabel, sourceValue);
+		loadLoad = new CustomLabel(loadIcon, 1, loadLabel, loadValue);
+		fromLoad.add(Box.createHorizontalStrut(100));
+		fromLoad.add(sourceLoad);
+		fromLoad.add(loadLoad);
+
+		diagram.add(fromSource, label[0]);
+		diagram.add(normal, label[1]);
+		diagram.add(fromLoad, label[2]);
+		cardManager.show(diagram, label[1]);
+	}
+
+	/**
+	 * Prepare a group of radio buttons to control views,
+	 * namely "View from Source", "Normal view", "View from load".
+	 */
+	private void prepareViewControl() {
+		checkBox = new JPanel(new GridLayout(1, 3));
+		checkBox.setBackground(Color.white);
+		checkBox.setPreferredSize(new Dimension(200, 60));
+		
+		radioGroup = new ButtonGroup();
+		for (int i = 0; i < radioButton.length; i++) {
+			radioButton[i] = new JRadioButton(label[i], buttonSelect[i]);
+			radioButton[i].setBackground(Color.white);
+			checkBox.add(radioButton[i]);
+			radioButton[i].addItemListener(this);
+			radioGroup.add(radioButton[i]);
+		}
+	}
+
+	/**
+	 * Prepare slider to specify winding ratio (primary/secondary) of the transformer.
+	 */
+	private void prepareTransformerControl() {
+		ratioSlider = new JSlider(JSlider.HORIZONTAL, RMIN, RMAX, RINIT);
+		// ratioSlider.setBackground( Color.white );
+		ratioSlider.addChangeListener(this);
+		Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
+		for (int i = RMIN; i <= RMAX; i++) {
+			labelTable.put(new Integer(i), new JLabel(ratioLabel[i]));
+		}
+		ratioSlider.setLabelTable(labelTable);
+		ratioSlider.setPaintLabels(true);
+		ratioSlider.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+				"Winding ratio", TitledBorder.CENTER, TitledBorder.TOP));
+		ratioSlider.setSnapToTicks(true);
 	}
 
 	/* 
@@ -309,76 +346,64 @@ class ImpedanceTransform extends JApplet implements ItemListener,
 	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
 	 */
 	public void stateChanged(ChangeEvent e) {
-		DecimalFormat twoDigits = new DecimalFormat("0.00");
+		
 		Object temp = e.getSource();
 		if (temp == ratioSlider) {
 			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			setTransformerLabel();
 			computeImpedanceTransform();
 			
 		} else if (temp == reLoadSlider) {
 			loadValue[0].setReal((double) reLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 			
 		} else if (temp == reSourceSlider) {
 			sourceValue[0].setReal((double) reSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 			
 		} else if (temp == reVoltSlider) {
 			sourceValue[1].setReal((double) reVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 			
 		} else if (temp == imLoadSlider) {
 			loadValue[0].setImaginary((double) imLoadSlider.getValue());
 			loadNormal.setValue(loadValue);
 			loadLoad.setValue(loadValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 			
 		} else if (temp == imSourceSlider) {
 			sourceValue[0].setImaginary((double) imSourceSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 			
 		} else if (temp == imVoltSlider) {
 			sourceValue[1].setImaginary((double) imVoltSlider.getValue());
 			sourceNormal.setValue(sourceValue);
 			sourceSource.setValue(sourceValue);
-			computeImpedanceTransform();
-			calculateVpVs();
-			ratio.setText("Vp: " + twoDigits.format(vp) + "            "
-					+ ratioLabel[ratioSlider.getValue()] + "            " + "Vs: "
-					+ twoDigits.format(vs));
+			updateCircuit();
 		}
 
+	}
+
+	/**
+	 * Recompute the circuit parameters and update the associated labels.
+	 */
+	private void updateCircuit() {
+		computeImpedanceTransform();
+		calculateVpVs();
+		setTransformerLabel();
+	}
+
+	private void setTransformerLabel() {
+		transformerLabel.setText(String.format("Vp: %.2f            %s            Vs: %.2f",
+				vp, ratioLabel[ratioSlider.getValue()], vs));
 	}
 
 	/**

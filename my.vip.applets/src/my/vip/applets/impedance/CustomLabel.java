@@ -71,7 +71,6 @@ class CustomLabel extends JLabel {
 		
 		/**
 		 * @param label
-		 * @param value
 		 * @param xPos
 		 * @param yPos
 		 */
