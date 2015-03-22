@@ -8,3 +8,4 @@ my.vip.applets/bin/
 JavaProgramming4th/Secure.plugin
 *.jar
 com.codeeval/
+*.classpath
