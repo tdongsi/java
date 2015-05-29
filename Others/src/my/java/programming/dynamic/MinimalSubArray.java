@@ -1,4 +1,4 @@
-package my.java.programming.fourth.chapter1;
+package my.java.programming.dynamic;
 
 public class MinimalSubArray {
 
