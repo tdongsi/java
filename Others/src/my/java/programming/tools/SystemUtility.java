@@ -17,6 +17,14 @@ import java.util.Set;
  *
  */
 public class SystemUtility {
+	
+	/**
+	 * Enforce that this class should not be instantiated. Suppress default
+	 * constructor.
+	 */
+	private SystemUtility() {
+		throw new AssertionError("Do not instantiate.");
+	}
 
 	/**
 	 * Method to perform system calls
@@ -26,7 +34,7 @@ public class SystemUtility {
 	 * @param isEcho: flag indicating whether to display the command (true) or not (false).
 	 * @return
 	 */
-	public int runCommand(String command, boolean isVerbose, boolean isEcho) {
+	public static int runCommand(String command, boolean isVerbose, boolean isEcho) {
 		if (isEcho) {
 			System.out.println("> " + command);
 		}
@@ -90,7 +98,7 @@ public class SystemUtility {
 	 * @param os the output sink that pass into the method for storing the output
 	 * @return
 	 */
-	public int runCommand(String command, boolean isVerbose, boolean isEcho, OutputStream os ) {
+	public static int runCommand(String command, boolean isVerbose, boolean isEcho, OutputStream os ) {
 		if (isEcho) {
 			System.out.println("> " + command);
 		}
@@ -141,7 +149,7 @@ public class SystemUtility {
 	 * @param dest: path to the destination file
 	 * @return true if the copying is success, false otherwise.
 	 */
-	public boolean copyFile(String src, String dest)
+	public static boolean copyFile(String src, String dest)
 	{
 		InputStream inStream = null;
 		OutputStream outStream = null;
@@ -189,7 +197,7 @@ public class SystemUtility {
      * @return true iff the file and all sub files/directories have been removed
      * @throws FileNotFoundException
      */
-    public boolean deleteRecursive(File path) throws FileNotFoundException
+    public static boolean deleteRecursive(File path) throws FileNotFoundException
     {
         if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
         boolean ret = true;
@@ -210,7 +218,7 @@ public class SystemUtility {
      * @param extension String of format ".ext" to indicate the desired "extension". Use empty string "" for all types.
      * @return A set of strings for all file names.
      */
-    public Set<String> findAllFilesOfType( String path, final String extension )
+    public static Set<String> findAllFilesOfType( String path, final String extension )
     {
     	Set<String> fileList = new HashSet<String>();
     	
