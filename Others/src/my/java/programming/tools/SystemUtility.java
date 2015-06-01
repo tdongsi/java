@@ -134,4 +134,107 @@ public class SystemUtility {
 		return errorLevel;
 	}
 	
+	
+	/**
+	 * Equivalent to "cp src dest".
+	 * @param src: path to the source file
+	 * @param dest: path to the destination file
+	 * @return true if the copying is success, false otherwise.
+	 */
+	public boolean copyFile(String src, String dest)
+	{
+		InputStream inStream = null;
+		OutputStream outStream = null;
+		boolean success = true;
+		
+		try {
+			File inFile = new File(src);
+			File outFile = new File(dest);
+			
+			inStream = new FileInputStream( inFile );
+			outStream = new FileOutputStream( outFile );
+			
+			byte[] buffer = new byte[1024];
+			 
+            int length;
+            while ((length = inStream.read(buffer)) > 0) {
+                outStream.write(buffer, 0, length);
+            }
+ 
+            if (inStream != null)
+            	inStream.close();
+            if (outStream != null)
+            	outStream.close();
+ 
+            System.out.println("Done copying file.");
+            
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			success = false;
+		}
+		catch (IOException e) {
+            e.printStackTrace();
+            success = false;
+        }
+		
+		return success;
+	}
+	
+	
+	/**
+     * A lightweight, recursive replacement of Apache commons-io FileUtils.deleteDirectory()
+     * Equivalent to "rm -r path".
+     * @param path Root File Path
+     * @return true iff the file and all sub files/directories have been removed
+     * @throws FileNotFoundException
+     */
+    public boolean deleteRecursive(File path) throws FileNotFoundException
+    {
+        if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
+        boolean ret = true;
+        if (path.isDirectory()){
+            for (File f : path.listFiles())
+            {
+//        		System.out.println( f.toString() );
+                ret = ret && deleteRecursive(f);
+            }
+        }
+        return ret && path.delete();
+    }
+    
+    /**
+     * Find all the files with some defined extension.
+     * Equivalent to "ls path/*.ext".
+     * @param path Path to the directory
+     * @param extension String of format ".ext" to indicate the desired "extension". Use empty string "" for all types.
+     * @return A set of strings for all file names.
+     */
+    public Set<String> findAllFilesOfType( String path, final String extension )
+    {
+    	Set<String> fileList = new HashSet<String>();
+    	
+    	File dir = new File( path );
+    	File[] files;
+    	
+    	if ( extension.equals("") )
+    	{
+    		files = dir.listFiles();
+    	} else
+    	{
+    		files = dir.listFiles(new FilenameFilter() {
+    			public boolean accept( File dir, String filename )
+    			{
+    				return filename.endsWith(extension);
+    			}
+    		});
+    	}
+    	
+    	for( int i = 0; i < files.length; i++ )
+    	{
+    		fileList.add( files[i].getName() );
+    	}
+    	
+    	return fileList;
+    }
 }
