@@ -9,3 +9,6 @@ JavaProgramming4th/Secure.plugin
 *.jar
 com.codeeval/
 *.classpath
+*/.gradle
+*/.settings
+*/.project
