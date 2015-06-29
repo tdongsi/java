@@ -15,3 +15,4 @@ com.codeeval/
 gradle/build/tmp
 
 !gradle/gradle/wrapper/gradle-wrapper.jar
+gradle/build
