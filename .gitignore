@@ -13,3 +13,5 @@ com.codeeval/
 */.settings
 */.project
 gradle/build/tmp
+
+!gradle/gradle/wrapper/gradle-wrapper.jar
