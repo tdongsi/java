@@ -17,6 +17,22 @@ dependencies {
 jar {
 	baseName = 'hello'
 	version = '0.1'
+	manifest {
+		attributes 'Main-Class': 'hello.HelloWorld'
+	}
+}
+
+task fatJar(type: Jar) {
+	baseName = 'hello-full'
+	version = '0.1'
+	
+	manifest {
+        attributes 'Main-Class': 'hello.HelloWorld'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+	
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }
 
 // This must be at the end
