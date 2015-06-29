@@ -12,3 +12,4 @@ com.codeeval/
 */.gradle
 */.settings
 */.project
+gradle/build/tmp
