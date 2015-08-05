@@ -3,16 +3,16 @@
 <project name="Java DB Properties" default="all" basedir=".">
 
 
-    <property name="JAVAC" value="C:\\java\\jdk1.7.0\\bin\\javac"/>
-    <property name="JAVA" value="C:\\java\\jdk1.7.0\\bin\\java"/>
+    <property name="JAVAC" value="/usr/bin/javac"/>
+    <property name="JAVA" value="/usr/bin/java"/>
 
 
   <property name="PROPERTIESFILE" value="properties/javadb-sample-properties.xml"/>
-  <property name="JAVADBDRIVER" value="C:\\java\\jdk1.7.0\\db\\lib\\derby.jar"/>
-  <property name="XALANDIRECTORY" value="C:\\apache\\xalan-j_2_7_1"/>
+  <property name="JAVADBDRIVER" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/db/lib/derby.jar"/>
+  <property name="XALANDIRECTORY" value="/Users/cdongsi/Documents/xalan-j_2_7_2"/>
 
   <path id="XALAN">
-    <pathelement location="${XALANDIRECTORY}\\xalan.jar"/>
+    <pathelement location="${XALANDIRECTORY}/xalan.jar"/>
   </path>
 
   <path id="CLASSPATH">
