@@ -1,7 +1,7 @@
 /**
  * 
  */
-package my.java.programming.reflection;
+package my.practice.reflection;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
