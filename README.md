@@ -1,12 +1,14 @@
 java
 ====
 This repo is for personal Java projects:
-* [my.vip.applets](my.vip.applets/): my works in Vaction Internship Program (VIP) 2004. Using Java 1.4.
-* CodeJam: my attempts to Google Code Jam programming problems
-* net.projecteuler: my attempts to Project Euler problems. http://projecteuler.net/problems.
-  * In summary, these are math-oriented programming problems. They are best solved (i.e., better run-time) by utilizing certain relevant math theorems.
-* Others: Miscellaneous exercies from technical blogs or books.
 
-Best viewed in Eclipse IDE:
-It is recommended that the above projects are "Imported as existing project" after cloning/pulling from the repo.
+* [my.vip.applets](my.vip.applets/): my works in Vaction Internship Program (VIP) 2004. Using Java 1.4.
+* [CodeJam](CodeJam/): my attempts to Google Code Jam programming problems
+* [net.projecteuler](net.projecteuler/): my attempts to Project Euler problems. http://projecteuler.net/problems.
+  * In summary, these are math-oriented programming problems. They are best solved (i.e., better run-time) by utilizing certain relevant math theorems.
+* [Tools](Tools/): Some of my frequently used personal tools/utitlity methods.
+* [Practice](Practice/): Miscellaneous exercies from technical blogs or books.
+* Concurrency: Exercises with Java concurrency.
+
+Best viewed in Eclipse IDE: It is recommended that the above projects are "Imported as existing project" after cloning/pulling from the repo.
 
