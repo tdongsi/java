@@ -8,11 +8,24 @@ package my.practice.concurrency;
  */
 public class ProducerConsumer {
 	
-	final public static int ENTRY_NUM = 10;
+	final public static int ENTRY_NUM = 100;
 
 	public static void main(String[] args) {
 		
 		Counter queue = new SimpleCounter();
+		produceAndConsume(queue);
+		System.out.println("Queue at the end: " + queue.current());
+	}
+	
+	/**
+	 * Run the simulation of producer-consumer problem
+	 * with the given queue.
+	 * 
+	 * At the end of simulation run, the queue should have 0 item.
+	 * 
+	 * @param queue
+	 */
+	public static void produceAndConsume(Counter queue) {
 		
 		Producer producer = new Producer(queue);
 		Consumer consumer = new Consumer(queue);
@@ -30,7 +43,6 @@ public class ProducerConsumer {
 			// Nothing
 		}
 		
-		System.out.println("Queue at the end: " + queue.current());
 	}
 
 }
