@@ -7,13 +7,13 @@ public class SimpleCounter implements Counter {
 	@Override
 	public void increment() {
 		count++;
-		System.out.println("Queue: " + count);
+//		System.out.println("Queue: " + count);
 	}
 
 	@Override
 	public void decrement() {
 		count--;
-		System.out.println("Queue: " + count);
+//		System.out.println("Queue: " + count);
 
 	}
 

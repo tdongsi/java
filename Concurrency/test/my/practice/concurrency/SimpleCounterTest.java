@@ -7,8 +7,17 @@ import org.junit.Test;
 public class SimpleCounterTest {
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testThreadSafety() {
+		final int TRIAL_NUM = 10;
+		Counter queue = new SimpleCounter();
+		
+		for (int i = 0; i < TRIAL_NUM; i++) {
+			System.out.println( "Trial number: " + i);
+			queue.reset();
+			
+			ProducerConsumer.produceAndConsume(queue);
+			assertEquals(0, queue.current());
+		}
 	}
 
 }
