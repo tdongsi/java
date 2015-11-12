@@ -1,5 +1,7 @@
 package my.practice.concurrency;
 
+import my.practice.concurrency.counter.SimpleCounter;
+
 /**
  * Main class for checking race condition
  * 

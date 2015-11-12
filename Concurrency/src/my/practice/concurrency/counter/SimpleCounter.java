@@ -1,4 +1,6 @@
-package my.practice.concurrency;
+package my.practice.concurrency.counter;
+
+import my.practice.concurrency.Counter;
 
 public class SimpleCounter implements Counter {
 	

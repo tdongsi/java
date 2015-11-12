@@ -1,6 +1,7 @@
 package my.practice.concurrency;
 
 import static org.junit.Assert.*;
+import my.practice.concurrency.counter.SimpleCounter;
 
 import org.junit.Test;
 
