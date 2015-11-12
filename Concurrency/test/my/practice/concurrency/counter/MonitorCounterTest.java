@@ -1,22 +1,17 @@
-package my.practice.concurrency;
+package my.practice.concurrency.counter;
 
 import static org.junit.Assert.*;
-import my.practice.concurrency.counter.SimpleCounter;
+import my.practice.concurrency.Counter;
+import my.practice.concurrency.ProducerConsumer;
 
 import org.junit.Test;
 
-/**
- * This test might pass, but it is expected to fail.
- * 
- * @author cdongsi
- *
- */
-public class SimpleCounterTest {
+public class MonitorCounterTest {
 
 	@Test
 	public void testThreadSafety() {
 		final int TRIAL_NUM = 10;
-		Counter queue = new SimpleCounter();
+		Counter queue = new MonitorCounter();
 		
 		for (int i = 0; i < TRIAL_NUM; i++) {
 			System.out.println( "Trial number: " + i);
