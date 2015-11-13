@@ -17,7 +17,9 @@ public class ProducerConsumer {
 	public static void main(String[] args) {
 		
 		Counter queue = new SimpleCounter();
-		produceAndConsume(queue);
+		Producer producer = new SimpleProducer(queue);
+		Consumer consumer = new SimpleConsumer(queue);
+		produceAndConsume(queue, producer, consumer);
 		System.out.println("Queue at the end: " + queue.current());
 	}
 	
@@ -29,13 +31,10 @@ public class ProducerConsumer {
 	 * 
 	 * @param queue
 	 */
-	public static void produceAndConsume(Counter queue) {
+	public static void produceAndConsume(Counter queue, Producer producer, Consumer consumer) {
 		
-		SimpleProducer producer = new SimpleProducer(queue);
-		SimpleConsumer consumer = new SimpleConsumer(queue);
-		
-		Thread t1 = new Thread(producer);
-		Thread t2 = new Thread(consumer);
+		Thread t1 = new Thread((Runnable) producer);
+		Thread t2 = new Thread((Runnable) consumer);
 		
 		t1.start();
 		t2.start();
