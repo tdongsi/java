@@ -9,6 +9,7 @@ import org.junit.Test;
 
 /**
  * This test might pass, but it is expected to fail.
+ * SimpleCounter is not thread-safe.
  * 
  * @author cdongsi
  *
