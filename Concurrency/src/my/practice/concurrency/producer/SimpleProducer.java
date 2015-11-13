@@ -3,9 +3,10 @@ package my.practice.concurrency.producer;
 import java.util.Random;
 
 import my.practice.concurrency.Counter;
+import my.practice.concurrency.Producer;
 import my.practice.concurrency.ProducerConsumer;
 
-public class SimpleProducer implements Runnable {
+public class SimpleProducer implements Producer, Runnable {
 	
 	// Using a counter to simulate a queue
 	private Counter queue;
@@ -31,7 +32,13 @@ public class SimpleProducer implements Runnable {
 		}
 	}
 
+	@Override
 	public void produce() {
 		queue.increment();
+	}
+	
+	@Override
+	public void useQueue(Counter queue) {
+		this.queue = queue;
 	}
 }

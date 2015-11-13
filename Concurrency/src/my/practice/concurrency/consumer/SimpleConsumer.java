@@ -2,10 +2,11 @@ package my.practice.concurrency.consumer;
 
 import java.util.Random;
 
+import my.practice.concurrency.Consumer;
 import my.practice.concurrency.Counter;
 import my.practice.concurrency.ProducerConsumer;
 
-public class SimpleConsumer implements Runnable {
+public class SimpleConsumer implements Consumer, Runnable {
 
 	private Counter queue;
 
@@ -30,8 +31,14 @@ public class SimpleConsumer implements Runnable {
 
 	}
 
+	@Override
 	public void consume() {
 		queue.decrement();
+	}
+	
+	@Override
+	public void useQueue(Counter queue) {
+		this.queue = queue;
 	}
 
 }

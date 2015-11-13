@@ -10,7 +10,7 @@ public class MonitorCounterTest {
 
 	@Test
 	public void testThreadSafety() {
-		final int TRIAL_NUM = 10;
+		final int TRIAL_NUM = 5;
 		Counter queue = new MonitorCounter();
 		
 		for (int i = 0; i < TRIAL_NUM; i++) {
