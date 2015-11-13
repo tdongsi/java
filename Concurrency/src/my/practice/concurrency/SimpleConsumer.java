@@ -2,29 +2,33 @@ package my.practice.concurrency;
 
 import java.util.Random;
 
-public class Producer implements Runnable {
-	
-	// Using a counter to simulate a queue
+public class SimpleConsumer implements Runnable {
+
 	private Counter queue;
-	
-	public Producer(Counter queue) {
+
+	public SimpleConsumer(Counter queue) {
 		this.queue = queue;
 	}
-	
+
 	@Override
 	public void run() {
 		
-		
-		// Produce some pre-defined number of entries
+		// Consume some pre-defined number of entries
 		for (int i = 0; i < ProducerConsumer.ENTRY_NUM; i++) {
-			queue.increment();
-			
+			consume();
+
 			// wait randomly
 			try {
 				Thread.sleep(new Random().nextInt(100));
-			} catch(InterruptedException e) {
+			} catch (InterruptedException e) {
 				// nothing
 			}
 		}
+
 	}
+
+	public void consume() {
+		queue.decrement();
+	}
+
 }

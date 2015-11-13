@@ -29,8 +29,8 @@ public class ProducerConsumer {
 	 */
 	public static void produceAndConsume(Counter queue) {
 		
-		Producer producer = new Producer(queue);
-		Consumer consumer = new Consumer(queue);
+		SimpleProducer producer = new SimpleProducer(queue);
+		SimpleConsumer consumer = new SimpleConsumer(queue);
 		
 		Thread t1 = new Thread(producer);
 		Thread t2 = new Thread(consumer);

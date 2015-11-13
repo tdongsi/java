@@ -9,14 +9,13 @@ public class SimpleCounter implements Counter {
 	@Override
 	public void increment() {
 		count++;
-//		System.out.println("Queue: " + count);
+		System.out.println("increment: Thread: " + Thread.currentThread().getId() );
 	}
 
 	@Override
 	public void decrement() {
 		count--;
-//		System.out.println("Queue: " + count);
-
+		System.out.println("decrement: Thread: " + Thread.currentThread().getId() );
 	}
 
 	@Override
