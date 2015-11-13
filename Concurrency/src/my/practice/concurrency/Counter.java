@@ -1,5 +1,11 @@
 package my.practice.concurrency;
 
+/**
+ * Simulate a queue in Producer-Consumer problem
+ * 
+ * @author cdongsi
+ *
+ */
 public interface Counter {
 	/**
 	 * Increment counter value by one.

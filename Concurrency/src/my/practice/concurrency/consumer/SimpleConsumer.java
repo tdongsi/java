@@ -1,6 +1,9 @@
-package my.practice.concurrency;
+package my.practice.concurrency.consumer;
 
 import java.util.Random;
+
+import my.practice.concurrency.Counter;
+import my.practice.concurrency.ProducerConsumer;
 
 public class SimpleConsumer implements Runnable {
 

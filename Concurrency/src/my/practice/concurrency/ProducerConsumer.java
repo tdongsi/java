@@ -1,6 +1,8 @@
 package my.practice.concurrency;
 
+import my.practice.concurrency.consumer.SimpleConsumer;
 import my.practice.concurrency.counter.SimpleCounter;
+import my.practice.concurrency.producer.SimpleProducer;
 
 /**
  * Main class for checking race condition
