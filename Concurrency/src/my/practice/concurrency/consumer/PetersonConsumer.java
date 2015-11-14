@@ -9,8 +9,6 @@ import my.practice.concurrency.counter.PetersonCounter;
 
 /**
  * Consumer class that uses Peterson's algorithm.
- * Only difference with SimpleConsumer is useQueue() method
- * with additional call PetersonCounter.getTicket().
  * 
  * @author cdongsi
  *
@@ -25,6 +23,7 @@ public class PetersonConsumer implements Consumer, Runnable {
 
 	@Override
 	public void run() {
+		this.queue.getTicket();
 		
 		// Consume some pre-defined number of entries
 		for (int i = 0; i < ProducerConsumer.ENTRY_NUM; i++) {
@@ -49,7 +48,6 @@ public class PetersonConsumer implements Consumer, Runnable {
 	public void useQueue(Counter queue) {
 		if (queue instanceof PetersonCounter) {
 			this.queue = (PetersonCounter) queue;
-			this.queue.getTicket();
 		} else {
 			throw new IllegalArgumentException("PetersonCounter expected.");
 		}

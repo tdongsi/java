@@ -32,6 +32,13 @@ public class PetersonCounter implements Counter {
 	
 	/**
 	 * Get a ticket number for the queue, either 0 or 1.
+	 * In Peterson's algorithm, each thread has a ticket (0 and 1)
+	 * when interacting with the queue/counter.
+	 * 
+	 * To avoid changing Counter interface to get ticket from each thread, 
+	 * this method is used to map thread ID to ticket. Therefore, synchronized block
+	 * is used to create that mapping.
+	 * This is the only place where intrinsic lock is used.
 	 * 
 	 * @return
 	 */
@@ -40,9 +47,12 @@ public class PetersonCounter implements Counter {
 		if (ticket >= PETERSON_ALGO_LIMIT) {
 			throw new IllegalStateException("Only two threads/processes in Peterson's algorithm");
 		} else {
-			long id = Thread.currentThread().getId();
-			threadIdToTicket.put(id, ticket);
-			ticket++;
+			final long id = Thread.currentThread().getId();
+			synchronized(this) {
+				threadIdToTicket.put(id, ticket);
+				ticket++;
+//				System.out.println(threadIdToTicket.toString());
+			}
 		}
 	}
 	
@@ -57,14 +67,19 @@ public class PetersonCounter implements Counter {
 			
 			// I want to enter
 			flags[key] = true;
-			// If the other wants to enter, it's his turn
+			// If the other wants to enter, it's his turn, aka "after you"
 			turn = 1-key;
 			
-			// While I want to enter, but not my turn
+			// While the other wants to enter, but not my turn
 			// I will wait
-			while (flags[key] && turn == 1-key ) {
+			while (flags[1-key] && turn == 1-key ) {
 				// waiting
-				// TODO: wait() and notifyAll()
+				/*
+				NOTE: not using Java's wait() because it requires
+				monitor lock (synchronized method) and defeat the purpose
+				of demonstration.
+				Moreover, the original Peterson's algorithm does busy waiting.
+				*/
 			}
 			
 		} else {
@@ -73,7 +88,7 @@ public class PetersonCounter implements Counter {
 	}
 	
 	/**
-	 * Relase mutual exclusion after leaving critical section
+	 * Release mutual exclusion after leaving critical section
 	 */
 	private void release() {
 		final long id = Thread.currentThread().getId();
@@ -88,13 +103,17 @@ public class PetersonCounter implements Counter {
 
 	@Override
 	public void increment() {
+		acquire();
 		count++;
+		release();
 //		System.out.println("Queue: " + count);
 	}
 
 	@Override
 	public void decrement() {
+		acquire();
 		count--;
+		release();
 //		System.out.println("Queue: " + count);
 
 	}
@@ -104,9 +123,18 @@ public class PetersonCounter implements Counter {
 		return count;
 	}
 
+	/* 
+	 * This method is called after simulation run is done.
+	 * Therefore, it is not a critical section.
+	 */
 	@Override
 	public void reset() {
 		count = 0;
+		ticket = 0;
+		threadIdToTicket.clear();
+		flags[0] = false;
+		flags[1] = false;
+		turn = 0;
 	}
 
 }
