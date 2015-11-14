@@ -5,13 +5,22 @@ import java.util.Random;
 import my.practice.concurrency.Counter;
 import my.practice.concurrency.Producer;
 import my.practice.concurrency.ProducerConsumer;
+import my.practice.concurrency.counter.PetersonCounter;
 
-public class SimpleProducer implements Producer, Runnable {
+/**
+ * Producer class that uses Peterson's algorithm.
+ * Only difference with SimpleProducer is useQueue() method
+ * with additional call PetersonCounter.getTicket().
+ * 
+ * @author cdongsi
+ *
+ */
+public class PetersonProducer implements Producer, Runnable {
 	
 	// Using a counter to simulate a queue
-	private Counter queue;
+	private PetersonCounter queue;
 	
-	public SimpleProducer(Counter queue) {
+	public PetersonProducer(Counter queue) {
 		useQueue(queue);
 	}
 	
@@ -39,6 +48,11 @@ public class SimpleProducer implements Producer, Runnable {
 	
 	@Override
 	public void useQueue(Counter queue) {
-		this.queue = queue;
+		if (queue instanceof PetersonCounter) {
+			this.queue = (PetersonCounter) queue;
+			this.queue.getTicket();
+		} else {
+			throw new IllegalArgumentException("PetersonCounter expected.");
+		}
 	}
 }

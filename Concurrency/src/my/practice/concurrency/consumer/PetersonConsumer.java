@@ -5,12 +5,21 @@ import java.util.Random;
 import my.practice.concurrency.Consumer;
 import my.practice.concurrency.Counter;
 import my.practice.concurrency.ProducerConsumer;
+import my.practice.concurrency.counter.PetersonCounter;
 
-public class SimpleConsumer implements Consumer, Runnable {
+/**
+ * Consumer class that uses Peterson's algorithm.
+ * Only difference with SimpleConsumer is useQueue() method
+ * with additional call PetersonCounter.getTicket().
+ * 
+ * @author cdongsi
+ *
+ */
+public class PetersonConsumer implements Consumer, Runnable {
 
-	private Counter queue;
+	private PetersonCounter queue;
 
-	public SimpleConsumer(Counter queue) {
+	public PetersonConsumer(Counter queue) {
 		useQueue(queue);
 	}
 
@@ -38,7 +47,12 @@ public class SimpleConsumer implements Consumer, Runnable {
 	
 	@Override
 	public void useQueue(Counter queue) {
-		this.queue = queue;
+		if (queue instanceof PetersonCounter) {
+			this.queue = (PetersonCounter) queue;
+			this.queue.getTicket();
+		} else {
+			throw new IllegalArgumentException("PetersonCounter expected.");
+		}
 	}
 
 }
