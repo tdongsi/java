@@ -1,6 +1,10 @@
-package my.practice.concurrency;
+package my.practice.concurrency.counter;
 
 import static org.junit.Assert.*;
+import my.practice.concurrency.Consumer;
+import my.practice.concurrency.Counter;
+import my.practice.concurrency.Producer;
+import my.practice.concurrency.ProducerConsumer;
 import my.practice.concurrency.consumer.SimpleConsumer;
 import my.practice.concurrency.counter.SimpleCounter;
 import my.practice.concurrency.producer.SimpleProducer;
