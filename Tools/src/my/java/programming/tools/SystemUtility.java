@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,22 @@ public class SystemUtility {
 	 */
 	private SystemUtility() {
 		throw new AssertionError("Do not instantiate.");
+	}
+	
+	/**
+	 * You can implement StreamManipulator in a separate class
+	 * or implement it on-the-fly with anonymous class.
+	 * 
+	 * processStream(System.in, System.out, new StreamManipulator() {
+	 * 	public void process() { ... }
+	 * } )
+	 * 
+	 * @param in
+	 * @param out
+	 * @param processor
+	 */
+	public static void processStream(InputStream in, PrintStream out, StreamManipulator processor) {
+		processor.process(in, out);
 	}
 
 	/**
