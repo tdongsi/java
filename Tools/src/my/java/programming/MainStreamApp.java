@@ -10,7 +10,7 @@ import my.java.programming.tools.StreamManipulator;
 import my.java.programming.tools.SystemUtility;
 
 /**
- * This Java program allows testing stream processing quickly.
+ * This Java program allows doing ad-hoc stream processing quickly.
  * You can accept zero argument or two arguments for input and output filenames.
  * 
  * In case of zero argument, the command can be something like this:
@@ -35,7 +35,7 @@ public class MainStreamApp {
 			// Use System.in and System.out
 			in = System.in;
 			out = System.out;
-		} else {
+		} else if (args.length == 2) {
 			// Use the arguments as file path/name input file and output file
 			try {
 				in = new FileInputStream(args[0]);
@@ -46,6 +46,11 @@ public class MainStreamApp {
 				e.printStackTrace();
 				return; // stop processing
 			}
+		} else {
+			System.err.println("Unexpected number of arguments");
+			System.err.println("Use 0 argument to input/output to/from command-line.");
+			System.err.println("Use 2 arguments to input/output to/from files.");
+			return;
 		}
 		
 		// For simple processing, use anonymous class
