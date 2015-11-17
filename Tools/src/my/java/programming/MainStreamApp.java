@@ -53,13 +53,39 @@ public class MainStreamApp {
 		// in a separate class
 		SystemUtility.processStream(in, out, new StreamManipulator() {
 			
-			/* 
-			 * This simple processing is equivalent to Python idiom:
-			 * out = ",".join(in)
-			 * 
-			 * (non-Javadoc)
-			 * @see my.java.programming.tools.StreamManipulator#process(java.io.InputStream, java.io.PrintStream)
-			 */
+			@Override
+			public void process(InputStream in, PrintStream out) {
+				
+				// Add column pymt_txn_application_source_type_key
+				final String oldColumns = "(pymt_merchant_key,txn_date_key,txn_type_key,card_type_key,is_swiped,region_key,currency_key,txn_amount,is_rejected,pymt_src_system_key,batch_date_key,pymt_plan_type_key,ihub_txn_id,is_ach)";
+				final String newColumns = "(pymt_merchant_key,txn_date_key,txn_type_key,card_type_key,is_swiped,region_key,currency_key,txn_amount,is_rejected,pymt_src_system_key,batch_date_key,pymt_plan_type_key,ihub_txn_id,is_ach,pymt_txn_application_source_type_key)";
+				
+				// Add value 1 for column pymt_txn_application_source_type_key
+				final String oldEnd = ");";
+				final String newEnd = ",1);";
+				
+				try( Scanner lineScanner = new Scanner(in) ) {
+					StringBuilder sb = new StringBuilder();
+					
+					while (lineScanner.hasNext()) {
+						String line = lineScanner.nextLine();
+						
+						String newColLine = line
+								.replace(oldColumns, newColumns)
+								.replace(oldEnd, newEnd);
+						
+//						System.out.println(newColLine);
+						sb.append(newColLine);
+						sb.append("\n");
+					}
+										
+					out.append(sb.toString());
+				}
+			}
+			
+			/*
+			// This simple processing is equivalent to Python idiom:
+			//  out = ",".join(in)
 			@Override
 			public void process(InputStream in, PrintStream out) {
 				try( Scanner lineScanner = new Scanner(in) ) {
@@ -76,6 +102,7 @@ public class MainStreamApp {
 					out.append(sb.toString());
 				}
 			}
+			*/
 		});
 	}
 	
