@@ -9,6 +9,21 @@ import java.util.Scanner;
 import my.java.programming.tools.StreamManipulator;
 import my.java.programming.tools.SystemUtility;
 
+/**
+ * This Java program allows testing stream processing quickly.
+ * You can accept zero argument or two arguments for input and output filenames.
+ * 
+ * In case of zero argument, the command can be something like this:
+ * > java MainStreamApp >fileOut <fileIn
+ * 
+ * where > and < are input and output redirection. This will make testing easier.
+ * 
+ * Example: In Eclipse, from the Project folder:
+ * MyMac:Tools cdongsi$ java -cp bin/ my.java.programming.MainStreamApp <in.stream >out.stream
+ * 
+ * @author cdongsi
+ *
+ */
 public class MainStreamApp {
 	
 	public static void main(String[] args) {
@@ -56,7 +71,7 @@ public class MainStreamApp {
 					}
 					
 					sb.deleteCharAt(sb.length()-1);
-					System.out.println(sb.toString());
+//					System.out.println(sb.toString());
 					
 					out.append(sb.toString());
 				}
