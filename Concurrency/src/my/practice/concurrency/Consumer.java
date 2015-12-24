@@ -1,6 +1,6 @@
 package my.practice.concurrency;
 
-public interface Consumer {
+public interface Consumer extends Runnable {
 	
 	/**
 	 * Remove some item from a common item queue

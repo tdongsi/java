@@ -28,8 +28,6 @@ public class ProducerConsumer {
 	 * with the given queue.
 	 * 
 	 * At the end of simulation run, the queue should have 0 item.
-	 * 
-	 * @param queue
 	 */
 	public static void produceAndConsume(Counter queue, Producer producer, Consumer consumer) {
 		
