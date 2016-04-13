@@ -14,7 +14,7 @@ import net.projecteuler.utility.PrimeSieve;
  * Find the product of the coefficients, a and b, for the quadratic expression 
  * that produces the maximum number of primes for consecutive values of n, starting with n = 0.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0027 {

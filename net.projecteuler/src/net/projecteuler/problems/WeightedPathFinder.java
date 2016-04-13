@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Solver class for the problem 18 and 67 in Project Euler.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class WeightedPathFinder {

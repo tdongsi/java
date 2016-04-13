@@ -17,7 +17,7 @@ import com.google.codejam.utility.Coordinate;
  * You may choose where you click. If it is possible, then print any valid mine configuration and the coordinates of your click, 
  * following the specifications in the Output section. Otherwise, print "Impossible".
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class MineSweeper {

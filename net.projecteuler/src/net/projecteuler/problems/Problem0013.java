@@ -8,7 +8,7 @@ import java.math.BigInteger;
 /**
  * Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0013 {

@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 /**
  * For displaying the black metal ring
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 @SuppressWarnings("serial")

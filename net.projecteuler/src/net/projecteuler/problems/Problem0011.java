@@ -9,7 +9,7 @@ import java.util.*;
  * 
  * NOTE: Old-style Java. Scanner should be used instead of StringTokenizer.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0011 {

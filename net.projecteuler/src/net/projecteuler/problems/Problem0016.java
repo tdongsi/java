@@ -7,7 +7,7 @@ import java.math.BigInteger;
  * Problem 16: What is the sum of the digits of the number 2^1000?
  * Problem 20: Find the sum of the digits in the number 100!.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0016 {

@@ -8,7 +8,7 @@ import java.math.BigInteger;
 /**
  * What is the first term in the Fibonacci sequence to contain 1000 digits?
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0025 {

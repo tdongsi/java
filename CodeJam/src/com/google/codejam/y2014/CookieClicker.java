@@ -15,7 +15,7 @@ import java.util.Scanner;
  * Using BigDecimal is a bit overkill, given the range of the inputs.
  * It's just an easy exercise for practicing using BigDecimal. 
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class CookieClicker {

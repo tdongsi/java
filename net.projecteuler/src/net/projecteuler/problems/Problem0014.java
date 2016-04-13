@@ -6,7 +6,7 @@ package net.projecteuler.problems;
  * n -> 3n + 1 (n is odd)
  * Which starting number, under one million, produces the longest chain?
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0014 {
