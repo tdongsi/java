@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * https://code.google.com/codejam/contest/dashboard?c=2418487
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Bullseye {

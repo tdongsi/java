@@ -11,7 +11,7 @@ import javax.swing.Timer;
 /**
  * A panel for drawing a sine wave to represent an AC.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class SinePanel extends JPanel implements ActionListener {

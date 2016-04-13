@@ -14,7 +14,7 @@ package com.google.codejam.y2008;
 -	sequence contains between 1 and 50 elements, inclusive.
 -	Each element of sequence is between 1 and 1000, inclusive
  *
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class ZigZag {

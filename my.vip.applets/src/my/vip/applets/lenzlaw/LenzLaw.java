@@ -10,7 +10,7 @@ import javax.swing.event.ChangeListener;
  * A Java project for the course Basic Electrical Enginering, under an Internship Program.
  * An applet/application to illustrate the Lenz's Law. Originally programmed in Java 1.4.
  *  
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class LenzLaw extends JApplet implements MouseMotionListener, ChangeListener {

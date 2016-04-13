@@ -13,7 +13,7 @@ import java.util.Arrays;
  * SUM of (number of combinations for A-D with that list up to D) 
  * for D is the values from first to last of that list
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0031 {

@@ -7,7 +7,7 @@ import javax.swing.JFrame;
  * under Vacation Internship Program (VIP).
  * An applet to illustrate how a transformer works. Programmed in Java 1.4. 
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class MainApp {

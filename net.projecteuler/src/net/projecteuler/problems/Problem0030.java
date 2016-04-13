@@ -12,7 +12,7 @@ package net.projecteuler.problems;
  * 
  * NOTE: This solution may be not robust for larger problems.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0030 {

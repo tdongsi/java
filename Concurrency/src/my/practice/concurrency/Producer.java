@@ -1,6 +1,6 @@
 package my.practice.concurrency;
 
-public interface Producer {
+public interface Producer extends Runnable {
 	
 	/**
 	 * Add some item into a common item queue

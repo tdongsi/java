@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * If d(a) = b and d(b) = a, where a is not b, then a and b are an amicable pair and each of a and b are called amicable numbers.
  * Evaluate the sum of all the amicable numbers under 10000.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0021 {

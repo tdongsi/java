@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * Find the greatest product of five consecutive digits in the 1000-digit number.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0008 {

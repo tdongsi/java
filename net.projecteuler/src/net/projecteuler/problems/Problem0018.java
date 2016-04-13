@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Find the maximum total from top to bottom of the triangle
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0018 {

@@ -22,7 +22,7 @@ package net.projecteuler.problems;
  * The closed-form solution of the minor diagonal:
  * n(n+1)(2n+1)/6 + - n(n+1)/2 + n
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0028 {

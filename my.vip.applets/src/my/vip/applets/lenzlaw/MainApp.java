@@ -9,7 +9,7 @@ import javax.swing.JFrame;
  * A TA project for the course Basic Electrical Enginering, under Vacation Internship Program (VIP).
  * An applet/application to illustrate the Lenz's Law. Programmed in Java 1.4. 
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class MainApp {

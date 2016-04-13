@@ -9,7 +9,7 @@ package net.projecteuler.problems;
  * Mathematical analysis:
  * It can be proven that n(x,y) = 2*n(x-1,y-1) + n(x-2,y) + n(y,x-2);
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class Problem0015 {

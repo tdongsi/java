@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
  * 
  * Applet width = 415 height = 370.
  * 
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 @SuppressWarnings("serial")

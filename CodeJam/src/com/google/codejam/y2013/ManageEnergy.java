@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * TODO: It does not work with the large data set
- * @author dongsi.tuecuong@gmail.com
+ * @author tdongsi
  *
  */
 public class ManageEnergy {
