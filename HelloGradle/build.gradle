@@ -30,3 +30,8 @@ uploadArchives {
        }
     }
 }
+
+// This must be at the end
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.3'
+}
