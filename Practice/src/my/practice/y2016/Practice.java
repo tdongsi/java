@@ -6,8 +6,13 @@ import java.util.List;
 public class Practice {
 	
 	public static List<Integer> maximalSubarray(List<Integer> list) {
+		if ( list.size() <= 1 ) {
+			return new ArrayList<Integer>(list);
+		}
+		
 		int sum = 0;
 		List<Integer> cumSum = new ArrayList<Integer>(list.size());
+		cumSum.add(0);
 		for (int elem : list) {
 			sum += elem;
 			cumSum.add(sum);
@@ -32,7 +37,7 @@ public class Practice {
 			}
 		}
 		
-		return new ArrayList<Integer>(list.subList(lowForProfitIdx+1, profitIdx+1));
+		return new ArrayList<Integer>(list.subList(lowForProfitIdx, profitIdx));
 	}
 
 }
