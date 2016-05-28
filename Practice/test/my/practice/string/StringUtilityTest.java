@@ -1,6 +1,8 @@
 package my.practice.string;
 
 import static org.junit.Assert.*;
+// Replace this with another class/package for practice: e.g. my.practice.y2016.Practice.*.
+import static my.practice.string.StringUtility.*;
 
 import org.junit.Test;
 
@@ -8,25 +10,26 @@ public class StringUtilityTest {
 
 	@Test
 	public void test_atoi() {
-		assertEquals(123, StringUtility.atoi("123"));
-		assertEquals(-123, StringUtility.atoi("-123"));
-		assertEquals(0, StringUtility.atoi("0"));
-		assertEquals(0, StringUtility.atoi("0000"));
+		assertEquals(123, atoi("123"));
+		assertEquals(-123, atoi("-123"));
+		assertEquals(0, atoi("0"));
+		assertEquals(0, atoi("0000"));
+		assertEquals(0, atoi("-0"));
 	}
 	
 	@Test
-	public void test_hasString() {
-		assertTrue( StringUtility.hasSubstring("", ""));
+	public void test_hasSubString() {
+		assertTrue( hasSubstring("", ""));
 		
-		assertTrue( StringUtility.hasSubstring("master", "mast"));
-		assertTrue( StringUtility.hasSubstring("master", "er"));
+		assertTrue( hasSubstring("master", "mast"));
+		assertTrue( hasSubstring("master", "er"));
 		
-		assertTrue( StringUtility.hasSubstring("master", "m"));
-		assertTrue( StringUtility.hasSubstring("master", "r"));
-		assertTrue( StringUtility.hasSubstring("master", ""));
+		assertTrue( hasSubstring("master", "m"));
+		assertTrue( hasSubstring("master", "r"));
+		assertTrue( hasSubstring("master", ""));
 		
-		assertFalse( StringUtility.hasSubstring("master", "mate"));
-		assertFalse( StringUtility.hasSubstring("master", "mastex"));
+		assertFalse( hasSubstring("master", "mate"));
+		assertFalse( hasSubstring("master", "mastex"));
 	}
 
 }
