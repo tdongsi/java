@@ -51,5 +51,44 @@ public class StringUtility {
 		
 		return false;
 	}
+	
+	public static String encoding(String input) {
+		
+		if (input.length() <= 1) {
+			return input;
+		}
+		
+		char[] charIn = input.toCharArray();
+		StringBuilder builder = new StringBuilder(input.length());
+		
+		char cur = charIn[0];
+		int count = 1;
+		
+		for (int i = 1; i < charIn.length; i++) {
+			if (charIn[i] == cur) {
+				count++;
+			} else {
+				if (count == 1) {
+					builder.append(cur);
+				} else {
+					builder.append(cur);
+					builder.append(Integer.toString(count));
+				}
+				
+				cur = charIn[i];
+				count = 1;
+			}
+		}
+		
+		// Append the last character run
+		if (count == 1) {
+			builder.append(cur);
+		} else {
+			builder.append(cur);
+			builder.append(Integer.toString(count));
+		}
+		
+		return builder.toString();
+	}
 
 }

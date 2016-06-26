@@ -33,5 +33,14 @@ public class StringUtilityTest {
 		
 		assertFalse( hasSubstring("", "mastex"));
 	}
+	
+	@Test
+	public void test_encoding() {
+		assertEquals("a4b3c2d2ef2", encoding("aaaabbbccddeff"));
+		assertEquals("abc", encoding("abc"));
+		
+		assertEquals("a", encoding("a"));
+		assertEquals("", encoding(""));
+	}
 
 }
