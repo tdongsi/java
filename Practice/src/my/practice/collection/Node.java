@@ -26,7 +26,46 @@ public class Node {
 	 * @return head of merged linked-list
 	 */
 	public static Node merge(Node first, Node second) {
-		return null;
+		if (first == null) {
+			return second;
+		}
+		if (second == null) {
+			return first;
+		}
+		
+		Node head;
+		if (first.value < second.value) {
+			head = first;
+			first = first.next;
+		} else {
+			head = second;
+			second = second.next;
+		}
+		
+		Node cur = head;
+		while (first != null && second != null ) {
+			if (first.value < second.value) {
+				cur.next = first;
+				
+				cur = cur.next;
+				first = first.next;
+			} else {
+				cur.next = second;
+				
+				cur = cur.next;
+				second = second.next;
+			}
+		}
+		
+		// Append the rest to current list
+		if (first != null) {
+			cur.next = first;
+		}
+		if (second != null) {
+			cur.next = second;
+		}
+		
+		return head;
 	}
 	
 	public static void printList(Node head) {
