@@ -30,6 +30,8 @@ public class StringUtilityTest {
 		
 		assertFalse( hasSubstring("master", "mate"));
 		assertFalse( hasSubstring("master", "mastex"));
+		
+		assertFalse( hasSubstring("", "mastex"));
 	}
 
 }
