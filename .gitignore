@@ -19,3 +19,5 @@ gradle/build
 JDBCTutorial/testdb
 derby.log
 site
+.recommenders/
+*.project
