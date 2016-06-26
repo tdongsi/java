@@ -19,6 +19,7 @@ public class NodeTest {
 		Node.printList(rHead);
 		
 		Node merged = Node.merge(leftHead, rHead);
+		// TODO: add method to convert List to array for easy unit testing
 		Node.printList(merged);
 	}
 	
@@ -35,6 +36,35 @@ public class NodeTest {
 		Node.printList(rHead);
 		
 		Node merged = Node.merge(leftHead, rHead);
+		Node.printList(merged);
+	}
+	
+	@Test
+	public void test_merge3() {
+		Node rEnd = new Node(6, null);
+		Node rMid = new Node(4, rEnd);
+		Node rHead = new Node(2, rMid);
+		
+		Node merged = Node.merge(rHead, null);
+		assertEquals(rHead, merged);
+		
+		Node merged2 = Node.merge(null, rHead);
+		assertEquals(rHead, merged2);
+	}
+	
+	@Test
+	public void test_merge4() {
+		Node left = new Node(2, null);
+		Node right = new Node(1, null);
+		Node merged = Node.merge(left, right);
+		Node.printList(merged);
+	}
+	
+	@Test
+	public void test_merge5() {
+		Node left = new Node(1, null);
+		Node right = new Node(1, null);
+		Node merged = Node.merge(left, right);
 		Node.printList(merged);
 	}
 
