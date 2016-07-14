@@ -25,7 +25,7 @@ public class SortUtilityTest {
 		int[] numbers2 = {1};
 		assertEquals(-1, binarySearch(numbers2, 2));
 		assertEquals(-1, binarySearch(numbers2, -2));
-		assertEquals(0, binarySearch(numbers2, 0));
+		assertEquals(0, binarySearch(numbers2, 1));
 		
 		int[] numbers3 = {1, 3, 4, 6, 7};
 		assertEquals(1, binarySearch(numbers3, 3));
