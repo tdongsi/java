@@ -8,8 +8,38 @@ public class SortUtility {
 	 * @param head
 	 * @param item
 	 */
-	public static void insertLoop(Node head, Node item) {
+	public static Node insertIntoLoop(Node head, int value) {
+		if (head == null) {
+			// empty loop
+			head = new Node(value, null);
+			head.next = head;
+			return head;
+		}
 		
+		// Case 1: insert value at the beginning of the list
+		if (value <= head.value) {
+			Node temp = new Node(value, head);
+			Node end = getLoopEnd(head);
+			end.next = temp;
+			return temp;
+		}
+		
+		// Case 2: insert value in the middle of the list
+		Node cur = head;
+		while (cur.next != head) {
+			if (cur.value < value && value <= cur.next.value) {
+				Node temp = new Node(value, cur.next);
+				cur.next = temp;
+				return head;
+			} else {
+				cur = cur.next;
+			}
+		}
+		
+		// Case 3: now we reach the end of the list
+		Node node = new Node(value, head);
+		cur.next = node;
+		return head;
 	}
 	
 	/**

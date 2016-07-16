@@ -59,5 +59,28 @@ public class SortUtilityTest {
 		assertEquals(head, end);
 		SortUtility.printLoop(head);
 	}
+	
+	@Test
+	public void test_insertIntoLoop() {
+		Node head = null;
+		head = SortUtility.insertIntoLoop(head, 1);
+		SortUtility.printLoop(head);
+		
+		head = SortUtility.insertIntoLoop(head, 3);
+		SortUtility.printLoop(head);
+		
+		Node old_head = head;
+		head = SortUtility.insertIntoLoop(old_head, 1);
+		assertNotEquals(head, old_head);
+		SortUtility.printLoop(head);
+		
+		old_head = head;
+		head = SortUtility.insertIntoLoop(old_head, 2);
+		assertEquals(head, old_head);
+		SortUtility.printLoop(head);
+		
+		head = SortUtility.insertIntoLoop(old_head, 2);
+		SortUtility.printLoop(head);
+	}
 
 }
