@@ -44,6 +44,7 @@ public class SortUtility {
 		while (cur != end) {
 			System.out.print(cur.value);
 			System.out.print("->");
+			cur = cur.next;
 		}
 		System.out.println(cur.value);
 	}
