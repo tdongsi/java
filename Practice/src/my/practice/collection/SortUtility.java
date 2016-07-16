@@ -3,6 +3,52 @@ package my.practice.collection;
 public class SortUtility {
 	
 	/**
+	 * Interview question: Insert a node into a looped, sorted linked list.
+	 * 
+	 * @param head
+	 * @param item
+	 */
+	public static void insertLoop(Node head, Node item) {
+		
+	}
+	
+	/**
+	 * Find the end of a looped linked list.
+	 * 
+	 * @param head: start of the looped linked list.
+	 * @return
+	 */
+	public static Node getLoopEnd(Node head) {
+		if (head == null) {
+			throw new IllegalArgumentException("Empty list");
+		}
+		Node cur = head;
+		while (cur.next != head) {
+			cur = cur.next;
+		}
+		return cur;
+	}
+	
+	/**
+	 * Print the looped linked list.
+	 * 
+	 * @param head: start of the looped linked list.
+	 */
+	public static void printLoop(Node head) {
+		if (head == null) {
+			throw new IllegalArgumentException("Empty list");
+		}
+		
+		Node end = getLoopEnd(head);
+		Node cur = head;
+		while (cur != end) {
+			System.out.print(cur.value);
+			System.out.print("->");
+		}
+		System.out.println(cur.value);
+	}
+	
+	/**
 	 * Simple binary search of integer from an array of integers.
 	 * 
 	 * @param items
