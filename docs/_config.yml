@@ -29,7 +29,7 @@ email:
 root: /java
 permalink: /blog/:year/:month/:day/:title/
 source: source
-destination: public/java
+destination: public
 plugins: plugins
 code_dir: download/code
 category_dir: blog/categories

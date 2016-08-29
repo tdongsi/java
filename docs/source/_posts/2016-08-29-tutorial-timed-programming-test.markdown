@@ -12,7 +12,7 @@ categories:
 For timed programming tests, new test-takers usually underestimate how short two and a half hours can be.
 Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
 And if you are unlukcy, you need another 15-30 minutes to debug any issue that comes up. 
-That leaves them only about one hour for actually solving the problem. 
+That leaves you only about one hour for actually solving the problem. 
 Most of the test takers are experienced and skilled programmers, but they tend to forget that many of those steps above are not needed in their every tasks.
 
 This post lists out steps to get started quickly for a **Java** programming test, using Eclipse and Maven.
