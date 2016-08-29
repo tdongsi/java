@@ -10,11 +10,14 @@ categories:
 ---
 
 For timed programming tests, new test-takers usually underestimate how short two and a half hours can be.
-Remember that 30 minutes of that will go into reading the problem instruction and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
+Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
 And if you are unlukcy, you need another 15-30 minutes to debug any issue that comes up. 
+That leaves them only about one hour for actually solving the problem. 
 Most of the test takers are experienced and skilled programmers, but they tend to forget that many of those steps above are not needed in their every tasks.
 
 This post lists out steps to get started quickly for a **Java** programming test, using Eclipse and Maven.
+
+<!--more-->
 
 (1) Use this command to setup an Eclipse empty project.
 
@@ -44,7 +47,7 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.intuit.sbg.qe.MainApp</mainClass>
+                                    <mainClass>my.interview.CompanyName</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
@@ -80,7 +83,7 @@ More importantly, it allows to print you lots of information needed for debuggin
 * Create `resources` source folder in `src/main`.
 * Add `log4j.properties`. For simplicity, only log information to console. 
     * Use `logger.debug` for printing debug information and turn on/off logging by setting `rootLogger` to `DEBUG`/`INFO`.
-* You need to add into `pom.xml` dependencies for the three followings: slf4j-api (interface), slf4j-log4j12 (route slf4j calls to log4j), log4j (logging backend).
+* You need to add into `pom.xml` dependencies for the three followings: `slf4j-api` (interface), `slf4j-log4j12` (route slf4j calls to log4j), `log4j` (logging backend).
 
 Use the following content for `log4j.properties`, modified from [this example](https://logging.apache.org/log4j/1.2/manual.html).
 
@@ -95,4 +98,50 @@ log4j.appender.A1= org.apache.log4j.ConsoleAppender
 log4j.appender.A1.layout= org.apache.log4j.PatternLayout
 log4j.appender.A1.layout.ConversionPattern= [%t][%-5p][%c] - %m%n
 ```
+(5) Check setup.
+``` plain Check running
+mvn clean package
+java -jar target/xxx-jar-with-dependencies.jar
+```
 
+(6) Use `StreamEditor` interface for easy testing in Eclipse and CLI.
+
+``` java StreamEditor interface
+public interface StreamEditor {
+	public void process(InputStream in, PrintStream out);
+}
+```
+
+``` java Main class calling Solver that implements StreamEditor interface
+public class App {
+	public static void main(String[] args) {
+		InputStream in;
+		PrintStream out;
+		
+		if (args.length == 2) {
+			try {
+				in = new FileInputStream(new File(args[0]));
+				out = new PrintStream(new File(args[1]));
+			} catch (FileNotFoundException e) {
+				System.err.println("Could not find file");
+				return;
+			}
+		} else {
+			in = System.in;
+			out = System.out;
+		}
+		
+		Solver solver = new Solver();
+		solver.process(in, out);
+	}
+}
+```
+If the test requires specific input from/output to console or file, it's easy to do it either way. 
+
+``` plain Commands to run when using StreamEditor interface
+For console input/output:
+java -jar target\xxx-jar-with-dependencies.jar < data\in.txt
+
+For file input/output:
+java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt data/out.txt
+```
