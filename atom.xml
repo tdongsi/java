@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
-  <link href="http://tdongsi.github.io/java/"/>
-  <updated>2016-08-27T00:34:21-07:00</updated>
-  <id>http://tdongsi.github.io/java/</id>
+  <title><![CDATA[Personal Interview Notes]]></title>
+  <link href="http://tdongsi.github.io/SqlTests/atom.xml" rel="self"/>
+  <link href="http://tdongsi.github.io/SqlTests/"/>
+  <updated>2016-08-29T01:32:40-07:00</updated>
+  <id>http://tdongsi.github.io/SqlTests/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Cuong Dong-Si]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
