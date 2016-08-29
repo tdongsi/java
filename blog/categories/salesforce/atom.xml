@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
-  <link href="http://tdongsi.github.io/SqlTests/blog/categories/java/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Salesforce | Personal Interview Notes]]></title>
+  <link href="http://tdongsi.github.io/SqlTests/blog/categories/salesforce/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/SqlTests/"/>
-  <updated>2016-08-29T02:17:46-07:00</updated>
+  <updated>2016-08-29T02:19:53-07:00</updated>
   <id>http://tdongsi.github.io/SqlTests/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>

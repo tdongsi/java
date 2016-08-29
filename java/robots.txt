@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://tdongsi.github.io/SqlTests/sitemap.xml 
