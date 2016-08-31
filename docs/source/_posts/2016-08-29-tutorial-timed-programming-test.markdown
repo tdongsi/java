@@ -78,7 +78,7 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
 ```
 
 (4) Add logging. Ability to use logging frameworks shows off your skill and experience. 
-More importantly, it allows to print you lots of information needed for debugging without worrying about cleaning up console output later.
+More importantly, it allows you to liberally print lots of information needed for debugging without worrying about cleaning up console output later.
 
 * Create `resources` source folder in `src/main`.
 * Add `log4j.properties`. For simplicity, only log information to console. 
