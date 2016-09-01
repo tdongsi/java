@@ -11,9 +11,9 @@ categories:
 
 For timed programming tests, new test-takers usually underestimate how short two and a half hours can be.
 Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
-And if you are unlukcy, you need another 15-30 minutes to debug any issue that comes up. 
+And if you are unlucky, you need another 15-30 minutes to debug any issue that comes up. 
 That leaves you only about one hour for actually solving the problem. 
-Most of the test takers are experienced and skilled programmers, but they tend to forget that many of those steps above are not needed in their every tasks.
+Most of the test takers are experienced and skilled programmers, but they tend to forget that many of those steps above are not needed in their everyday tasks, in their daily environments and routines.
 
 This post lists out steps to get started quickly for a **Java** programming test, using Eclipse and Maven.
 
@@ -78,7 +78,7 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
 ```
 
 (4) Add logging. Ability to use logging frameworks shows off your skill and experience. 
-More importantly, it allows to print you lots of information needed for debugging without worrying about cleaning up console output later.
+More importantly, it allows you to liberally print lots of information needed for debugging without worrying about cleaning up console output later.
 
 * Create `resources` source folder in `src/main`.
 * Add `log4j.properties`. For simplicity, only log information to console. 
