@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2016-09-14T23:03:52-07:00</updated>
+  <updated>2017-05-10T00:12:28-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -14,11 +14,20 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Tutorial: Quick-start for Timed Programming Test]]></title>
+    <title type="html"><![CDATA[Tutorial: Quick-start for Groovy Programming Test]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/"/>
+    <updated>2017-05-10T00:07:18-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test</id>
+    <content type="html"><![CDATA[<p>Eclipse &amp; Maven.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Tutorial: Quick-start for Java Programming Test]]></title>
     <link href="http://tdongsi.github.io/java/blog/2016/08/29/tutorial-timed-programming-test/"/>
     <updated>2016-08-29T01:38:40-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2016/08/29/tutorial-timed-programming-test</id>
-    <content type="html"><![CDATA[<p>For timed programming tests, new test-takers usually underestimate how short two and a half hours can be.
+    <content type="html"><![CDATA[<p>For <strong>timed</strong> programming tests, new test-takers usually underestimate how short two and a half hours can be.
 Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
 And if you are unlucky, you need another 15-30 minutes to debug any issue that comes up.
 That leaves you only about one hour for actually solving the problem.
