@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tutorial: Quick-start for Timed programming test"
+title: "Tutorial: Quick-start for Java programming test"
 date: 2016-08-29 01:38:40 -0700
 comments: true
 categories: 
@@ -9,7 +9,7 @@ categories:
 - Salesforce
 ---
 
-For timed programming tests, new test-takers usually underestimate how short two and a half hours can be.
+For **timed** programming tests, new test-takers usually underestimate how short two and a half hours can be.
 Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
 And if you are unlucky, you need another 15-30 minutes to debug any issue that comes up. 
 That leaves you only about one hour for actually solving the problem. 
