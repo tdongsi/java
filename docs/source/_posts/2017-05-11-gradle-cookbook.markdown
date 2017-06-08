@@ -7,12 +7,18 @@ categories:
 - Gradle
 ---
 
+This post goes over simple (but beyond the very basic) recipes for getting started with Gradle.
+
+<!--more-->
+
 ### Basic tasks
 
 ``` plain 
 ./gradlew dependencies
+
 # Subproject
 ./gradlew :subprojectName:dependencies
+
 # Configuration
 ./gradlew dependencies --configuration testCompile
 ```
@@ -155,16 +161,33 @@ project(':server') {
 
 #### Maven/Nexus authentication
 
-http://stackoverflow.com/questions/12749225/where-to-put-gradle-configuration-i-e-credentials-that-should-not-be-committe
+In Gradle, Nexus authentication can be specified in both `build.gradle` and `gradle.properties` file, where `build.gradle` should be checked into VCS (e.g., git) while `gradle.properties` contains sensitive credentials information.
+
+``` groovy Example build.gradle
+    repositories {
+        maven {
+            credentials {
+                username nexusUsername
+                password nexusPassword
+            }
+            url { nexusPublic }
+        }
+    }
+```
+
+``` properties Example gradle.properties
+nexusUsername=myUsername
+nexusPassword=password123
+nexusPublic=https://nexus.example.com/nexus/content/groups/public/
+```
+
+In Jenkins, to securely passing Nexus credentials, `properties` file is not recommended. 
+Instead, use `withCredentials` for passing credentials as shown in [this blog post](http://tdongsi.github.io/blog/2017/05/20/gradle-settings-in-jenkinsfile/).
 
 #### `buildscript` block
 
-The difference https://discuss.gradle.org/t/what-is-difference-between-buildscript-classpath-and-dependencies-compile/4290/2
-
-First of all, I assume you meant to include the "dependencies" block between "buildscript" and "classpath".
-
-The "buildscript" block only controls dependencies for the buildscript process itself, not for the application code, which the top-level "dependencies" block controls.
-
-For instance, you could define dependencies in "buildscript/classpath" that represent Gradle plugins used in the build process. Those plugins would not be referenced as dependencies for the application code.
-
+From [here](https://discuss.gradle.org/t/what-is-difference-between-buildscript-classpath-and-dependencies-compile/4290/2), 
+the `buildscript` block only controls dependencies for the buildscript process itself, not for the application code, which the top-level `dependencies` block controls.
+For instance, you could define dependencies in "buildscript/classpath" that represent Gradle plugins used in the build process. 
+Those plugins would not be referenced as dependencies for the application code. 
 Read the Gradle User Guide for more information (the PDF is easy to search).
