@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2017/05/11/gradle-cookbook/</loc>
+<lastmod>2017-05-11T10:20:39-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/</loc>
 <lastmod>2017-05-10T00:07:18-07:00</lastmod>
 </url>
@@ -35,5 +39,8 @@
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/groovy/</loc>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/categories/gradle/</loc>
 </url>
 </urlset>

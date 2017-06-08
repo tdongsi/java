@@ -1,0 +1,552 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Gradle Cookbook - Personal Interview Notes</title>
+  <meta name="author" content="Cuong Dong-Si">
+
+  
+  <meta name="description" content="This post goes over simple (but beyond the very basic) recipes for getting started with Gradle. Basic tasks 1
+2
+3
+4
+5
+6
+7
+./gradlew dependencies # &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2017/05/11/gradle-cookbook/">
+  <link href="/java/favicon.png" rel="icon">
+  <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
+  <script src="/java/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/java/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/java/">Personal Interview Notes</a></h1>
+  
+    <h2>Neither success nor failure is ever final.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tdongsi.github.io/java">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/java/">Blog Home</a></li>
+  <li><a href="/java/blog/archives">Archives</a></li>
+  <li><a href="http://tdongsi.github.io/SqlTests/syllabus/">Syllabus</a></li>
+  <li><a href="http://tdongsi.github.io">Personal Home</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Gradle Cookbook</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-05-11T10:20:39-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>10:20 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This post goes over simple (but beyond the very basic) recipes for getting started with Gradle.</p>
+
+<!--more-->
+
+
+<h3>Basic tasks</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./gradlew dependencies
+</span><span class='line'>
+</span><span class='line'># Subproject
+</span><span class='line'>./gradlew :subprojectName:dependencies
+</span><span class='line'>
+</span><span class='line'># Configuration
+</span><span class='line'>./gradlew dependencies --configuration testCompile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the second command based on <a href="http://stackoverflow.com/questions/27763472/how-to-check-dependency-list-at-runtime-gradle">this example</a>, the root project might not have dependencies and you want to list dependencies on one of the subprojects.</p>
+
+<p>In the third command based on <a href="https://discuss.gradle.org/t/how-to-find-which-dependency-is-fetching-a-certain-jar/7319/10">this example</a>, you want to see which task will fetch a certain JAR (e.g., velocity).</p>
+
+<h3>Sample <code>build.gradle</code> file</h3>
+
+<p>Most of the tutorials show a very simplistic <code>build.gradle</code> file to illustrate the basics.
+However, starting from those simple build files will often lead to frequent major changes, coming from frequent Google and StackOverflow searches for how to do something (e.g., Nexus authentication).
+This section shows how a <code>build.gradle</code> file looks like for a medium-size team working in industry.</p>
+
+<figure class='code'><figcaption><span>Sample build file</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">buildscript</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">credentials</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">username</span> <span class="n">nexusUsername</span>
+</span><span class='line'>                <span class="n">password</span> <span class="n">nexusPassword</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">url</span> <span class="o">{</span> <span class="n">nexusPublic</span> <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.h2database:h2:1.3.170&#39;</span>
+</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;org.postgresql:postgresql:9.4-1201-jdbc41&#39;</span>
+</span><span class='line'>        <span class="n">classpath</span> <span class="s1">&#39;com.example.plugins:some-gradle-plugin:1.1.6&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;com.example.plugins&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">subprojects</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">credentials</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">username</span> <span class="n">nexusUsername</span>
+</span><span class='line'>                <span class="n">password</span> <span class="n">nexusPassword</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="n">url</span> <span class="o">{</span> <span class="n">nexusPublic</span> <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;groovy&#39;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;com.example.app&#39;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Core</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="o">(</span><span class="s1">&#39;org.apache.kafka:kafka_2.11:0.8.2.0&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;jms&#39;</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;jmxtools&#39;</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;jmxri&#39;</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">group:</span> <span class="s1">&#39;org.slf4j&#39;</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;junit&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">compile</span> <span class="s1">&#39;com.amazonaws:aws-java-sdk:1.9.24&#39;</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="s1">&#39;io.swagger:swagger-core:1.5.10&#39;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="cm">/*</span>
+</span><span class='line'><span class="cm">         * junit is excluded in multiple places, because org.apache.cassandra.cassandra-all:2.1.9</span>
+</span><span class='line'><span class="cm">         * includes JUnit 4.8.1 as a compile dependency, and our test framework needing 4.12</span>
+</span><span class='line'><span class="cm">         */</span>
+</span><span class='line'>        <span class="c1">// Support</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="o">(</span><span class="s2">&quot;org.apache.cassandra.cassandra-all:2.1.9&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;junit&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="o">(</span><span class="s2">&quot;com.example.app:common:${commons_version}&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">exclude</span> <span class="nl">module:</span> <span class="s1">&#39;junit&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="s2">&quot;org.flywaydb:flyway-core:3.2.1&quot;</span>
+</span><span class='line'>        <span class="n">testCompile</span> <span class="s1">&#39;org.hsqldb:hsqldb:2.3.2&#39;</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="s1">&#39;com.google.code.findbugs:findbugs:3.0.1&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// CassandraSetupTest-based tests fail for newer versions of Guava.</span>
+</span><span class='line'>    <span class="n">configurations</span><span class="o">.</span><span class="na">all</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">resolutionStrategy</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">force</span> <span class="s1">&#39;com.google.guava:guava:18.0&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">jacocoCoverage</span><span class="o">.</span><span class="na">limits</span> <span class="o">=</span>  <span class="o">[</span>
+</span><span class='line'>    <span class="s1">&#39;instruction&#39;</span><span class="o">:</span> <span class="mi">40</span><span class="o">,</span>
+</span><span class='line'>    <span class="s1">&#39;line&#39;</span>       <span class="o">:</span> <span class="mi">48</span><span class="o">,</span>
+</span><span class='line'>    <span class="s1">&#39;complexity&#39;</span> <span class="o">:</span> <span class="mi">30</span><span class="o">,</span>
+</span><span class='line'>    <span class="s1">&#39;method&#39;</span>     <span class="o">:</span> <span class="mi">55</span><span class="o">,</span>
+</span><span class='line'>    <span class="s1">&#39;class&#39;</span>      <span class="o">:</span> <span class="mi">70</span>
+</span><span class='line'><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">project</span><span class="o">(</span><span class="s1">&#39;:server&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mainClassName</span> <span class="o">=</span> <span class="s1">&#39;com.example.app.ApiApplication&#39;</span>
+</span><span class='line'>    <span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">compile</span> <span class="s1">&#39;com.exacttarget:partner-api:1.0.3&#39;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">testCompile</span> <span class="s1">&#39;com.squareup.okhttp3:mockwebserver:3.2.0&#39;</span>
+</span><span class='line'>        <span class="n">testCompile</span> <span class="s1">&#39;org.apache.lucene:lucene-test-framework:5.3.1&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">test</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">exclude</span> <span class="s1">&#39;**/SomeClass.class&#39;</span>
+</span><span class='line'>        <span class="n">exclude</span> <span class="s1">&#39;**/*IntegrationTest.*&#39;</span>
+</span><span class='line'>      <span class="n">exclude</span> <span class="s1">&#39;**/schema/model/*MoreWildcard.class&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// generateSwagger is not a Test but depends on the testing framework</span>
+</span><span class='line'>    <span class="n">task</span> <span class="nf">generateSwagger</span><span class="o">(</span><span class="nl">type:</span> <span class="n">Test</span><span class="o">,</span> <span class="nl">dependsOn:</span> <span class="n">testClasses</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">include</span> <span class="s1">&#39;**/util/SwaggerFileGenerator.class&#39;</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">swaggerPath</span> <span class="o">=</span> <span class="s1">&#39;build/swagger-test.yaml&#39;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Not considered &quot;UP-TO-DATE&quot; if the output file does not exist</span>
+</span><span class='line'>        <span class="n">outputs</span><span class="o">.</span><span class="na">upToDateWhen</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">file</span><span class="o">(</span><span class="s1">&#39;server/&#39;</span> <span class="o">+</span> <span class="n">swaggerPath</span><span class="o">).</span><span class="na">exists</span><span class="o">()</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">systemProperty</span> <span class="s1">&#39;test.swagger.outfile&#39;</span><span class="o">,</span> <span class="n">file</span><span class="o">(</span><span class="n">swaggerPath</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;\n\nSwagger documentation can be found in api/server/${swaggerPath}\n\n&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">checkstyle</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">checkstyleMain</span><span class="o">.</span><span class="na">exclude</span> <span class="s1">&#39;**/db/migration/*.java&#39;</span> <span class="c1">// Exclude flywaydb migrations: they violate type name checks</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">jacocoCoverage</span><span class="o">.</span><span class="na">limits</span> <span class="o">=</span>  <span class="o">[</span>
+</span><span class='line'>        <span class="s1">&#39;instruction&#39;</span><span class="o">:</span> <span class="mi">40</span><span class="o">,</span>
+</span><span class='line'>        <span class="s1">&#39;line&#39;</span>       <span class="o">:</span> <span class="mi">48</span><span class="o">,</span>
+</span><span class='line'>        <span class="s1">&#39;complexity&#39;</span> <span class="o">:</span> <span class="mi">30</span><span class="o">,</span>
+</span><span class='line'>        <span class="s1">&#39;method&#39;</span>     <span class="o">:</span> <span class="mi">55</span><span class="o">,</span>
+</span><span class='line'>        <span class="s1">&#39;class&#39;</span>      <span class="o">:</span> <span class="mi">70</span>
+</span><span class='line'>    <span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Maven/Nexus authentication</h4>
+
+<p>In Gradle, Nexus authentication can be specified in both <code>build.gradle</code> and <code>gradle.properties</code> file, where <code>build.gradle</code> should be checked into VCS (e.g., git) while <code>gradle.properties</code> contains sensitive credentials information.</p>
+
+<figure class='code'><figcaption><span>Example build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">maven</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">credentials</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">username</span> <span class="n">nexusUsername</span>
+</span><span class='line'>            <span class="n">password</span> <span class="n">nexusPassword</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">url</span> <span class="o">{</span> <span class="n">nexusPublic</span> <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Example gradle.properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='properties'><span class='line'><span class="na">nexusUsername</span><span class="o">=</span><span class="s">myUsername</span>
+</span><span class='line'><span class="na">nexusPassword</span><span class="o">=</span><span class="s">password123</span>
+</span><span class='line'><span class="na">nexusPublic</span><span class="o">=</span><span class="s">https://nexus.example.com/nexus/content/groups/public/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In Jenkins, to securely passing Nexus credentials, <code>properties</code> file is not recommended.
+Instead, use <code>withCredentials</code> for passing credentials as shown in <a href="http://tdongsi.github.io/blog/2017/05/20/gradle-settings-in-jenkinsfile/">this blog post</a>.</p>
+
+<h4><code>buildscript</code> block</h4>
+
+<p>From <a href="https://discuss.gradle.org/t/what-is-difference-between-buildscript-classpath-and-dependencies-compile/4290/2">here</a>,
+the <code>buildscript</code> block only controls dependencies for the buildscript process itself, not for the application code, which the top-level <code>dependencies</code> block controls.
+For instance, you could define dependencies in &ldquo;buildscript/classpath&rdquo; that represent Gradle plugins used in the build process.
+Those plugins would not be referenced as dependencies for the application code.
+Read the Gradle User Guide for more information (the PDF is easy to search).</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Cuong Dong-Si</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-05-11T10:20:39-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>10:20 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/java/blog/categories/gradle/'>gradle</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2017/05/11/gradle-cookbook/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2017/05/11/gradle-cookbook/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/" title="Previous Post: Tutorial: Quick-start for Groovy programming test">&laquo; Tutorial: Quick-start for Groovy programming test</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>About This Blog</h1>
+    <p>Random interview experience and lessons.</p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2017/05/11/gradle-cookbook/">Gradle Cookbook</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/">Tutorial: Quick-start for Groovy Programming Test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2016/09/09/common-interview-questions/">Common Interview Questions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2016/08/29/tutorial-timed-programming-test/">Tutorial: Quick-start for Java Programming Test</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (1)</a></li><li><a href='/java/blog/categories/java/'>java (2)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/salesforce/'>salesforce (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (2)</a></li></ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Cuong Dong-Si -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
