@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-08T17:12:55-07:00</updated>
+  <updated>2017-06-08T17:27:21-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,119 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[HttpClient Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook/"/>
+    <updated>2017-06-08T17:14:29-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook</id>
+    <content type="html"><![CDATA[<p>Apache HttpClient library is regularly used in Java program to query REST endpoints.</p>
+
+<!--more-->
+
+
+<h3>Version 4.1.x -> 4.2.1</h3>
+
+<p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
+
+<p><strong>Recipe 1</strong>: Proxy setup. Based on <a href="https://stackoverflow.com/questions/9811828/common-httpclient-and-proxy">this</a>:</p>
+
+<pre><code class="java Setting up proxy">    HttpHost proxy = new HttpHost("127.0.0.1", 8080, "http");
+
+    DefaultHttpClient httpclient = new DefaultHttpClient();
+    try {
+        httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+
+        HttpHost target = new HttpHost("issues.apache.org", 443, "https");
+        HttpGet req = new HttpGet("/");
+
+        System.out.println("executing request to " + target + " via " + proxy);
+        HttpResponse rsp = httpclient.execute(target, req);
+        ...
+    } finally {
+        // When HttpClient instance is no longer needed,
+        // shut down the connection manager to ensure
+        // immediate deallocation of all system resources
+        httpclient.getConnectionManager().shutdown();
+    }
+</code></pre>
+
+<p>With proxy authentication? Check out <a href="https://stackoverflow.com/questions/13288038/httpclient-4-2-2-and-proxy-with-username-password">this</a></p>
+
+<p><strong>Recipe 2</strong>: Connection timeout. Based on <a href="https://gist.github.com/tychobrailleur/9fbf521727539b403c90">this</a>:</p>
+
+<pre><code class="java Conneciton timeout">public class RunTest {
+
+    @Test
+    public void runDefaultClient() throws Exception {
+        URI uri = new URL("http://localhost:3000/").toURI();
+
+        HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 2000);
+        httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
+
+        HttpGet message = new HttpGet("/");
+        HttpResponse response = httpClient.execute(host, message);
+
+        System.out.println(response.getStatusLine());
+    }
+}
+</code></pre>
+
+<h3>Later version</h3>
+
+<p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
+
+<pre><code class="java Setting up proxy">public class ClientExecuteProxy {
+
+    public static void main(String[] args)throws Exception {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpHost target = new HttpHost("httpbin.org", 443, "https");
+            HttpHost proxy = new HttpHost("127.0.0.1", 8080, "http");
+
+            RequestConfig config = RequestConfig.custom()
+                    .setProxy(proxy)
+                    .build();
+            HttpGet request = new HttpGet("/");
+            request.setConfig(config);
+
+            System.out.println("Executing request " + request.getRequestLine() + " to " + target + " via " + proxy);
+
+            CloseableHttpResponse response = httpclient.execute(target, request);
+            try {
+                System.out.println("----------------------------------------");
+                System.out.println(response.getStatusLine());
+                System.out.println(EntityUtils.toString(response.getEntity()));
+            } finally {
+                response.close();
+            }
+        } finally {
+            httpclient.close();
+        }
+    }
+
+}
+</code></pre>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="https://hc.apache.org/index.html">Project Home</a></li>
+<li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
+</ul>
+
+
+<p>Apache HttpClient 4.2.1</p>
+
+<ul>
+<li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Common Interview Questions]]></title>
