@@ -6,7 +6,6 @@ comments: true
 categories: 
 - Java
 - Tutorial
-- Salesforce
 ---
 
 For **timed** programming tests, new test-takers usually underestimate how short two and a half hours can be.

@@ -5,6 +5,7 @@ date: 2017-05-11 10:20:39 -0700
 comments: true
 categories: 
 - Gradle
+- Tutorial
 ---
 
 This post goes over simple (but beyond the very basic) recipes for getting started with Gradle.
@@ -33,7 +34,7 @@ Most of the tutorials show a very simplistic `build.gradle` file to illustrate t
 However, starting from those simple build files will often lead to frequent major changes, coming from frequent Google and StackOverflow searches for how to do something (e.g., Nexus authentication).
 This section shows how a `build.gradle` file looks like for a medium-size team working in industry.
 
-``` gradle Sample build file
+``` groovy Sample build file
 buildscript {
     repositories {
         maven {
@@ -191,3 +192,13 @@ the `buildscript` block only controls dependencies for the buildscript process i
 For instance, you could define dependencies in "buildscript/classpath" that represent Gradle plugins used in the build process. 
 Those plugins would not be referenced as dependencies for the application code. 
 Read the Gradle User Guide for more information (the PDF is easy to search).
+
+#### Proxy
+
+Use `http.proxyHost` and `https.proxyHost` accordingly for setting up proxy.
+
+``` groovy Example HTTP proxy in Jenkinsfile
+            echo "Running with proxy ${env.https_proxy} and ${env.http_proxy}"
+            PROXY_OPTIONS = '-Dhttps.proxyHost=public0-proxy1.data.example.net -Dhttps.proxyPort=8080'
+            sh "./gradlew ${PROXY_OPTIONS} run --stacktrace --info"
+```
