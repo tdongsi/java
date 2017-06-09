@@ -421,6 +421,19 @@ the <code>buildscript</code> block only controls dependencies for the buildscrip
 For instance, you could define dependencies in &ldquo;buildscript/classpath&rdquo; that represent Gradle plugins used in the build process.
 Those plugins would not be referenced as dependencies for the application code.
 Read the Gradle User Guide for more information (the PDF is easy to search).</p>
+
+<h4>Proxy</h4>
+
+<p>Use <code>http.proxyHost</code> and <code>https.proxyHost</code> accordingly for setting up proxy.</p>
+
+<figure class='code'><figcaption><span>Example HTTP proxy in Jenkinsfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'>        <span class="n">echo</span> <span class="s2">&quot;Running with proxy ${env.https_proxy} and ${env.http_proxy}&quot;</span>
+</span><span class='line'>        <span class="n">PROXY_OPTIONS</span> <span class="o">=</span> <span class="s1">&#39;-Dhttps.proxyHost=public0-proxy1.data.example.net -Dhttps.proxyPort=8080&#39;</span>
+</span><span class='line'>        <span class="n">sh</span> <span class="s2">&quot;./gradlew ${PROXY_OPTIONS} run --stacktrace --info&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
