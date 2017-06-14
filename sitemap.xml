@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy/</loc>
+<lastmod>2017-06-14T09:57:51-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook/</loc>
 <lastmod>2017-06-08T17:14:29-07:00</lastmod>
 </url>
