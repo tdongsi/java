@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-17T14:11:05-07:00</updated>
+  <updated>2017-06-17T14:14:26-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -18,7 +18,11 @@
     <link href="http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile/"/>
     <updated>2017-06-17T12:08:15-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile</id>
-    <content type="html"><![CDATA[<p>Groovy is supported in Jenkinsfile for quick scripting. However, lots of features in the language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.</p>
+    <content type="html"><![CDATA[<p>Groovy is supported in Jenkinsfile for quick scripting.
+However, lots of features in the Groovy language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.</p>
+
+<!--more-->
+
 
 <h3>Different ways to process XML file</h3>
 
@@ -171,7 +175,16 @@ return this
     <link href="http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy/"/>
     <updated>2017-06-14T09:57:51-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy</id>
-    <content type="html"><![CDATA[<h3>Code recipes</h3>
+    <content type="html"><![CDATA[<p>This post discusses XML processing in Groovy.</p>
+
+<!--more-->
+
+
+<h3>XmlParser vs XmlSlurper</h3>
+
+<p>TODO</p>
+
+<h3>Code recipes</h3>
 
 <p>The input XML file is based on typical Maven &ldquo;settings.xml&rdquo; file.</p>
 
