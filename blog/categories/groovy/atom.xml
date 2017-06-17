@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-14T10:01:21-07:00</updated>
+  <updated>2017-06-17T14:11:05-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -14,11 +14,232 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Groovy in Jenkinsfile]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile/"/>
+    <updated>2017-06-17T12:08:15-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile</id>
+    <content type="html"><![CDATA[<p>Groovy is supported in Jenkinsfile for quick scripting. However, lots of features in the language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.</p>
+
+<h3>Different ways to process XML file</h3>
+
+<p>In summary, if it is possible, use another script language (e.g., Python) for <strong>file manipulation</strong> in Jenkinsfile.
+It is time consuming to navigate all tricky stuffs of Groovy implementaiton in Jenkins:</p>
+
+<ul>
+<li>In-process Script Approval: you have to approve every single class and method <em>one by one</em>.</li>
+<li>Some features of Groovy is not supported and it takes time to figure out what is not supported and how to work around. When in doubt, use <code>@NonCPS</code>.</li>
+</ul>
+
+
+<h4>Groovy method in Jenkinsfile</h4>
+
+<pre><code class="groovy Jenkinsfile">import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+def settingsFile = 'temp.xml'
+
+@NonCPS
+def xmlTransform(txt, username, password) {
+
+    def xmlRoot = new XmlSlurper(false, false).parseText(txt)
+    echo 'Start tranforming XML'
+    xmlRoot.servers.server.each { node -&gt;
+       node.username = username
+       node.password = password
+    }
+
+    // TRICKY: FileWriter does NOT work
+    def outWriter = new StringWriter()
+    XmlUtil.serialize( xmlRoot, outWriter )
+    return outWriter.toString()
+}
+
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               withCredentials([
+                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+               ]) {
+                   script {
+                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
+                       def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
+
+                       // TRICKY: FileWriter does NOT work in xmlTransform
+                       def mCommand = "cat &gt;${settingsFile} &lt;&lt;EOF"
+                       mCommand += "\n${xmlFile}\nEOF"
+                       sh mCommand
+                       sh "ls -al ${settingsFile}"
+
+                       sh "mvn -B -s ${settingsFile} clean compile"
+                   }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
+</code></pre>
+
+<p>Some notes:</p>
+
+<ul>
+<li><code>import</code> statements must be at the top, right after the shebang and before anything else.</li>
+<li>The Groovy methods must be annotated with <code>@NonCPS</code> or Jenkins will report the error &ldquo;java.io.NotSerializableException&rdquo;.</li>
+<li>The Groovy methods can not be defined inside a <code>step</code> block. It must be defined at the top.</li>
+<li><code>@NonCPS</code> is required since the Groovy method uses several non-serializble objects.</li>
+</ul>
+
+
+<h4>Groovy method in separate script</h4>
+
+<pre><code class="groovy Jenkinsfile">def myScript
+
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               withCredentials([
+                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+               ]) {
+                   script {
+                       myScript = load 'jenkins/xml.groovy'
+                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
+                       String xmlFile = myScript.transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
+
+                       String myPath = 'temp.xml'
+                       def mCommand = "cat &gt;${myPath} &lt;&lt;EOF"
+                       mCommand += "\n${xmlFile}\nEOF"
+                       sh mCommand
+
+                       sh "mvn -B clean compile -s ${myPath}"
+
+                       sh "rm ${myPath}"
+                   }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
+</code></pre>
+
+<pre><code class="groovy xml.groovy">import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+@NonCPS
+def transformXml(String xmlContent, String username, String password) {
+  def xml = new XmlSlurper(false, false).parseText(xmlContent)
+
+  echo 'Start tranforming XML'
+  xml.servers.server.each { node -&gt;
+    node.username = username
+    node.password = password
+  }
+
+  def outWriter = new StringWriter()
+  XmlUtil.serialize( xml, outWriter )
+  return outWriter.toString()
+}
+
+return this
+</code></pre>
+
+<h4>Groovy method in shared library</h4>
+
+<p><code>groovy Jenkinsfile
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[XML Processing in Groovy]]></title>
     <link href="http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy/"/>
     <updated>2017-06-14T09:57:51-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy</id>
-    <content type="html"><![CDATA[<h3>References</h3>
+    <content type="html"><![CDATA[<h3>Code recipes</h3>
+
+<p>The input XML file is based on typical Maven &ldquo;settings.xml&rdquo; file.</p>
+
+<p><strong>Recipe 1</strong>: Read, transform, and write to file. Based on <a href="https://stackoverflow.com/questions/2245641/load-modify-and-write-an-xml-document-in-groovy">this</a>.</p>
+
+<pre><code class="groovy XML transform to file">import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+def transformXml(String filePath, String username, String password) {
+  String TMP_PATH = '/tmp/temp.xml'
+
+  def inFile = new File( filePath )
+  def outFile = new File( TMP_PATH )
+  def xml = new XmlSlurper(false, false).parse(inFile)
+
+  xml.servers.server.each { node -&gt;
+    node.username = username
+    node.password = password
+  }
+
+  def outBuilder = new StreamingMarkupBuilder()
+  def outWriter = outFile.newWriter()
+
+  // Option 1: Write XML to one line
+  outWriter &lt;&lt; outBuilder.bind{ mkp.yield xml }
+  // Option 2: Pretty print XML
+  XmlUtil.serialize( xml, outWriter )
+
+  return TMP_PATH
+}
+</code></pre>
+
+<p>For overwriting the original file (based on <a href="https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file">this</a>):</p>
+
+<pre><code class="groovy Write the transformed XML to original file">inFile.withWriter { outWriter -&gt;
+    XmlUtil.serialize( new StreamingMarkupBuilder().bind{ mkp.yield xml }, outWriter )
+}
+</code></pre>
+
+<p><strong>Recipe 2</strong>: Read, transform, and write to string.</p>
+
+<pre><code class="groovy XML transform to String">import groovy.xml.XmlUtil
+
+@NonCPS
+def transformXml(String xmlContent, String username, String password) {
+  def xml = new XmlSlurper(false, false).parseText(xmlContent)
+
+  echo 'Start tranforming XML'
+  xml.servers.server.each { node -&gt;
+    node.username = username
+    node.password = password
+  }
+
+  def outWriter = new StringWriter()
+  XmlUtil.serialize( xml, outWriter )
+  return outWriter.toString()
+}
+</code></pre>
+
+<h3>Tips</h3>
+
+<ul>
+<li><a href="https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file">https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file</a></li>
+<li><a href="https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace">https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace</a></li>
+</ul>
+
+
+<h3>References</h3>
 
 <ul>
 <li><a href="http://groovy-lang.org/processing-xml.html">Processing XML</a></li>
