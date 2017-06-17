@@ -1,0 +1,122 @@
+---
+layout: post
+title: "Groovy in Jenkinsfile"
+date: 2017-06-17 12:08:15 -0700
+comments: true
+categories: 
+- Groovy
+---
+
+Groovy is supported in Jenkinsfile for quick scripting. However, lots of features in the language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.
+
+### Different ways to process XML file
+
+In summary, if it is possible, use another script language (e.g., Python) for **file manipulation** in Jenkinsfile. 
+It is time consuming to navigate all tricky stuffs of Groovy implementaiton in Jenkins:
+
+* In-process Script Approval: you have to approve every single class and method *one by one*.
+* Some features of Groovy is not supported and it takes time to figure out what is not supported and how to work around. When in doubt, use `@NonCPS`.
+
+#### Groovy method in Jenkinsfile
+
+``` groovy Jenkinsfile
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+def settingsFile = 'temp.xml'
+
+@NonCPS
+def xmlTransform(txt, username, password) {
+    
+    def xmlRoot = new XmlSlurper(false, false).parseText(txt)
+    echo 'Start tranforming XML'
+    xmlRoot.servers.server.each { node ->
+       node.username = username
+       node.password = password
+    }
+
+    // TRICKY: FileWriter does NOT work
+    def outWriter = new StringWriter()
+    XmlUtil.serialize( xmlRoot, outWriter )
+    return outWriter.toString()
+}
+
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               withCredentials([
+                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+               ]) {
+                   script {
+                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
+                       def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
+                       
+                       // TRICKY: FileWriter does NOT work in xmlTransform
+                       def mCommand = "cat >${settingsFile} <<EOF"
+                       mCommand += "\n${xmlFile}\nEOF"
+                       sh mCommand
+                       sh "ls -al ${settingsFile}"
+                       
+                       sh "mvn -B -s ${settingsFile} clean compile"
+                   }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
+```
+
+#### Groovy method in separate script
+
+``` groovy Jenkinsfile
+def myScript
+
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               withCredentials([
+                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+               ]) {
+                   script {
+                       myScript = load 'jenkins/xml.groovy'
+                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
+                       String xmlFile = myScript.transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
+                       
+                       String myPath = 'temp.xml'
+                       def mCommand = "cat >${myPath} <<EOF"
+                       mCommand += "\n${xmlFile}\nEOF"
+                       sh mCommand
+                       
+                       sh "mvn -B clean compile -s ${myPath}"
+                   
+                       sh "rm ${myPath}"
+                   }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
+
+```
+
+``` groovy Groovy method in shared library
+```
+
