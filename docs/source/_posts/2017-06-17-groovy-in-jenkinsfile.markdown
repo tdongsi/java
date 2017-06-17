@@ -75,6 +75,13 @@ pipeline {
 }
 ```
 
+Some notes:
+
+* `import` statements must be at the top, right after the shebang and before anything else.
+* The Groovy methods must be annotated with `@NonCPS` or Jenkins will report the error "java.io.NotSerializableException".
+* The Groovy methods can not be defined inside a `step` block. It must be defined at the top.
+* `@NonCPS` is required since the Groovy method uses several non-serializble objects. 
+
 #### Groovy method in separate script
 
 ``` groovy Jenkinsfile
@@ -117,6 +124,30 @@ pipeline {
 
 ```
 
-``` groovy Groovy method in shared library
+``` groovy xml.groovy
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+@NonCPS
+def transformXml(String xmlContent, String username, String password) {
+  def xml = new XmlSlurper(false, false).parseText(xmlContent)
+  
+  echo 'Start tranforming XML'
+  xml.servers.server.each { node ->
+    node.username = username
+    node.password = password
+  }
+  
+  def outWriter = new StringWriter()
+  XmlUtil.serialize( xml, outWriter )
+  return outWriter.toString()
+}
+
+return this
+```
+
+#### Groovy method in shared library
+
+``` groovy Jenkinsfile
 ```
 
