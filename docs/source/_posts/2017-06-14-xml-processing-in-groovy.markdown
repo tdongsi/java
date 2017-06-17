@@ -7,6 +7,14 @@ categories:
 - Groovy
 ---
 
+This post discusses XML processing in Groovy.
+
+<!--more-->
+
+### XmlParser vs XmlSlurper
+
+TODO
+
 ### Code recipes
 
 The input XML file is based on typical Maven "settings.xml" file.

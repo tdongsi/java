@@ -7,7 +7,10 @@ categories:
 - Groovy
 ---
 
-Groovy is supported in Jenkinsfile for quick scripting. However, lots of features in the language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.
+Groovy is supported in Jenkinsfile for quick scripting. 
+However, lots of features in the Groovy language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.
+
+<!--more-->
 
 ### Different ways to process XML file
 
