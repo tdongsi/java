@@ -9,18 +9,7 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This post details some of the more advanced Jenkins pipelines using Jenkinsfile. Running test suite in parallel Jenkinsfile1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12 &hellip;">
+  <meta name="description" content="This post details some of the more advanced Jenkins pipelines using Jenkinsfile. Nexus authentication in Maven More detailed discussion is in here. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -100,6 +89,124 @@
 <div class="entry-content"><p>This post details some of the more advanced Jenkins pipelines using Jenkinsfile.</p>
 
 <!--more-->
+
+
+<h3>Nexus authentication in Maven</h3>
+
+<p>More detailed discussion is in <a href="/java/blog/2017/06/17/groovy-in-jenkinsfile/">here</a>.</p>
+
+<figure class='code'><figcaption><span>Jenkinsfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">myScript</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pipeline</span> <span class="o">{</span>
+</span><span class='line'>   <span class="n">agent</span> <span class="o">{</span> <span class="n">node</span> <span class="o">{</span> <span class="n">label</span> <span class="s1">&#39;test-agent&#39;</span> <span class="o">}</span> <span class="o">}</span>
+</span><span class='line'>   <span class="n">stages</span> <span class="o">{</span>
+</span><span class='line'>       <span class="n">stage</span><span class="o">(</span><span class="s2">&quot;compile&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>           <span class="n">steps</span> <span class="o">{</span>
+</span><span class='line'>               <span class="n">checkout</span> <span class="n">scm</span>
+</span><span class='line'>               <span class="nf">withCredentials</span><span class="o">([</span>
+</span><span class='line'>                 <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;StringBinding&#39;</span><span class="o">,</span> <span class="nl">credentialsId:</span> <span class="s1">&#39;nexusUsername&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;nexusUsername&#39;</span><span class="o">],</span>
+</span><span class='line'>                 <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;StringBinding&#39;</span><span class="o">,</span> <span class="nl">credentialsId:</span> <span class="s1">&#39;nexusPassword&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;nexusPassword&#39;</span><span class="o">]</span>
+</span><span class='line'>               <span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>                   <span class="n">script</span> <span class="o">{</span>
+</span><span class='line'>                       <span class="n">myScript</span> <span class="o">=</span> <span class="n">load</span> <span class="s1">&#39;jenkins/xml.groovy&#39;</span>
+</span><span class='line'>                       <span class="kt">def</span> <span class="n">xmlTemplate</span> <span class="o">=</span> <span class="n">readFile</span><span class="o">(</span> <span class="s1">&#39;jenkins/settings.xml&#39;</span> <span class="o">)</span>
+</span><span class='line'>                       <span class="n">String</span> <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">myScript</span><span class="o">.</span><span class="na">transformXml</span><span class="o">(</span><span class="n">xmlTemplate</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusUsername</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusPassword</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>                       <span class="n">String</span> <span class="n">myPath</span> <span class="o">=</span> <span class="s1">&#39;temp.xml&#39;</span>
+</span><span class='line'>                       <span class="n">writeFile</span> <span class="nl">file:</span> <span class="n">myPath</span><span class="o">,</span> <span class="nl">text:</span> <span class="n">xmlFile</span>
+</span><span class='line'>
+</span><span class='line'>                       <span class="n">sh</span> <span class="s2">&quot;mvn -B clean compile -s ${myPath}&quot;</span>
+</span><span class='line'>
+</span><span class='line'>                       <span class="n">sh</span> <span class="s2">&quot;rm ${myPath}&quot;</span>
+</span><span class='line'>                   <span class="o">}</span>
+</span><span class='line'>               <span class="o">}</span>
+</span><span class='line'>           <span class="o">}</span>
+</span><span class='line'>           <span class="n">post</span> <span class="o">{</span>
+</span><span class='line'>           <span class="n">failure</span> <span class="o">{</span>
+</span><span class='line'>               <span class="n">echo</span> <span class="s2">&quot;Sending email for compile failed (TBD)&quot;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>           <span class="o">}</span>
+</span><span class='line'>       <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>xml.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.StreamingMarkupBuilder</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.XmlUtil</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@NonCPS</span>
+</span><span class='line'><span class="kt">def</span> <span class="nf">transformXml</span><span class="o">(</span><span class="n">String</span> <span class="n">xmlContent</span><span class="o">,</span> <span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kt">def</span> <span class="n">xml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">).</span><span class="na">parseText</span><span class="o">(</span><span class="n">xmlContent</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">echo</span> <span class="s1">&#39;Start tranforming XML&#39;</span>
+</span><span class='line'>  <span class="n">xml</span><span class="o">.</span><span class="na">servers</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span> <span class="n">node</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">username</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">def</span> <span class="n">outWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+</span><span class='line'>  <span class="n">XmlUtil</span><span class="o">.</span><span class="na">serialize</span><span class="o">(</span> <span class="n">xml</span><span class="o">,</span> <span class="n">outWriter</span> <span class="o">)</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">outWriter</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Running test suite in parallel</h3>

@@ -154,11 +154,6 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 <span class='line-number'>46</span>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
 </pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.StreamingMarkupBuilder</span>
 </span><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.XmlUtil</span>
 </span><span class='line'>
@@ -193,12 +188,7 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 </span><span class='line'>                   <span class="n">script</span> <span class="o">{</span>
 </span><span class='line'>                       <span class="kt">def</span> <span class="n">xmlTemplate</span> <span class="o">=</span> <span class="n">readFile</span><span class="o">(</span> <span class="s1">&#39;jenkins/settings.xml&#39;</span> <span class="o">)</span>
 </span><span class='line'>                       <span class="kt">def</span> <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">xmlTransform</span><span class="o">(</span><span class="n">xmlTemplate</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusUsername</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusPassword</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'>                       <span class="c1">// TRICKY: FileWriter does NOT work in xmlTransform</span>
-</span><span class='line'>                       <span class="kt">def</span> <span class="n">mCommand</span> <span class="o">=</span> <span class="s2">&quot;cat &gt;${settingsFile} &lt;&lt;EOF&quot;</span>
-</span><span class='line'>                       <span class="n">mCommand</span> <span class="o">+=</span> <span class="s2">&quot;\n${xmlFile}\nEOF&quot;</span>
-</span><span class='line'>                       <span class="n">sh</span> <span class="n">mCommand</span>
-</span><span class='line'>                       <span class="n">sh</span> <span class="s2">&quot;ls -al ${settingsFile}&quot;</span>
+</span><span class='line'>                       <span class="n">writeFile</span> <span class="nl">file:</span> <span class="n">settingsFile</span><span class="o">,</span> <span class="nl">text:</span> <span class="n">xmlFile</span>
 </span><span class='line'>
 </span><span class='line'>                       <span class="n">sh</span> <span class="s2">&quot;mvn -B -s ${settingsFile} clean compile&quot;</span>
 </span><span class='line'>                   <span class="o">}</span>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Todo | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/todo/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-19T14:32:26-07:00</updated>
+  <updated>2017-06-19T14:44:38-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -71,12 +71,7 @@ pipeline {
                    script {
                        def xmlTemplate = readFile( 'jenkins/settings.xml' )
                        def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
-
-                       // TRICKY: FileWriter does NOT work in xmlTransform
-                       def mCommand = "cat &gt;${settingsFile} &lt;&lt;EOF"
-                       mCommand += "\n${xmlFile}\nEOF"
-                       sh mCommand
-                       sh "ls -al ${settingsFile}"
+                       writeFile file: settingsFile, text: xmlFile
 
                        sh "mvn -B -s ${settingsFile} clean compile"
                    }

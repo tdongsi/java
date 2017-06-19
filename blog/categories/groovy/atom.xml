@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-19T14:32:26-07:00</updated>
+  <updated>2017-06-19T14:44:38-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -22,6 +22,67 @@
 
 <!--more-->
 
+
+<h3>Nexus authentication in Maven</h3>
+
+<p>More detailed discussion is in <a href="/blog/2017/06/17/groovy-in-jenkinsfile/">here</a>.</p>
+
+<pre><code class="groovy Jenkinsfile">def myScript
+
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               withCredentials([
+                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+               ]) {
+                   script {
+                       myScript = load 'jenkins/xml.groovy'
+                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
+                       String xmlFile = myScript.transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
+
+                       String myPath = 'temp.xml'
+                       writeFile file: myPath, text: xmlFile
+
+                       sh "mvn -B clean compile -s ${myPath}"
+
+                       sh "rm ${myPath}"
+                   }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
+</code></pre>
+
+<pre><code class="groovy xml.groovy">import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+@NonCPS
+def transformXml(String xmlContent, String username, String password) {
+  def xml = new XmlSlurper(false, false).parseText(xmlContent)
+
+  echo 'Start tranforming XML'
+  xml.servers.server.each { node -&gt;
+    node.username = username
+    node.password = password
+  }
+
+  def outWriter = new StringWriter()
+  XmlUtil.serialize( xml, outWriter )
+  return outWriter.toString()
+}
+
+return this
+</code></pre>
 
 <h3>Running test suite in parallel</h3>
 
@@ -163,12 +224,7 @@ pipeline {
                    script {
                        def xmlTemplate = readFile( 'jenkins/settings.xml' )
                        def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
-
-                       // TRICKY: FileWriter does NOT work in xmlTransform
-                       def mCommand = "cat &gt;${settingsFile} &lt;&lt;EOF"
-                       mCommand += "\n${xmlFile}\nEOF"
-                       sh mCommand
-                       sh "ls -al ${settingsFile}"
+                       writeFile file: settingsFile, text: xmlFile
 
                        sh "mvn -B -s ${settingsFile} clean compile"
                    }
