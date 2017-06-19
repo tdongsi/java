@@ -58,12 +58,7 @@ pipeline {
                    script {
                        def xmlTemplate = readFile( 'jenkins/settings.xml' )
                        def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
-                       
-                       // TRICKY: FileWriter does NOT work in xmlTransform
-                       def mCommand = "cat >${settingsFile} <<EOF"
-                       mCommand += "\n${xmlFile}\nEOF"
-                       sh mCommand
-                       sh "ls -al ${settingsFile}"
+                       writeFile file: settingsFile, text: xmlFile
                        
                        sh "mvn -B -s ${settingsFile} clean compile"
                    }
