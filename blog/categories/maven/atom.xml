@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Maven | Personal Interview Notes]]></title>
+  <link href="http://tdongsi.github.io/java/blog/categories/maven/atom.xml" rel="self"/>
+  <link href="http://tdongsi.github.io/java/"/>
+  <updated>2017-06-19T14:32:26-07:00</updated>
+  <id>http://tdongsi.github.io/java/</id>
+  <author>
+    <name><![CDATA[Cuong Dong-Si]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook/"/>
+    <updated>2015-06-19T14:07:37-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook</id>
+    <content type="html"><![CDATA[<p>This blog post lists out some common <code>mvn</code> commands.</p>
+
+<!--more-->
+
+
+<p><strong>Recipe 1</strong>: <code>mvn</code> exit normally wieth test failures.</p>
+
+<pre><code class="plain Exit normally with test failure">sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2017/06/19/jenkinsfile-cookbook/</loc>
+<lastmod>2017-06-19T14:23:01-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile/</loc>
 <lastmod>2017-06-17T12:08:15-07:00</lastmod>
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy/</loc>
 <lastmod>2017-06-14T09:57:51-07:00</lastmod>
-</url>
-<url>
-<loc>http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook/</loc>
-<lastmod>2017-06-08T17:14:29-07:00</lastmod>
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/2017/05/11/gradle-cookbook/</loc>
@@ -29,6 +29,14 @@
 <lastmod>2016-08-29T01:38:40-07:00</lastmod>
 </url>
 <url>
+<loc>http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook/</loc>
+<lastmod>2015-06-19T14:07:37-07:00</lastmod>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook/</loc>
+<lastmod>2015-06-08T17:14:29-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/archives/</loc>
 </url>
 <url>
@@ -36,6 +44,9 @@
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/java/</loc>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/categories/maven/</loc>
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/tutorial/</loc>

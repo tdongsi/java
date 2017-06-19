@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-17T14:14:26-07:00</updated>
+  <updated>2017-06-19T14:32:26-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Advanced Jenkinsfile Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/06/19/jenkinsfile-cookbook/"/>
+    <updated>2017-06-19T14:23:01-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/06/19/jenkinsfile-cookbook</id>
+    <content type="html"><![CDATA[<p>This post details some of the more advanced Jenkins pipelines using Jenkinsfile.</p>
+
+<!--more-->
+
+
+<h3>Running test suite in parallel</h3>
+
+<figure class='code'><figcaption><span>Jenkinsfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span><span class="o">(</span><span class="s1">&#39;remote&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">git</span> <span class="s1">&#39;https://github.com/jenkinsci/parallel-test-executor-plugin-sample.git&#39;</span>
+</span><span class='line'>  <span class="n">stash</span> <span class="nl">name:</span> <span class="s1">&#39;sources&#39;</span><span class="o">,</span> <span class="nl">includes:</span> <span class="s1">&#39;pom.xml,src/&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">splits</span> <span class="o">=</span> <span class="n">splitTests</span> <span class="n">count</span><span class="o">(</span><span class="mi">2</span><span class="o">)</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">branches</span> <span class="o">=</span> <span class="o">[:]</span>
+</span><span class='line'><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">splits</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kt">def</span> <span class="n">index</span> <span class="o">=</span> <span class="n">i</span> <span class="c1">// fresh variable per iteration; i will be mutated</span>
+</span><span class='line'>  <span class="n">branches</span><span class="o">[</span><span class="s2">&quot;split${i}&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">(</span><span class="s1">&#39;remote&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">deleteDir</span><span class="o">()</span>
+</span><span class='line'>      <span class="n">unstash</span> <span class="s1">&#39;sources&#39;</span>
+</span><span class='line'>      <span class="kt">def</span> <span class="n">exclusions</span> <span class="o">=</span> <span class="n">splits</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">writeFile</span> <span class="nl">file:</span> <span class="s1">&#39;exclusions.txt&#39;</span><span class="o">,</span> <span class="nl">text:</span> <span class="n">exclusions</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s2">&quot;\n&quot;</span><span class="o">)</span>
+</span><span class='line'>      <span class="n">sh</span> <span class="s2">&quot;${tool &#39;M3&#39;}/bin/mvn -B -Dmaven.test.failure.ignore test&quot;</span>
+</span><span class='line'>      <span class="n">junit</span> <span class="s1">&#39;target/surefire-reports/*.xml&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">parallel</span> <span class="n">branches</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When you run this Pipeline for the first time, it will check out a project and run all of its tests in sequence.
+The second and subsequent times you run it, the <code>splitTests</code> task will partition your tests into two sets of roughly equal runtime.
+The rest of the Pipeline then runs these in parallel — so if you look at <strong>trend</strong> (in the <strong>Build History</strong> widget) you will see the second and subsequent builds taking roughly half the time of the first.
+If you only have the one agent configured with its two executors, this won&rsquo;t save as much time, but you may have multiple agents on different hardware matching the same label expression.</p>
+
+<p>This script is more complex than the previous ones so it bears some examination.
+You start by grabbing an agent, checking out sources, and making a copy of them using the <code>stash</code> step:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">stash</span> <span class="nl">name:</span> <span class="s1">&#39;sources&#39;</span><span class="o">,</span> <span class="nl">includes:</span> <span class="s1">&#39;pom.xml,src/&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Later, you <code>unstash</code> these same files back into <strong>other</strong> workspaces.
+You could have just run <code>git</code> anew in each agent&rsquo;s workspace, but this would result in duplicated changelog entries, as well as contacting the Git server twice.
+* A Pipeline build is permitted to run as many SCM checkouts as it needs to, which is useful for projects working with multiple repositories, but not what we want here.
+* More importantly, if anyone pushes a new Git commit at  the wrong time, you might be testing different sources in some branches - which is prevented when you do the checkout just once and distribute sources to agents yourself.</p>
+
+<p>The command <code>splitTests</code> returns a list of lists of strings.
+From each (list) entry, you construct one branch to run; the label (map key) is akin to a thread name, and will appear in the build log.
+The Maven project is set up to expect a file <code>exclusions.txt</code> at its root, and it will run all tests <em>not</em> mentioned there, which we set up via the <code>writeFile</code> step.
+When you run the <code>parallel</code> step, each branch is started at the same time, and the overall step completes when all the branches finish: “fork &amp; join”.</p>
+
+<p>There are several new ideas at work here:
+* A single Pipeline build allocates several executors, potentially on different agents, at the same time.
+You can see these starting and finishing in the Jenkins executor widget on the main screen.</p>
+
+<ul>
+<li>Each call to <code>node</code> gets its own workspace.
+This kind of flexibility is impossible in a freestyle project, each build of which is tied to exactly one workspace.The Parallel Test Executor plugin works around that for its freestyle build step by triggering multiple builds of the project, making the history hard to follow.</li>
+</ul>
+
+
+<p>Do not use <code>env</code> in this case:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">env</span><span class="o">.</span><span class="na">PATH</span> <span class="o">=</span> <span class="s2">&quot;${mvnHome}/bin:${env.PATH}&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>because environment variable overrides are  limited to being global to a pipeline run, not local to the current thread (and thus agent).
+You could, however, use the <code>withEnv</code> step as noted above.</p>
+
+<p>You may also have noticed that you are running <code>JUnitResultArchiver</code> several times, something that is not possible in a freestyle project.
+The test results recorded in the build are cumulative.</p>
+
+<p>When you view the log for a build with multiple branches, the output from each will be intermixed.
+It can be useful to click on the <em>Pipeline Steps</em> link on the build’s sidebar.
+This will display a tree-table view of all the steps run so far in the build, grouped by logical block, for example <code>parallel</code> branch.
+You can click on individual steps and get more details, such as the log output for that step in isolation, the workspace associated with a <code>node</code> step, and so on.</p>
+
+<h4>Reference</h4>
+
+<ul>
+<li><a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/TUTORIAL.md">TUTORIAL</a></li>
+<li><a href="https://jenkins.io/blog/2016/06/16/parallel-test-executor-plugin/">More in Blog post</a></li>
+<li><a href="https://wiki.jenkins-ci.org/display/JENKINS/Parallel+Test+Executor+Plugin">Plugin page</a>: <code>splitTests</code> defined by this plugin.</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Groovy in Jenkinsfile]]></title>
@@ -278,6 +395,8 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 
 <h4>Groovy method in shared library</h4>
 
+<p>TODO: For Declarative Pipeline and Scripted Pipeline.</p>
+
 <p><code>groovy Jenkinsfile
 </code></p>
 ]]></content>
@@ -407,8 +526,7 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 <h3>Tips</h3>
 
 <ul>
-<li><a href="https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file">https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file</a></li>
-<li><a href="https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace">https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace</a></li>
+<li><code>XmlSlurper(false, false)</code> is used due to <a href="https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace">this</a></li>
 </ul>
 
 
@@ -416,188 +534,6 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 
 <ul>
 <li><a href="http://groovy-lang.org/processing-xml.html">Processing XML</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[HttpClient Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook/"/>
-    <updated>2017-06-08T17:14:29-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/06/08/httpclient-cookbook</id>
-    <content type="html"><![CDATA[<p>Apache HttpClient library is regularly used in Java program to query REST endpoints.</p>
-
-<!--more-->
-
-
-<h3>Version 4.1.x -> 4.2.1</h3>
-
-<p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
-
-<p><strong>Recipe 1</strong>: Proxy setup. Based on <a href="https://stackoverflow.com/questions/9811828/common-httpclient-and-proxy">this</a>:</p>
-
-<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">DefaultHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'><span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">ConnRoutePNames</span><span class="o">.</span><span class="na">DEFAULT_PROXY</span><span class="o">,</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;issues.apache.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">HttpGet</span> <span class="n">req</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;executing request to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">HttpResponse</span> <span class="n">rsp</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">req</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// When HttpClient instance is no longer needed,</span>
-</span><span class='line'>    <span class="c1">// shut down the connection manager to ensure</span>
-</span><span class='line'>    <span class="c1">// immediate deallocation of all system resources</span>
-</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getConnectionManager</span><span class="o">().</span><span class="na">shutdown</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With proxy authentication? Check out <a href="https://stackoverflow.com/questions/13288038/httpclient-4-2-2-and-proxy-with-username-password">this</a></p>
-
-<p><strong>Recipe 2</strong>: Connection timeout. Based on <a href="https://gist.github.com/tychobrailleur/9fbf521727539b403c90">this</a>:</p>
-
-<figure class='code'><figcaption><span>Conneciton timeout</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunTest</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runDefaultClient</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">URI</span> <span class="n">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">URL</span><span class="o">(</span><span class="s">&quot;http://localhost:3000/&quot;</span><span class="o">).</span><span class="na">toURI</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">HttpHost</span> <span class="n">host</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getHost</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">DefaultHttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">CONNECTION_TIMEOUT</span><span class="o">,</span> <span class="mi">2000</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">SO_TIMEOUT</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">HttpGet</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">HttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Later version</h3>
-
-<p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
-
-<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientExecuteProxy</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span><span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;httpbin.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">RequestConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="n">RequestConfig</span><span class="o">.</span><span class="na">custom</span><span class="o">()</span>
-</span><span class='line'>                    <span class="o">.</span><span class="na">setProxy</span><span class="o">(</span><span class="n">proxy</span><span class="o">)</span>
-</span><span class='line'>                    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">request</span><span class="o">.</span><span class="na">setConfig</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Executing request &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getRequestLine</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;----------------------------------------&quot;</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">()));</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">httpclient</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Reference</h3>
-
-<ul>
-<li><a href="https://hc.apache.org/index.html">Project Home</a></li>
-<li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
-</ul>
-
-
-<p>Apache HttpClient 4.2.1</p>
-
-<ul>
-<li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
 </ul>
 
 ]]></content>
@@ -1339,6 +1275,206 @@ More importantly, it allows you to liberally print lots of information needed fo
 </span><span class='line'>
 </span><span class='line'>For file input/output:
 </span><span class='line'>java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt data/out.txt</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook/"/>
+    <updated>2015-06-19T14:07:37-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook</id>
+    <content type="html"><![CDATA[<p>This blog post lists out some common <code>mvn</code> commands.</p>
+
+<!--more-->
+
+
+<p><strong>Recipe 1</strong>: <code>mvn</code> exit normally wieth test failures.</p>
+
+<figure class='code'><figcaption><span>Exit normally with test failure</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[HttpClient Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook/"/>
+    <updated>2015-06-08T17:14:29-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook</id>
+    <content type="html"><![CDATA[<p>Apache HttpClient library is regularly used in Java program to query REST endpoints.</p>
+
+<!--more-->
+
+
+<h3>Version 4.1.x -> 4.2.1</h3>
+
+<p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
+
+<p><strong>Recipe 1</strong>: Proxy setup. Based on <a href="https://stackoverflow.com/questions/9811828/common-httpclient-and-proxy">this</a>:</p>
+
+<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">DefaultHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">ConnRoutePNames</span><span class="o">.</span><span class="na">DEFAULT_PROXY</span><span class="o">,</span> <span class="n">proxy</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;issues.apache.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">HttpGet</span> <span class="n">req</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;executing request to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">HttpResponse</span> <span class="n">rsp</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">req</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// When HttpClient instance is no longer needed,</span>
+</span><span class='line'>    <span class="c1">// shut down the connection manager to ensure</span>
+</span><span class='line'>    <span class="c1">// immediate deallocation of all system resources</span>
+</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getConnectionManager</span><span class="o">().</span><span class="na">shutdown</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With proxy authentication? Check out <a href="https://stackoverflow.com/questions/13288038/httpclient-4-2-2-and-proxy-with-username-password">this</a></p>
+
+<p><strong>Recipe 2</strong>: Connection timeout. Based on <a href="https://gist.github.com/tychobrailleur/9fbf521727539b403c90">this</a>:</p>
+
+<figure class='code'><figcaption><span>Conneciton timeout</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runDefaultClient</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">URI</span> <span class="n">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">URL</span><span class="o">(</span><span class="s">&quot;http://localhost:3000/&quot;</span><span class="o">).</span><span class="na">toURI</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">HttpHost</span> <span class="n">host</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getHost</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">DefaultHttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">CONNECTION_TIMEOUT</span><span class="o">,</span> <span class="mi">2000</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">SO_TIMEOUT</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">HttpGet</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">HttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Later version</h3>
+
+<p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
+
+<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientExecuteProxy</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span><span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;httpbin.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">RequestConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="n">RequestConfig</span><span class="o">.</span><span class="na">custom</span><span class="o">()</span>
+</span><span class='line'>                    <span class="o">.</span><span class="na">setProxy</span><span class="o">(</span><span class="n">proxy</span><span class="o">)</span>
+</span><span class='line'>                    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">request</span><span class="o">.</span><span class="na">setConfig</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Executing request &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getRequestLine</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;----------------------------------------&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">()));</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">httpclient</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="https://hc.apache.org/index.html">Project Home</a></li>
+<li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
+</ul>
+
+
+<p>Apache HttpClient 4.2.1</p>
+
+<ul>
+<li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
+</ul>
 
 ]]></content>
   </entry>
