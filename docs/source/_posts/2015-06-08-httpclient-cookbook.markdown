@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "HttpClient cookbook"
-date: 2017-06-08 17:14:29 -0700
+date: 2015-06-08 17:14:29 -0700
 comments: true
 categories: 
 - Java
