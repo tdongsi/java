@@ -5,6 +5,7 @@ date: 2017-06-14 09:57:51 -0700
 comments: true
 categories: 
 - Groovy
+- TODO
 ---
 
 This post discusses XML processing in Groovy.
@@ -80,8 +81,7 @@ def transformXml(String xmlContent, String username, String password) {
 
 ### Tips
 
-* https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file
-* https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace
+* `XmlSlurper(false, false)` is used due to [this](https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace)
 
 ### References
 

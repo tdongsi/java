@@ -5,6 +5,7 @@ date: 2017-06-17 12:08:15 -0700
 comments: true
 categories: 
 - Groovy
+- TODO
 ---
 
 Groovy is supported in Jenkinsfile for quick scripting. 
@@ -150,6 +151,8 @@ return this
 ```
 
 #### Groovy method in shared library
+
+TODO: For Declarative Pipeline and Scripted Pipeline.
 
 ``` groovy Jenkinsfile
 ```
