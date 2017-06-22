@@ -5,7 +5,6 @@ date: 2017-06-17 12:08:15 -0700
 comments: true
 categories: 
 - Groovy
-- TODO
 ---
 
 Groovy is supported in Jenkinsfile for quick scripting. 
@@ -147,8 +146,86 @@ return this
 
 #### Groovy method in shared library
 
-TODO: For Declarative Pipeline and Scripted Pipeline.
+The above Nexus authentication code is likely repeated across multiple Maven builds.
+Therefore, it is worth converting it into a DSL into a Shared Library in Jenkins.
+The DSL takes two parameters:
+
+* templateFile: settings.xml template with Nexus credentials info redacted.
+* command: Maven command with settings file NOT specified (i.e., NO "-s" option in the command).
+
+The example usage is as follows:
 
 ``` groovy Jenkinsfile
+pipeline {
+   agent { node { label 'test-agent' } }
+   stages {
+       stage("compile") {
+           steps {
+               checkout scm
+               script {
+                    withNexusMaven {
+                        templateFile = 'jenkins/settings.xml'
+                        command = "mvn -B clean compile"
+                    }
+               }
+           }
+           post {
+           failure {
+               echo "Sending email for compile failed (TBD)"
+            }
+           }
+       }
+   }
+}
 ```
 
+The Jenksinfile is much cleaner since most of implementation details have been moved inside the DSL:
+
+``` groovy withNexusMaven.groovy
+#!groovy
+import groovy.xml.XmlUtil
+
+@NonCPS
+def transformXml(String xmlContent, String username, String password) {
+  def xml = new XmlSlurper(false, false).parseText(xmlContent)
+
+  echo 'Start tranforming XML'
+  xml.servers.server.each { node ->
+    node.username = username
+    node.password = password
+  }
+
+  def outWriter = new StringWriter()
+  XmlUtil.serialize( xml, outWriter )
+  return outWriter.toString()
+}
+
+def call(Closure body) {
+
+    def config = [:]
+    if (body != null) {
+        body.resolveStrategy = Closure.DELEGATE_FIRST
+        body.delegate = config
+        body()
+    }
+
+    def templateFile = config.templateFile ?: '/home/data/settings.xml'
+    def command = config.command ?: "mvn -B clean compile"
+
+    withCredentials([
+        [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
+        [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
+    ]) {
+        def xmlTemplate = readFile templateFile
+        String xmlFile = transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
+
+        String tempFile = 'temp.xml'
+        writeFile file: tempFile, text: xmlFile
+
+        sh "${command} -s ${tempFile}"
+
+        // Clean up
+        sh "rm ${tempFile}"
+    }
+}
+```
