@@ -337,10 +337,159 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 
 <h4>Groovy method in shared library</h4>
 
-<p>TODO: For Declarative Pipeline and Scripted Pipeline.</p>
+<p>The above Nexus authentication code is likely repeated across multiple Maven builds.
+Therefore, it is worth converting it into a DSL into a Shared Library in Jenkins.
+The DSL takes two parameters:</p>
 
-<p><code>groovy Jenkinsfile
-</code></p>
+<ul>
+<li>templateFile: settings.xml template with Nexus credentials info redacted.</li>
+<li>command: Maven command with settings file NOT specified (i.e., NO &ldquo;-s&rdquo; option in the command).</li>
+</ul>
+
+
+<p>The example usage is as follows:</p>
+
+<figure class='code'><figcaption><span>Jenkinsfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">pipeline</span> <span class="o">{</span>
+</span><span class='line'>   <span class="n">agent</span> <span class="o">{</span> <span class="n">node</span> <span class="o">{</span> <span class="n">label</span> <span class="s1">&#39;test-agent&#39;</span> <span class="o">}</span> <span class="o">}</span>
+</span><span class='line'>   <span class="n">stages</span> <span class="o">{</span>
+</span><span class='line'>       <span class="n">stage</span><span class="o">(</span><span class="s2">&quot;compile&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>           <span class="n">steps</span> <span class="o">{</span>
+</span><span class='line'>               <span class="n">checkout</span> <span class="n">scm</span>
+</span><span class='line'>               <span class="n">script</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">withNexusMaven</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">templateFile</span> <span class="o">=</span> <span class="s1">&#39;jenkins/settings.xml&#39;</span>
+</span><span class='line'>                        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;mvn -B clean compile&quot;</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>               <span class="o">}</span>
+</span><span class='line'>           <span class="o">}</span>
+</span><span class='line'>           <span class="n">post</span> <span class="o">{</span>
+</span><span class='line'>           <span class="n">failure</span> <span class="o">{</span>
+</span><span class='line'>               <span class="n">echo</span> <span class="s2">&quot;Sending email for compile failed (TBD)&quot;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>           <span class="o">}</span>
+</span><span class='line'>       <span class="o">}</span>
+</span><span class='line'>   <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Jenksinfile is much cleaner since most of implementation details have been moved inside the DSL:</p>
+
+<figure class='code'><figcaption><span>withNexusMaven.groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="cp">#!groovy</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">groovy.xml.XmlUtil</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@NonCPS</span>
+</span><span class='line'><span class="kt">def</span> <span class="nf">transformXml</span><span class="o">(</span><span class="n">String</span> <span class="n">xmlContent</span><span class="o">,</span> <span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kt">def</span> <span class="n">xml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">).</span><span class="na">parseText</span><span class="o">(</span><span class="n">xmlContent</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">echo</span> <span class="s1">&#39;Start tranforming XML&#39;</span>
+</span><span class='line'>  <span class="n">xml</span><span class="o">.</span><span class="na">servers</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span> <span class="n">node</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">username</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">def</span> <span class="n">outWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+</span><span class='line'>  <span class="n">XmlUtil</span><span class="o">.</span><span class="na">serialize</span><span class="o">(</span> <span class="n">xml</span><span class="o">,</span> <span class="n">outWriter</span> <span class="o">)</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">outWriter</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="nf">call</span><span class="o">(</span><span class="n">Closure</span> <span class="n">body</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">config</span> <span class="o">=</span> <span class="o">[:]</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">body</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">body</span><span class="o">.</span><span class="na">resolveStrategy</span> <span class="o">=</span> <span class="n">Closure</span><span class="o">.</span><span class="na">DELEGATE_FIRST</span>
+</span><span class='line'>        <span class="n">body</span><span class="o">.</span><span class="na">delegate</span> <span class="o">=</span> <span class="n">config</span>
+</span><span class='line'>        <span class="n">body</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">templateFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">templateFile</span> <span class="o">?:</span> <span class="s1">&#39;/home/data/settings.xml&#39;</span>
+</span><span class='line'>    <span class="kt">def</span> <span class="n">command</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="na">command</span> <span class="o">?:</span> <span class="s2">&quot;mvn -B clean compile&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">withCredentials</span><span class="o">([</span>
+</span><span class='line'>        <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;StringBinding&#39;</span><span class="o">,</span> <span class="nl">credentialsId:</span> <span class="s1">&#39;nexusUsername&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;nexusUsername&#39;</span><span class="o">],</span>
+</span><span class='line'>        <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;StringBinding&#39;</span><span class="o">,</span> <span class="nl">credentialsId:</span> <span class="s1">&#39;nexusPassword&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;nexusPassword&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">xmlTemplate</span> <span class="o">=</span> <span class="n">readFile</span> <span class="n">templateFile</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">transformXml</span><span class="o">(</span><span class="n">xmlTemplate</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusUsername</span><span class="o">,</span> <span class="n">env</span><span class="o">.</span><span class="na">nexusPassword</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">String</span> <span class="n">tempFile</span> <span class="o">=</span> <span class="s1">&#39;temp.xml&#39;</span>
+</span><span class='line'>        <span class="n">writeFile</span> <span class="nl">file:</span> <span class="n">tempFile</span><span class="o">,</span> <span class="nl">text:</span> <span class="n">xmlFile</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">sh</span> <span class="s2">&quot;${command} -s ${tempFile}&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Clean up</span>
+</span><span class='line'>        <span class="n">sh</span> <span class="s2">&quot;rm ${tempFile}&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -361,7 +510,7 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 
 <span class="categories">
   
-    <a class='category' href='/java/blog/categories/groovy/'>groovy</a>, <a class='category' href='/java/blog/categories/todo/'>todo</a>
+    <a class='category' href='/java/blog/categories/groovy/'>groovy</a>
   
 </span>
 
@@ -442,7 +591,7 @@ It is time consuming to navigate all tricky stuffs of Groovy implementaiton in J
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (4)</a></li><li><a href='/java/blog/categories/java/'>java (3)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (4)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (4)</a></li><li><a href='/java/blog/categories/java/'>java (3)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (3)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
 </section>
 
 
