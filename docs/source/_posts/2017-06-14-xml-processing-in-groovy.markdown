@@ -57,7 +57,7 @@ use(DOMCategory) {
 }
 ```
 
-### GPath navigation
+### Navigation with GPath
 
 From [here](http://groovy-lang.org/processing-xml.html):
 
@@ -178,8 +178,7 @@ assert records.car.find { it.@name == 'P50' }.country.text() == 'Isle of Man'
 
 #### MarkupBuilderHelper
 
-This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
-This helper can be accessed as `mkp` property.
+This helper normally can be accessed from within an instance of class MarkupBuilder or an instance of StreamingMarkupBuilder as `mkp` property.
 
 ``` groovy Using mkp for comments and escape in XML
 def xmlWriter = new StringWriter()
