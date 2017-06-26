@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-21T17:07:53-07:00</updated>
+  <updated>2017-06-25T17:41:49-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -412,7 +412,115 @@ def call(Closure body) {
 
 <h3>XmlParser vs XmlSlurper</h3>
 
-<p>TODO</p>
+<p>Both are in <code>groovy.util</code> packages and both have the same approach to parse an xml: both are based on <code>SAX</code> (low memory footprint) and both can update/transform the XML.</p>
+
+<p>Based on this <a href="https://stackoverflow.com/questions/7558019/groovy-xmlslurper-vs-xmlparser">StackOverflow answer</a>, when to use <code>XmlParser</code> versus <code>XmlSlurper</code> is as follows:</p>
+
+<ul>
+<li><code>XmlSlurper</code>: when you want to transform an existing XML document to another.</li>
+<li><code>XmlSlurper</code>: when you just want to read a few nodes since <code>XmlSlurper</code> evaluates the structure lazily.</li>
+<li><code>XmlParser</code>: when you want to update and read at the same time.</li>
+</ul>
+
+
+<h4>Example usage:</h4>
+
+<pre><code class="groovy XmlSlurper">def text = '''
+    &lt;list&gt;
+        &lt;technology&gt;
+            &lt;name&gt;Groovy&lt;/name&gt;
+        &lt;/technology&gt;
+    &lt;/list&gt;
+'''
+
+def list = new XmlSlurper().parseText(text) 
+
+assert list instanceof groovy.util.slurpersupport.GPathResult 
+assert list.technology.name == 'Groovy'
+</code></pre>
+
+<pre><code class="groovy XmlParser">def list = new XmlParser().parseText(text) 
+
+assert list instanceof groovy.util.Node 
+assert list.technology.name.text() == 'Groovy'
+</code></pre>
+
+<p>Another option is DOMCategory:</p>
+
+<pre><code class="groovy DOMCateogry">def reader = new StringReader(CAR_RECORDS)
+def doc = DOMBuilder.parse(reader) 
+def records = doc.documentElement
+
+use(DOMCategory) { 
+    assert records.car.size() == 3
+}
+</code></pre>
+
+<h3>GPath navigation</h3>
+
+<p>From <a href="http://groovy-lang.org/processing-xml.html">here</a>:</p>
+
+<pre><code class="groovy GPath example">static final String books = '''
+    &lt;response version-api="2.0"&gt;
+        &lt;value&gt;
+            &lt;books&gt;
+                &lt;book available="20" id="1"&gt;
+                    &lt;title&gt;Don Xijote&lt;/title&gt;
+                    &lt;author id="1"&gt;Manuel De Cervantes&lt;/author&gt;
+                &lt;/book&gt;
+                &lt;book available="14" id="2"&gt;
+                    &lt;title&gt;Catcher in the Rye&lt;/title&gt;
+                   &lt;author id="2"&gt;JD Salinger&lt;/author&gt;
+               &lt;/book&gt;
+               &lt;book available="13" id="3"&gt;
+                   &lt;title&gt;Alice in Wonderland&lt;/title&gt;
+                   &lt;author id="3"&gt;Lewis Carroll&lt;/author&gt;
+               &lt;/book&gt;
+               &lt;book available="5" id="4"&gt;
+                   &lt;title&gt;Don Xijote&lt;/title&gt;
+                   &lt;author id="4"&gt;Manuel De Cervantes&lt;/author&gt;
+               &lt;/book&gt;
+           &lt;/books&gt;
+       &lt;/value&gt;
+    &lt;/response&gt;
+'''
+
+def response = new XmlSlurper().parseText(books)
+
+def book = response.value.books.book[0] 
+def bookAuthorId1 = book.@id 
+def bookAuthorId2 = book['@id'] 
+
+assert bookAuthorId1 == '1'
+
+// .'*' could be replaced by .children()
+def catcherInTheRye = response.value.books.'*'.find { node-&gt;
+    // node.@id == 2 could be expressed as node['@id'] == 2
+    node.name() == 'book' &amp;&amp; node.@id == '2'
+}
+
+assert catcherInTheRye.title.text() == 'Catcher in the Rye'
+
+// .'**' could be replaced by .depthFirst()
+def bookId = response.'**'.find { book-&gt;
+    book.author.text() == 'Lewis Carroll'
+}.@id
+
+assert bookId == 3
+
+// find(Closure cl) finds just the first occurrence. To find all titles:
+def titles = response.'**'.findAll{ node-&gt; node.name() == 'title' }*.text()
+
+assert titles.size() == 4
+</code></pre>
+
+<p>As you can see there are two types of notations to get attributes, the</p>
+
+<ul>
+<li>direct notation with <code>@nameoftheattribute</code></li>
+<li>map notation using <code>['@nameoftheattribute']</code></li>
+</ul>
+
 
 <h3>Code recipes</h3>
 
