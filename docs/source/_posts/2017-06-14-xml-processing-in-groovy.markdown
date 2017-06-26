@@ -5,7 +5,6 @@ date: 2017-06-14 09:57:51 -0700
 comments: true
 categories: 
 - Groovy
-- TODO
 ---
 
 This post discusses XML processing in Groovy.
@@ -14,7 +13,113 @@ This post discusses XML processing in Groovy.
 
 ### XmlParser vs XmlSlurper
 
-TODO
+Both are in `groovy.util` packages and both have the same approach to parse an xml: both are based on `SAX` (low memory footprint) and both can update/transform the XML.
+
+Based on this [StackOverflow answer](https://stackoverflow.com/questions/7558019/groovy-xmlslurper-vs-xmlparser), when to use `XmlParser` versus `XmlSlurper` is as follows:
+
+* `XmlSlurper`: when you want to transform an existing XML document to another.
+* `XmlSlurper`: when you just want to read a few nodes since `XmlSlurper` evaluates the structure lazily.
+* `XmlParser`: when you want to update and read at the same time.
+
+#### Example usage:
+
+``` groovy XmlSlurper
+def text = '''
+    <list>
+        <technology>
+            <name>Groovy</name>
+        </technology>
+    </list>
+'''
+
+def list = new XmlSlurper().parseText(text) 
+
+assert list instanceof groovy.util.slurpersupport.GPathResult 
+assert list.technology.name == 'Groovy'
+```
+
+``` groovy XmlParser
+def list = new XmlParser().parseText(text) 
+
+assert list instanceof groovy.util.Node 
+assert list.technology.name.text() == 'Groovy'
+```
+
+Another option is DOMCategory:
+
+``` groovy DOMCateogry
+def reader = new StringReader(CAR_RECORDS)
+def doc = DOMBuilder.parse(reader) 
+def records = doc.documentElement
+
+use(DOMCategory) { 
+    assert records.car.size() == 3
+}
+```
+
+### GPath navigation
+
+From [here](http://groovy-lang.org/processing-xml.html):
+
+``` groovy GPath example
+static final String books = '''
+    <response version-api="2.0">
+        <value>
+            <books>
+                <book available="20" id="1">
+                    <title>Don Xijote</title>
+                    <author id="1">Manuel De Cervantes</author>
+                </book>
+                <book available="14" id="2">
+                    <title>Catcher in the Rye</title>
+                   <author id="2">JD Salinger</author>
+               </book>
+               <book available="13" id="3">
+                   <title>Alice in Wonderland</title>
+                   <author id="3">Lewis Carroll</author>
+               </book>
+               <book available="5" id="4">
+                   <title>Don Xijote</title>
+                   <author id="4">Manuel De Cervantes</author>
+               </book>
+           </books>
+       </value>
+    </response>
+'''
+
+def response = new XmlSlurper().parseText(books)
+
+def book = response.value.books.book[0] 
+def bookAuthorId1 = book.@id 
+def bookAuthorId2 = book['@id'] 
+
+assert bookAuthorId1 == '1'
+
+// .'*' could be replaced by .children()
+def catcherInTheRye = response.value.books.'*'.find { node->
+    // node.@id == 2 could be expressed as node['@id'] == 2
+    node.name() == 'book' && node.@id == '2'
+}
+
+assert catcherInTheRye.title.text() == 'Catcher in the Rye'
+
+// .'**' could be replaced by .depthFirst()
+def bookId = response.'**'.find { book->
+    book.author.text() == 'Lewis Carroll'
+}.@id
+
+assert bookId == 3
+
+// find(Closure cl) finds just the first occurrence. To find all titles:
+def titles = response.'**'.findAll{ node-> node.name() == 'title' }*.text()
+
+assert titles.size() == 4
+```
+
+As you can see there are two types of notations to get attributes, the
+
+* direct notation with `@nameoftheattribute`
+* map notation using `['@nameoftheattribute']`
 
 ### Code recipes
 
