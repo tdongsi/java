@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-25T17:41:49-07:00</updated>
+  <updated>2017-06-25T17:52:33-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -410,7 +410,7 @@ def call(Closure body) {
 <!--more-->
 
 
-<h3>XmlParser vs XmlSlurper</h3>
+<h3>Parsing: XmlParser vs XmlSlurper</h3>
 
 <p>Both are in <code>groovy.util</code> packages and both have the same approach to parse an xml: both are based on <code>SAX</code> (low memory footprint) and both can update/transform the XML.</p>
 
@@ -521,6 +521,77 @@ assert titles.size() == 4
 <li>map notation using <code>['@nameoftheattribute']</code></li>
 </ul>
 
+
+<h3>Writing XML</h3>
+
+<pre><code class="groovy Standard usage of MarkupBuilder">def writer = new StringWriter()
+def xml = new MarkupBuilder(writer) 
+
+xml.records() { 
+    car(name:'HSV Maloo', make:'Holden', year:2006) {
+        country('Australia')
+        record(type:'speed', 'Production Pickup Truck with speed of 271kph')
+    }
+    car(name:'Royale', make:'Bugatti', year:1931) {
+        country('France')
+        record(type:'price', 'Most Valuable Car at $15 million')
+    }
+}
+
+def records = new XmlSlurper().parseText(writer.toString()) 
+
+assert records.car.first().name.text() == 'HSV Maloo'
+assert records.car.last().name.text() == 'Royale'
+</code></pre>
+
+<p>See documentation for the following use cases:</p>
+
+<ul>
+<li>Namespace aware</li>
+<li>Generate elements inside XML document.</li>
+</ul>
+
+
+<p>Using <code>StreamingMarkupBuilder</code> is very similar to using <code>MarkupBuilder</code>.
+The <code>bind</code> method returns a <code>Writable</code> instance that can be used to stream the markup.</p>
+
+<pre><code class="groovy Standard usage of StreamingMarkupBuilder">def xml = new StreamingMarkupBuilder().bind { 
+    records {
+        car(name:'HSV Maloo', make:'Holden', year:2006) { 
+            country('Australia')
+            record(type:'speed', 'Production Pickup Truck with speed of 271kph')
+        }
+        car(name:'P50', make:'Peel', year:1962) {
+            country('Isle of Man')
+            record(type:'size', 'Smallest Street-Legal Car at 99cm wide and 59 kg in weight')
+        }
+        car(name:'Royale', make:'Bugatti', year:1931) {
+            country('France')
+            record(type:'price', 'Most Valuable Car at $15 million')
+        }
+    }
+}
+
+def records = new XmlSlurper().parseText(xml.toString()) 
+
+assert records.car.size() == 3
+assert records.car.find { it.@name == 'P50' }.country.text() == 'Isle of Man'
+</code></pre>
+
+<h4>MarkupBuilderHelper</h4>
+
+<p>This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
+This helper can be accessed as <code>mkp</code> property.</p>
+
+<pre><code class="groovy Using mkp for comments and escape in XML">def xmlWriter = new StringWriter()
+def xmlMarkup = new MarkupBuilder(xmlWriter).rules {
+    mkp.comment('THIS IS THE MAIN RULE') 
+    rule(sentence: mkp.yield('3 &gt; n')) 
+}
+
+assert xmlWriter.toString().contains('3 &amp;gt; n')
+assert xmlWriter.toString().contains('&lt;!-- THIS IS THE MAIN RULE --&gt;')
+</code></pre>
 
 <h3>Code recipes</h3>
 

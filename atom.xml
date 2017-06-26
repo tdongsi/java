@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-25T17:41:49-07:00</updated>
+  <updated>2017-06-25T17:52:33-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -669,7 +669,7 @@ The DSL takes two parameters:</p>
 <!--more-->
 
 
-<h3>XmlParser vs XmlSlurper</h3>
+<h3>Parsing: XmlParser vs XmlSlurper</h3>
 
 <p>Both are in <code>groovy.util</code> packages and both have the same approach to parse an xml: both are based on <code>SAX</code> (low memory footprint) and both can update/transform the XML.</p>
 
@@ -860,6 +860,127 @@ The DSL takes two parameters:</p>
 <li>direct notation with <code>@nameoftheattribute</code></li>
 <li>map notation using <code>['@nameoftheattribute']</code></li>
 </ul>
+
+
+<h3>Writing XML</h3>
+
+<figure class='code'><figcaption><span>Standard usage of MarkupBuilder</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">xml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkupBuilder</span><span class="o">(</span><span class="n">writer</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">xml</span><span class="o">.</span><span class="na">records</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">car</span><span class="o">(</span><span class="nl">name:</span><span class="s1">&#39;HSV Maloo&#39;</span><span class="o">,</span> <span class="nl">make:</span><span class="s1">&#39;Holden&#39;</span><span class="o">,</span> <span class="nl">year:</span><span class="mi">2006</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">country</span><span class="o">(</span><span class="s1">&#39;Australia&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">record</span><span class="o">(</span><span class="nl">type:</span><span class="s1">&#39;speed&#39;</span><span class="o">,</span> <span class="s1">&#39;Production Pickup Truck with speed of 271kph&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">car</span><span class="o">(</span><span class="nl">name:</span><span class="s1">&#39;Royale&#39;</span><span class="o">,</span> <span class="nl">make:</span><span class="s1">&#39;Bugatti&#39;</span><span class="o">,</span> <span class="nl">year:</span><span class="mi">1931</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">country</span><span class="o">(</span><span class="s1">&#39;France&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">record</span><span class="o">(</span><span class="nl">type:</span><span class="s1">&#39;price&#39;</span><span class="o">,</span> <span class="s1">&#39;Most Valuable Car at $15 million&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">().</span><span class="na">parseText</span><span class="o">(</span><span class="n">writer</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">records</span><span class="o">.</span><span class="na">car</span><span class="o">.</span><span class="na">first</span><span class="o">().</span><span class="na">name</span><span class="o">.</span><span class="na">text</span><span class="o">()</span> <span class="o">==</span> <span class="s1">&#39;HSV Maloo&#39;</span>
+</span><span class='line'><span class="k">assert</span> <span class="n">records</span><span class="o">.</span><span class="na">car</span><span class="o">.</span><span class="na">last</span><span class="o">().</span><span class="na">name</span><span class="o">.</span><span class="na">text</span><span class="o">()</span> <span class="o">==</span> <span class="s1">&#39;Royale&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See documentation for the following use cases:</p>
+
+<ul>
+<li>Namespace aware</li>
+<li>Generate elements inside XML document.</li>
+</ul>
+
+
+<p>Using <code>StreamingMarkupBuilder</code> is very similar to using <code>MarkupBuilder</code>.
+The <code>bind</code> method returns a <code>Writable</code> instance that can be used to stream the markup.</p>
+
+<figure class='code'><figcaption><span>Standard usage of StreamingMarkupBuilder</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">xml</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StreamingMarkupBuilder</span><span class="o">().</span><span class="na">bind</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">records</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">car</span><span class="o">(</span><span class="nl">name:</span><span class="s1">&#39;HSV Maloo&#39;</span><span class="o">,</span> <span class="nl">make:</span><span class="s1">&#39;Holden&#39;</span><span class="o">,</span> <span class="nl">year:</span><span class="mi">2006</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">country</span><span class="o">(</span><span class="s1">&#39;Australia&#39;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">record</span><span class="o">(</span><span class="nl">type:</span><span class="s1">&#39;speed&#39;</span><span class="o">,</span> <span class="s1">&#39;Production Pickup Truck with speed of 271kph&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">car</span><span class="o">(</span><span class="nl">name:</span><span class="s1">&#39;P50&#39;</span><span class="o">,</span> <span class="nl">make:</span><span class="s1">&#39;Peel&#39;</span><span class="o">,</span> <span class="nl">year:</span><span class="mi">1962</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">country</span><span class="o">(</span><span class="s1">&#39;Isle of Man&#39;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">record</span><span class="o">(</span><span class="nl">type:</span><span class="s1">&#39;size&#39;</span><span class="o">,</span> <span class="s1">&#39;Smallest Street-Legal Car at 99cm wide and 59 kg in weight&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">car</span><span class="o">(</span><span class="nl">name:</span><span class="s1">&#39;Royale&#39;</span><span class="o">,</span> <span class="nl">make:</span><span class="s1">&#39;Bugatti&#39;</span><span class="o">,</span> <span class="nl">year:</span><span class="mi">1931</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">country</span><span class="o">(</span><span class="s1">&#39;France&#39;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">record</span><span class="o">(</span><span class="nl">type:</span><span class="s1">&#39;price&#39;</span><span class="o">,</span> <span class="s1">&#39;Most Valuable Car at $15 million&#39;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">().</span><span class="na">parseText</span><span class="o">(</span><span class="n">xml</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">records</span><span class="o">.</span><span class="na">car</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">3</span>
+</span><span class='line'><span class="k">assert</span> <span class="n">records</span><span class="o">.</span><span class="na">car</span><span class="o">.</span><span class="na">find</span> <span class="o">{</span> <span class="n">it</span><span class="o">.</span><span class="nd">@name</span> <span class="o">==</span> <span class="s1">&#39;P50&#39;</span> <span class="o">}.</span><span class="na">country</span><span class="o">.</span><span class="na">text</span><span class="o">()</span> <span class="o">==</span> <span class="s1">&#39;Isle of Man&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>MarkupBuilderHelper</h4>
+
+<p>This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
+This helper can be accessed as <code>mkp</code> property.</p>
+
+<figure class='code'><figcaption><span>Using mkp for comments and escape in XML</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">xmlWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">xmlMarkup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MarkupBuilder</span><span class="o">(</span><span class="n">xmlWriter</span><span class="o">).</span><span class="na">rules</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mkp</span><span class="o">.</span><span class="na">comment</span><span class="o">(</span><span class="s1">&#39;THIS IS THE MAIN RULE&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">rule</span><span class="o">(</span><span class="nl">sentence:</span> <span class="n">mkp</span><span class="o">.</span><span class="na">yield</span><span class="o">(</span><span class="s1">&#39;3 &gt; n&#39;</span><span class="o">))</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">assert</span> <span class="n">xmlWriter</span><span class="o">.</span><span class="na">toString</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;3 &amp;gt; n&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="k">assert</span> <span class="n">xmlWriter</span><span class="o">.</span><span class="na">toString</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;&lt;!-- THIS IS THE MAIN RULE --&gt;&#39;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Code recipes</h3>
