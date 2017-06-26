@@ -11,7 +11,7 @@ This post discusses XML processing in Groovy.
 
 <!--more-->
 
-### XmlParser vs XmlSlurper
+### Parsing: XmlParser vs XmlSlurper
 
 Both are in `groovy.util` packages and both have the same approach to parse an xml: both are based on `SAX` (low memory footprint) and both can update/transform the XML.
 
@@ -120,6 +120,77 @@ As you can see there are two types of notations to get attributes, the
 
 * direct notation with `@nameoftheattribute`
 * map notation using `['@nameoftheattribute']`
+
+### Writing XML
+
+``` groovy Standard usage of MarkupBuilder
+def writer = new StringWriter()
+def xml = new MarkupBuilder(writer) 
+
+xml.records() { 
+    car(name:'HSV Maloo', make:'Holden', year:2006) {
+        country('Australia')
+        record(type:'speed', 'Production Pickup Truck with speed of 271kph')
+    }
+    car(name:'Royale', make:'Bugatti', year:1931) {
+        country('France')
+        record(type:'price', 'Most Valuable Car at $15 million')
+    }
+}
+
+def records = new XmlSlurper().parseText(writer.toString()) 
+
+assert records.car.first().name.text() == 'HSV Maloo'
+assert records.car.last().name.text() == 'Royale'
+```
+
+See documentation for the following use cases:
+
+* Namespace aware
+* Generate elements inside XML document.
+
+Using `StreamingMarkupBuilder` is very similar to using `MarkupBuilder`. 
+The `bind` method returns a `Writable` instance that can be used to stream the markup.
+
+``` groovy Standard usage of StreamingMarkupBuilder
+def xml = new StreamingMarkupBuilder().bind { 
+    records {
+        car(name:'HSV Maloo', make:'Holden', year:2006) { 
+            country('Australia')
+            record(type:'speed', 'Production Pickup Truck with speed of 271kph')
+        }
+        car(name:'P50', make:'Peel', year:1962) {
+            country('Isle of Man')
+            record(type:'size', 'Smallest Street-Legal Car at 99cm wide and 59 kg in weight')
+        }
+        car(name:'Royale', make:'Bugatti', year:1931) {
+            country('France')
+            record(type:'price', 'Most Valuable Car at $15 million')
+        }
+    }
+}
+
+def records = new XmlSlurper().parseText(xml.toString()) 
+
+assert records.car.size() == 3
+assert records.car.find { it.@name == 'P50' }.country.text() == 'Isle of Man'
+```
+
+#### MarkupBuilderHelper
+
+This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
+This helper can be accessed as `mkp` property.
+
+``` groovy Using mkp for comments and escape in XML
+def xmlWriter = new StringWriter()
+def xmlMarkup = new MarkupBuilder(xmlWriter).rules {
+    mkp.comment('THIS IS THE MAIN RULE') 
+    rule(sentence: mkp.yield('3 > n')) 
+}
+
+assert xmlWriter.toString().contains('3 &gt; n')
+assert xmlWriter.toString().contains('<!-- THIS IS THE MAIN RULE -->')
+```
 
 ### Code recipes
 
