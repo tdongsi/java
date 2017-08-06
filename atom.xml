@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-06T14:48:56-07:00</updated>
+  <updated>2017-08-06T16:58:48-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -1926,6 +1926,43 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p><strong>Recipe 2</strong>: Consuming response entities originate from a trusted HTTP server and are known to be of limited length. From <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html">here</a>. <a href="http://www.vogella.com/tutorials/ApacheHttpClient/article.html">Another variant</a>.</p>
+
+<figure class='code'><figcaption><span>Consuming entity content</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
+</span><span class='line'><span class="n">HttpGet</span> <span class="n">httpget</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;http://localhost/&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">httpget</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">long</span> <span class="n">len</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="na">getContentLength</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">2048</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">entity</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// Stream content out</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h3>Advanced Cookbook</h3>
 
 <h4>Version 4.1.x -> 4.2.1</h4>
@@ -2096,6 +2133,22 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
 
 <ul>
 <li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Blog Map]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2011/08/06/blog-map/"/>
+    <updated>2011-08-06T15:05:44-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2011/08/06/blog-map</id>
+    <content type="html"><![CDATA[<p>A blog post in 2011 will serve as a general guideline on how posts are organized in this blog.</p>
+
+<ul>
+<li>2015: Java topics. Too beginner to post in main blog.</li>
+<li>2016: Java-related interview topics</li>
+<li>2017: Groovy, Gradle topics.</li>
 </ul>
 
 ]]></content>

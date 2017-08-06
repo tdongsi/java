@@ -114,6 +114,43 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p><strong>Recipe 2</strong>: Consuming response entities originate from a trusted HTTP server and are known to be of limited length. From <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html">here</a>. <a href="http://www.vogella.com/tutorials/ApacheHttpClient/article.html">Another variant</a>.</p>
+
+<figure class='code'><figcaption><span>Consuming entity content</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
+</span><span class='line'><span class="n">HttpGet</span> <span class="n">httpget</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;http://localhost/&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">httpget</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">HttpEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">long</span> <span class="n">len</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="na">getContentLength</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">2048</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">entity</span><span class="o">));</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// Stream content out</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h3>Advanced Cookbook</h3>
 
 <h4>Version 4.1.x -> 4.2.1</h4>
@@ -326,6 +363,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/java/blog/2011/08/06/blog-map/" title="Previous Post: Blog map">&laquo; Blog map</a>
+      
       
         <a class="basic-alignment right" href="/java/blog/2015/06/19/maven-cookbook/" title="Next Post: Maven cookbook">Maven cookbook &raquo;</a>
       
@@ -378,6 +417,10 @@
     
       <li class="post">
         <a href="/java/blog/2015/06/08/httpclient-cookbook/">HttpClient Cookbook</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2011/08/06/blog-map/">Blog Map</a>
       </li>
     
   </ul>
