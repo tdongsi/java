@@ -11,7 +11,25 @@ Apache HttpClient library is regularly used in Java program to query REST endpoi
 
 <!--more-->
 
-### Version 4.1.x -> 4.2.1
+### Beginner Cookbook
+
+Based on HttpClient Tutorial (version 4.3).
+
+**Recipe 1**: For simple use cases, it is better to use [Fluent API](https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html).
+
+``` java Fluent API
+    private static String API_ENDPOINT = "http://api.icndb.com/jokes/random";
+    String see = Request.Get(API_ENDPOINT)
+            .execute()
+            .returnContent()
+            .asString();
+    assertFalse(see.isEmpty());
+    System.out.println(see);
+```
+
+### Advanced Cookbook
+
+#### Version 4.1.x -> 4.2.1
 
 Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).
 
@@ -63,7 +81,7 @@ public class RunTest {
 }
 ```
 
-### Later version
+#### Later version
 
 **Recipe 1**: Based on [this](http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java)
 
@@ -104,6 +122,7 @@ public class ClientExecuteProxy {
 
 * [Project Home](https://hc.apache.org/index.html)
 * [JavaDoc](https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html)
+* Alternative: [Jetty HttpClient](https://www.eclipse.org/jetty/documentation/9.4.6.v20170531/http-client.html).
 
 Apache HttpClient 4.2.1
 
