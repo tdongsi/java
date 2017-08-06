@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/maven/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-06T03:28:53-07:00</updated>
+  <updated>2017-08-06T03:43:01-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -23,10 +23,41 @@
 <!--more-->
 
 
+<h3>Recipes</h3>
+
 <p><strong>Recipe 1</strong>: <code>mvn</code> exit normally wieth test failures.</p>
 
 <pre><code class="plain Exit normally with test failure">sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"
 </code></pre>
+
+<p><strong>Recipe 2</strong>: Switch between corporate Nexus and Maven Central.</p>
+
+<p>Corporate Nexus is specified in settings.xml. Some need to use Maven Central for personal projects.
+To switch between them, create a <a href="https://maven.apache.org/settings.html">minimal settings.xml</a> and specify with <code>mvn -s settings.xml</code>.</p>
+
+<pre><code class="xml Minimal settings.xml">&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;
+  &lt;localRepository/&gt;
+  &lt;interactiveMode/&gt;
+  &lt;usePluginRegistry/&gt;
+  &lt;offline/&gt;
+  &lt;pluginGroups/&gt;
+  &lt;servers/&gt;
+  &lt;mirrors/&gt;
+  &lt;proxies/&gt;
+  &lt;profiles/&gt;
+  &lt;activeProfiles/&gt;
+&lt;/settings&gt;
+</code></pre>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="https://maven.apache.org/settings.html">settings.xml</a></li>
+</ul>
+
 ]]></content>
   </entry>
   

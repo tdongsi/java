@@ -9,8 +9,8 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This blog post lists out some common mvn commands. Recipe 1: mvn exit normally wieth test failures. Exit normally with test failure1
-sh "${mvnHome}/ &hellip;">
+  <meta name="description" content="This blog post lists out some common mvn commands. Recipes Recipe 1: mvn exit normally wieth test failures. Exit normally with test failure1
+sh "${ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -92,10 +92,57 @@ sh "${mvnHome}/ &hellip;">
 <!--more-->
 
 
+<h3>Recipes</h3>
+
 <p><strong>Recipe 1</strong>: <code>mvn</code> exit normally wieth test failures.</p>
 
 <figure class='code'><figcaption><span>Exit normally with test failure</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Recipe 2</strong>: Switch between corporate Nexus and Maven Central.</p>
+
+<p>Corporate Nexus is specified in settings.xml. Some need to use Maven Central for personal projects.
+To switch between them, create a <a href="https://maven.apache.org/settings.html">minimal settings.xml</a> and specify with <code>mvn -s settings.xml</code>.</p>
+
+<figure class='code'><figcaption><span>Minimal settings.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span>
+</span><span class='line'>  <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'>  <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/SETTINGS/1.0.0</span>
+</span><span class='line'><span class="s">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;localRepository/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;interactiveMode/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;usePluginRegistry/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;offline/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pluginGroups/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;servers/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;mirrors/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;proxies/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profiles/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;activeProfiles/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="https://maven.apache.org/settings.html">settings.xml</a></li>
+</ul>
 
 </div>
 
