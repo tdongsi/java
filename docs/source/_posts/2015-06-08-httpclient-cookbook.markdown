@@ -27,6 +27,27 @@ Based on HttpClient Tutorial (version 4.3).
     System.out.println(see);
 ```
 
+**Recipe 2**: Consuming response entities originate from a trusted HTTP server and are known to be of limited length. From [here](https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html). [Another variant](http://www.vogella.com/tutorials/ApacheHttpClient/article.html).
+
+``` java Consuming entity content
+CloseableHttpClient httpclient = HttpClients.createDefault();
+HttpGet httpget = new HttpGet("http://localhost/");
+CloseableHttpResponse response = httpclient.execute(httpget);
+try {
+    HttpEntity entity = response.getEntity();
+    if (entity != null) {
+        long len = entity.getContentLength();
+        if (len != -1 && len < 2048) {
+            System.out.println(EntityUtils.toString(entity));
+        } else {
+            // Stream content out
+        }
+    }
+} finally {
+    response.close();
+}
+```
+
 ### Advanced Cookbook
 
 #### Version 4.1.x -> 4.2.1

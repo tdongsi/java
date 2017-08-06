@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Blog map"
+date: 2011-08-06 15:05:44 -0700
+comments: true
+categories: 
+---
+
+A blog post in 2011 will serve as a general guideline on how posts are organized in this blog.
+
+* 2015: Java topics. Too beginner to post in main blog.
+* 2016: Java-related interview topics
+* 2017: Groovy, Gradle topics.
+
