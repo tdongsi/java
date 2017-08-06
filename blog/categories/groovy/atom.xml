@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-25T17:52:33-07:00</updated>
+  <updated>2017-08-06T03:28:53-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -456,7 +456,7 @@ use(DOMCategory) {
 }
 </code></pre>
 
-<h3>GPath navigation</h3>
+<h3>Navigation with GPath</h3>
 
 <p>From <a href="http://groovy-lang.org/processing-xml.html">here</a>:</p>
 
@@ -580,8 +580,7 @@ assert records.car.find { it.@name == 'P50' }.country.text() == 'Isle of Man'
 
 <h4>MarkupBuilderHelper</h4>
 
-<p>This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
-This helper can be accessed as <code>mkp</code> property.</p>
+<p>This helper normally can be accessed from within an instance of class MarkupBuilder or an instance of StreamingMarkupBuilder as <code>mkp</code> property.</p>
 
 <pre><code class="groovy Using mkp for comments and escape in XML">def xmlWriter = new StringWriter()
 def xmlMarkup = new MarkupBuilder(xmlWriter).rules {

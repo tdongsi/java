@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-25T17:52:33-07:00</updated>
+  <updated>2017-08-06T03:28:53-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -743,7 +743,7 @@ The DSL takes two parameters:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>GPath navigation</h3>
+<h3>Navigation with GPath</h3>
 
 <p>From <a href="http://groovy-lang.org/processing-xml.html">here</a>:</p>
 
@@ -961,8 +961,7 @@ The <code>bind</code> method returns a <code>Writable</code> instance that can b
 
 <h4>MarkupBuilderHelper</h4>
 
-<p>This helper normally can be accessed from within an instance of class groovy.xml.MarkupBuilder or an instance of groovy.xml.StreamingMarkupBuilder.
-This helper can be accessed as <code>mkp</code> property.</p>
+<p>This helper normally can be accessed from within an instance of class MarkupBuilder or an instance of StreamingMarkupBuilder as <code>mkp</code> property.</p>
 
 <figure class='code'><figcaption><span>Using mkp for comments and escape in XML</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1629,7 +1628,7 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 
 <p>(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
 
-<p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;.</p>
+<p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
 
 <figure class='code'><figcaption><span>Add this into pom.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1666,16 +1665,6 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 <span class='line-number'>33</span>
 <span class='line-number'>34</span>
 <span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
 </pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
 </span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
 </span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
@@ -1707,16 +1696,6 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 </span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
 </span><span class='line'>                <span class="nt">&lt;source&gt;</span>1.7<span class="nt">&lt;/source&gt;</span>
 </span><span class='line'>                <span class="nt">&lt;target&gt;</span>1.7<span class="nt">&lt;/target&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.17<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;suiteXmlFiles&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;suiteXmlFile&gt;</span>testng.xml<span class="nt">&lt;/suiteXmlFile&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/suiteXmlFiles&gt;</span>
 </span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
 </span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
 </span><span class='line'>    <span class="nt">&lt;/plugins&gt;</span>
@@ -1762,7 +1741,7 @@ More importantly, it allows you to liberally print lots of information needed fo
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>(5) Check setup.</p>
+<p>(5) At the end, your <code>pom.xml</code> shoulld looks like <a href="https://github.com/tdongsi/bart-parking/blob/f8511604bafa4564c468f952ca2fce1452f6a097/java/bart/pom.xml">this</a>. Check setup.</p>
 
 <figure class='code'><figcaption><span>Check running</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

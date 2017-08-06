@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-06-25T17:52:33-07:00</updated>
+  <updated>2017-08-06T03:28:53-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -149,7 +149,7 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 
 <p>(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
 
-<p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;.</p>
+<p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
 
 <pre><code class="xml Add this into pom.xml">    &lt;build&gt;
         &lt;plugins&gt;
@@ -184,16 +184,6 @@ Most of the test takers are experienced and skilled programmers, but they tend t
                     &lt;target&gt;1.7&lt;/target&gt;
                 &lt;/configuration&gt;
             &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
-                &lt;version&gt;2.17&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;suiteXmlFiles&gt;
-                        &lt;suiteXmlFile&gt;testng.xml&lt;/suiteXmlFile&gt;
-                    &lt;/suiteXmlFiles&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
         &lt;/plugins&gt;
     &lt;/build&gt;
 </code></pre>
@@ -226,11 +216,11 @@ log4j.appender.A1.layout= org.apache.log4j.PatternLayout
 log4j.appender.A1.layout.ConversionPattern= [%t][%-5p][%c] - %m%n
 </code></pre>
 
-<p>(5) Check setup.
-<code>plain Check running
-mvn clean package
+<p>(5) At the end, your <code>pom.xml</code> shoulld looks like <a href="https://github.com/tdongsi/bart-parking/blob/f8511604bafa4564c468f952ca2fce1452f6a097/java/bart/pom.xml">this</a>. Check setup.</p>
+
+<pre><code class="plain Check running">mvn clean package
 java -jar target/xxx-jar-with-dependencies.jar
-</code></p>
+</code></pre>
 
 <p>(6) Use <code>StreamEditor</code> interface for easy testing in Eclipse and CLI.</p>
 
