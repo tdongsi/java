@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-06T03:43:01-07:00</updated>
+  <updated>2017-08-06T14:48:56-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -274,7 +274,24 @@ java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt d
 <!--more-->
 
 
-<h3>Version 4.1.x -> 4.2.1</h3>
+<h3>Beginner Cookbook</h3>
+
+<p>Based on HttpClient Tutorial (version 4.3).</p>
+
+<p><strong>Recipe 1</strong>: For simple use cases, it is better to use <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html">Fluent API</a>.</p>
+
+<pre><code class="java Fluent API">    private static String API_ENDPOINT = "http://api.icndb.com/jokes/random";
+    String see = Request.Get(API_ENDPOINT)
+            .execute()
+            .returnContent()
+            .asString();
+    assertFalse(see.isEmpty());
+    System.out.println(see);
+</code></pre>
+
+<h3>Advanced Cookbook</h3>
+
+<h4>Version 4.1.x -> 4.2.1</h4>
 
 <p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
 
@@ -324,7 +341,7 @@ java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt d
 }
 </code></pre>
 
-<h3>Later version</h3>
+<h4>Later version</h4>
 
 <p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
 
@@ -365,6 +382,7 @@ java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt d
 <ul>
 <li><a href="https://hc.apache.org/index.html">Project Home</a></li>
 <li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
+<li>Alternative: <a href="https://www.eclipse.org/jetty/documentation/9.4.6.v20170531/http-client.html">Jetty HttpClient</a>.</li>
 </ul>
 
 
