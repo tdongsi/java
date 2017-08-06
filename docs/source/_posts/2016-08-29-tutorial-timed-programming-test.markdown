@@ -26,7 +26,7 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
 
 (2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.
 
-(3) Update pom.xml for "Executable jar file" + "specified Java version".
+(3) Update pom.xml for "Executable jar file" + "specified Java version". Replace `my.interview.CompanyName` with the correct name of your main class.
 
 ``` xml Add this into pom.xml
     <build>
@@ -62,16 +62,6 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 ```
@@ -97,7 +87,8 @@ log4j.appender.A1= org.apache.log4j.ConsoleAppender
 log4j.appender.A1.layout= org.apache.log4j.PatternLayout
 log4j.appender.A1.layout.ConversionPattern= [%t][%-5p][%c] - %m%n
 ```
-(5) Check setup.
+(5) At the end, your `pom.xml` shoulld looks like [this](https://github.com/tdongsi/bart-parking/blob/f8511604bafa4564c468f952ca2fce1452f6a097/java/bart/pom.xml). Check setup.
+
 ``` plain Check running
 mvn clean package
 java -jar target/xxx-jar-with-dependencies.jar
