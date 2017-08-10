@@ -8,7 +8,7 @@ categories:
 - Groovy
 ---
 
-This post shows how to customize standard "steps" in Jenkinsfile.
+This post shows how to customize standard Pipeline "steps" in Jenkinsfile (excluding their common usage).
 
 <!--more-->
 
@@ -32,7 +32,7 @@ Reference:
 
 ### `checkout` step
 
-`scm` is the global variable for the current commit && branch && repository of Jenkinsfile. 
+`scm` is the global variable for the current commit AND branch AND repository of Jenkinsfile. 
 `checkout scm` means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
 To check out another repository, you need to specify the paremeters to `checkout` step.
 
