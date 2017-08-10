@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-10T11:42:54-07:00</updated>
+  <updated>2017-08-10T11:53:31-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -253,7 +253,7 @@ You can click on individual steps and get more details, such as the log output f
     <link href="http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook/"/>
     <updated>2017-06-18T11:20:20-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook</id>
-    <content type="html"><![CDATA[<p>This post shows how to customize standard &ldquo;steps&rdquo; in Jenkinsfile.</p>
+    <content type="html"><![CDATA[<p>This post shows how to customize standard Pipeline &ldquo;steps&rdquo; in Jenkinsfile (excluding their common usage).</p>
 
 <!--more-->
 
@@ -287,7 +287,7 @@ For asking input from a list of multiple choices, you can use the advanced versi
 
 <h3><code>checkout</code> step</h3>
 
-<p><code>scm</code> is the global variable for the current commit &amp;&amp; branch &amp;&amp; repository of Jenkinsfile.
+<p><code>scm</code> is the global variable for the current commit AND branch AND repository of Jenkinsfile.
 <code>checkout scm</code> means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
 To check out another repository, you need to specify the paremeters to <code>checkout</code> step.</p>
 
