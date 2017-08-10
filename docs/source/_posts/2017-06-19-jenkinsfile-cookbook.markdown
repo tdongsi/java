@@ -5,6 +5,7 @@ date: 2017-06-19 14:23:01 -0700
 comments: true
 categories: 
 - Groovy
+- Jenkins
 ---
 
 This post details some of the more advanced Jenkins pipelines using Jenkinsfile.

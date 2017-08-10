@@ -5,6 +5,7 @@ date: 2017-06-17 12:08:15 -0700
 comments: true
 categories: 
 - Groovy
+- Jenkins
 ---
 
 Groovy is supported in Jenkinsfile for quick scripting. 
