@@ -5,6 +5,10 @@
 <lastmod>2017-06-19T14:23:01-07:00</lastmod>
 </url>
 <url>
+<loc>http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook/</loc>
+<lastmod>2017-06-18T11:20:20-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile/</loc>
 <lastmod>2017-06-17T12:08:15-07:00</lastmod>
 </url>
@@ -66,5 +70,8 @@
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/gradle/</loc>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/posts/2/</loc>
 </url>
 </urlset>

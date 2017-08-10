@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-06T16:58:48-07:00</updated>
+  <updated>2017-08-10T11:42:54-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -243,6 +243,91 @@ You can click on individual steps and get more details, such as the log output f
 <li><a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/TUTORIAL.md">TUTORIAL</a></li>
 <li><a href="https://jenkins.io/blog/2016/06/16/parallel-test-executor-plugin/">More in Blog post</a></li>
 <li><a href="https://wiki.jenkins-ci.org/display/JENKINS/Parallel+Test+Executor+Plugin">Plugin page</a>: <code>splitTests</code> defined by this plugin.</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Basic Jenkinsfile Cookbook]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook/"/>
+    <updated>2017-06-18T11:20:20-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook</id>
+    <content type="html"><![CDATA[<p>This post shows how to customize standard &ldquo;steps&rdquo; in Jenkinsfile.</p>
+
+<!--more-->
+
+
+<h3><code>input</code> step</h3>
+
+<p>Simple <code>input</code> step can be used to ask for approval to proceed.
+For asking input from a list of multiple choices, you can use the advanced version of input.</p>
+
+<figure class='code'><figcaption><span>Input from list of choices</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'>   <span class="n">sh</span> <span class="s2">&quot;source scripts/findCL.sh &gt; choiceLists.txt&quot;</span>
+</span><span class='line'>   <span class="kt">def</span> <span class="n">choiceOptions</span> <span class="o">=</span> <span class="n">readFile</span> <span class="s2">&quot;${env.WORKSPACE}/choiceLists.txt&quot;</span>
+</span><span class='line'>   <span class="kt">def</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">input</span><span class="o">(</span>
+</span><span class='line'>   <span class="nl">id:</span> <span class="s1">&#39;CHOICE_LIST&#39;</span><span class="o">,</span> <span class="nl">message:</span><span class="s1">&#39;Choose a CL&#39;</span> <span class="o">,</span> <span class="nl">parameters:</span> <span class="o">[</span>
+</span><span class='line'>    <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;ChoiceParameterDefinition&#39;</span><span class="o">,</span> <span class="nl">name:</span><span class="s1">&#39;CHOICE_LIST_SELECTED&#39;</span><span class="o">,</span> <span class="nl">description:</span><span class="s1">&#39;Select one&#39;</span><span class="o">,</span> <span class="nl">choices:</span><span class="n">choiceOptions</span><span class="o">]</span>
+</span><span class='line'>  <span class="o">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
+</ul>
+
+
+<h3><code>checkout</code> step</h3>
+
+<p><code>scm</code> is the global variable for the current commit &amp;&amp; branch &amp;&amp; repository of Jenkinsfile.
+<code>checkout scm</code> means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
+To check out another repository, you need to specify the paremeters to <code>checkout</code> step.</p>
+
+<figure class='code'><figcaption><span>Checkout from another Git repo</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">checkout</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;GitSCM&#39;</span><span class="o">,</span> <span class="nl">branches:</span> <span class="o">[[</span><span class="nl">name:</span> <span class="s1">&#39;*/master&#39;</span><span class="o">]],</span>
+</span><span class='line'>     <span class="nl">userRemoteConfigs:</span> <span class="o">[[</span><span class="nl">url:</span> <span class="s1">&#39;http://git-server/user/repository.git&#39;</span><span class="o">]]])</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// From README file.</span>
+</span><span class='line'><span class="n">checkout</span> <span class="nl">scm:</span> <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;MercurialSCM&#39;</span><span class="o">,</span> <span class="nl">source:</span> <span class="s1">&#39;ssh://hg@bitbucket.org/user/repo&#39;</span><span class="o">,</span> <span class="nl">clean:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">credentialsId:</span> <span class="s1">&#39;1234-5678-abcd&#39;</span><span class="o">],</span> <span class="nl">poll:</span> <span class="kc">false</span>
+</span><span class='line'><span class="c1">// If scm is the only parameter, you can omit its name, but Groovy syntax then requires parentheses around the value:</span>
+</span><span class='line'><span class="n">checkout</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;MercurialSCM&#39;</span><span class="o">,</span> <span class="nl">source:</span> <span class="s1">&#39;ssh://hg@bitbucket.org/user/repo&#39;</span><span class="o">])</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Short hand form for Git</span>
+</span><span class='line'><span class="n">git</span> <span class="nl">branch:</span> <span class="s1">&#39;develop&#39;</span><span class="o">,</span> <span class="nl">url:</span> <span class="s1">&#39;https://github.com/WtfJoke/Any.git&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/git/#git-git"><code>git</code> step</a></li>
+<li><a href="https://stackoverflow.com/questions/14843696/checkout-multiple-git-repos-into-same-jenkins-workspace"><code>git</code> example</a></li>
+<li><a href="https://jenkins.io/doc/pipeline/steps/workflow-scm-step/#checkout-general-scm"><code>checkout</code> step</a></li>
+<li><a href="https://github.com/jenkinsci/workflow-scm-step-plugin/blob/master/README.md"><code>checkout</code> README</a></li>
+</ul>
+
+
+<h3>References</h3>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/">Basic Jenkinsfile steps</a></li>
 </ul>
 
 ]]></content>
