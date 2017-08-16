@@ -56,6 +56,35 @@ Reference:
 * [`checkout` step](https://jenkins.io/doc/pipeline/steps/workflow-scm-step/#checkout-general-scm)
 * [`checkout` README](https://github.com/jenkinsci/workflow-scm-step-plugin/blob/master/README.md)
 
+### `findFiles` step
+
+Doing in Bash:
+
+``` groovy Doing in Bash
+    sh '''
+    for file in target/surefire-reports/*.txt;
+    do
+        echo $file >> testresult
+    done
+    cat testresult
+    '''
+    def result = readFile "testresult"
+```
+
+``` groovy Doing in Groovy
+    def files = findFiles(glob: 'target/surefire-reports/*.txt')
+    for file in files:
+      echo """
+      ${files[0].name} ${files[0].path} ${files[0].directory} 
+      ${files[0].length} ${files[0].lastModified}
+      """
+```
+
+Reference:
+
+* [`findFiles` step](https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/)
+* Related: `readFile`, `writeFile`.
+
 ### References
 
 * [Basic Jenkinsfile steps](https://jenkins.io/doc/pipeline/steps/)
