@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-10T11:53:31-07:00</updated>
+  <updated>2017-08-16T11:11:40-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -221,6 +221,36 @@ git branch: 'develop', url: 'https://github.com/WtfJoke/Any.git'
 <li><a href="https://stackoverflow.com/questions/14843696/checkout-multiple-git-repos-into-same-jenkins-workspace"><code>git</code> example</a></li>
 <li><a href="https://jenkins.io/doc/pipeline/steps/workflow-scm-step/#checkout-general-scm"><code>checkout</code> step</a></li>
 <li><a href="https://github.com/jenkinsci/workflow-scm-step-plugin/blob/master/README.md"><code>checkout</code> README</a></li>
+</ul>
+
+
+<h3><code>findFiles</code> step</h3>
+
+<p>Doing in Bash:</p>
+
+<pre><code class="groovy Doing in Bash">    sh '''
+    for file in target/surefire-reports/*.txt;
+    do
+        echo $file &gt;&gt; testresult
+    done
+    cat testresult
+    '''
+    def result = readFile "testresult"
+</code></pre>
+
+<pre><code class="groovy Doing in Groovy">    def files = findFiles(glob: 'target/surefire-reports/*.txt')
+    for file in files:
+      echo """
+      ${files[0].name} ${files[0].path} ${files[0].directory} 
+      ${files[0].length} ${files[0].lastModified}
+      """
+</code></pre>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/"><code>findFiles</code> step</a></li>
+<li>Related: <code>readFile</code>, <code>writeFile</code>.</li>
 </ul>
 
 

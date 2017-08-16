@@ -157,6 +157,54 @@ To check out another repository, you need to specify the paremeters to <code>che
 </ul>
 
 
+<h3><code>findFiles</code> step</h3>
+
+<p>Doing in Bash:</p>
+
+<figure class='code'><figcaption><span>Doing in Bash</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">sh</span> <span class="s1">&#39;&#39;&#39;</span>
+</span><span class='line'><span class="s1">for file in target/surefire-reports/*.txt;</span>
+</span><span class='line'><span class="s1">do</span>
+</span><span class='line'><span class="s1">    echo $file &gt;&gt; testresult</span>
+</span><span class='line'><span class="s1">done</span>
+</span><span class='line'><span class="s1">cat testresult</span>
+</span><span class='line'><span class="s1">&#39;&#39;&#39;</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">result</span> <span class="o">=</span> <span class="n">readFile</span> <span class="s2">&quot;testresult&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Doing in Groovy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="n">files</span> <span class="o">=</span> <span class="n">findFiles</span><span class="o">(</span><span class="nl">glob:</span> <span class="s1">&#39;target/surefire-reports/*.txt&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="k">for</span> <span class="n">file</span> <span class="k">in</span> <span class="nl">files:</span>
+</span><span class='line'>  <span class="n">echo</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s2">  ${files[0].name} ${files[0].path} ${files[0].directory} </span>
+</span><span class='line'><span class="s2">  ${files[0].length} ${files[0].lastModified}</span>
+</span><span class='line'><span class="s2">  &quot;&quot;&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/"><code>findFiles</code> step</a></li>
+<li>Related: <code>readFile</code>, <code>writeFile</code>.</li>
+</ul>
+
+
 <h3>References</h3>
 
 <ul>
