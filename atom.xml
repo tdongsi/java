@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-09-05T13:35:59-07:00</updated>
+  <updated>2017-09-05T16:53:36-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -370,6 +370,44 @@ For asking input from a list of multiple choices, you can use the advanced versi
 <ul>
 <li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
 </ul>
+
+
+<h3><code>junit</code> step</h3>
+
+<p>JUnit tests + PMD, FindBugs, CheckStyle.
+In Blue Ocean interface, these will be displayed in a separate tab.</p>
+
+<figure class='code'><figcaption><span>Related steps</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;JUnit-Reports&#39;</span><span class="o">){</span>
+</span><span class='line'>    <span class="n">junit</span> <span class="nl">allowEmptyResults:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">testResults:</span> <span class="s1">&#39;**/build/test-results/*.xml&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;FindBugs-Reports&#39;</span><span class="o">){</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;FindBugsPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">excludePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">includePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/findbugs/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;PMD-Reports&#39;</span><span class="o">){</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;PmdPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/pmd/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;CheckStyle-Reports&#39;</span><span class="o">){</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;CheckStylePublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/checkstyle/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3><code>sendSlack</code> step</h3>

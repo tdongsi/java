@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jenkins | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-09-05T13:35:59-07:00</updated>
+  <updated>2017-09-05T16:53:36-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -253,6 +253,28 @@ For asking input from a list of multiple choices, you can use the advanced versi
 <li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
 </ul>
 
+
+<h3><code>junit</code> step</h3>
+
+<p>JUnit tests + PMD, FindBugs, CheckStyle.
+In Blue Ocean interface, these will be displayed in a separate tab.</p>
+
+<pre><code class="groovy Related steps">stage('JUnit-Reports'){
+    junit allowEmptyResults: true, testResults: '**/build/test-results/*.xml'
+}
+
+stage('FindBugs-Reports'){
+    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
+}
+
+stage('PMD-Reports'){
+    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
+}
+
+stage('CheckStyle-Reports'){
+    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
+}
+</code></pre>
 
 <h3><code>sendSlack</code> step</h3>
 
