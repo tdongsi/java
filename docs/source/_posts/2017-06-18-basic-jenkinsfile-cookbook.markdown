@@ -85,9 +85,61 @@ Reference:
 
 * [`input` step](https://jenkins.io/doc/pipeline/steps/pipeline-input-step/)
 
+### `junit` step
+
+JUnit tests + PMD, FindBugs, CheckStyle. 
+In Blue Ocean interface, these will be displayed in a separate tab.
+
+``` groovy Related steps
+stage('JUnit-Reports'){
+    junit allowEmptyResults: true, testResults: '**/build/test-results/*.xml'
+}
+
+stage('FindBugs-Reports'){
+    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
+}
+
+stage('PMD-Reports'){
+    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
+}
+
+stage('CheckStyle-Reports'){
+    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
+}
+```
+
 ### `sendSlack` step
 
+Standard Jenkinsfile for testing Slack
 
+``` groovy Jenkinsfile
+node('test-agent') {
+    stage('Checkout') {
+        checkout scm
+    }
+    
+    stage('Main') {
+        withCredentials([string(credentialsId: 'matrixsfdc-slack', variable: 'TOKEN')]) {
+            slackSend ( teamDomain: 'matrixsfdc', channel: '#jenkins-pcloud', token: env.TOKEN,
+                   baseUrl: 'https://matrixsfdc.slack.com/services/hooks/jenkins-ci/',
+                   color: '#FFFF00', 
+                   message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+                   )
+        }
+    }
+    
+    input 'Finished with K8S pod?'
+}
+```
+
+### `withCredentials` step
+
+There are different variations of `withCredentials` step.
+The most common ones are:
+
+``` groovy
+TODO
+```
 
 ### References
 
