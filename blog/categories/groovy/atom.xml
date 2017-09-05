@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-16T11:11:40-07:00</updated>
+  <updated>2017-09-05T13:35:59-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -176,27 +176,7 @@ You can click on individual steps and get more details, such as the log output f
 <!--more-->
 
 
-<h3><code>input</code> step</h3>
-
-<p>Simple <code>input</code> step can be used to ask for approval to proceed.
-For asking input from a list of multiple choices, you can use the advanced version of input.</p>
-
-<pre><code class="groovy Input from list of choices">       sh "source scripts/findCL.sh &gt; choiceLists.txt"
-       def choiceOptions = readFile "${env.WORKSPACE}/choiceLists.txt"
-       def choice = input(
-       id: 'CHOICE_LIST', message:'Choose a CL' , parameters: [
-        [$class: 'ChoiceParameterDefinition', name:'CHOICE_LIST_SELECTED', description:'Select one', choices:choiceOptions]
-      ])
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
-</ul>
-
-
-<h3><code>checkout</code> step</h3>
+<h3><code>checkout</code>/<code>git</code> step</h3>
 
 <p><code>scm</code> is the global variable for the current commit AND branch AND repository of Jenkinsfile.
 <code>checkout scm</code> means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
@@ -253,6 +233,57 @@ git branch: 'develop', url: 'https://github.com/WtfJoke/Any.git'
 <li>Related: <code>readFile</code>, <code>writeFile</code>.</li>
 </ul>
 
+
+<h3><code>input</code> step</h3>
+
+<p>Simple <code>input</code> step can be used to ask for approval to proceed.
+For asking input from a list of multiple choices, you can use the advanced version of input.</p>
+
+<pre><code class="groovy Input from list of choices">       sh "source scripts/findCL.sh &gt; choiceLists.txt"
+       def choiceOptions = readFile "${env.WORKSPACE}/choiceLists.txt"
+       def choice = input(
+       id: 'CHOICE_LIST', message:'Choose a CL' , parameters: [
+        [$class: 'ChoiceParameterDefinition', name:'CHOICE_LIST_SELECTED', description:'Select one', choices:choiceOptions]
+      ])
+</code></pre>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
+</ul>
+
+
+<h3><code>sendSlack</code> step</h3>
+
+<p>Standard Jenkinsfile for testing Slack</p>
+
+<pre><code class="groovy Jenkinsfile">node('test-agent') {
+    stage('Checkout') {
+        checkout scm
+    }
+
+    stage('Main') {
+        withCredentials([string(credentialsId: 'matrixsfdc-slack', variable: 'TOKEN')]) {
+            slackSend ( teamDomain: 'matrixsfdc', channel: '#jenkins-pcloud', token: env.TOKEN,
+                   baseUrl: 'https://matrixsfdc.slack.com/services/hooks/jenkins-ci/',
+                   color: '#FFFF00', 
+                   message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
+                   )
+        }
+    }
+
+    input 'Finished with K8S pod?'
+}
+</code></pre>
+
+<h3><code>withCredentials</code> step</h3>
+
+<p>There are different variations of <code>withCredentials</code> step.
+The most common ones are:</p>
+
+<pre><code class="groovy">TODO
+</code></pre>
 
 <h3>References</h3>
 

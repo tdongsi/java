@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-08-16T11:11:40-07:00</updated>
+  <updated>2017-09-05T13:35:59-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -258,34 +258,7 @@ You can click on individual steps and get more details, such as the log output f
 <!--more-->
 
 
-<h3><code>input</code> step</h3>
-
-<p>Simple <code>input</code> step can be used to ask for approval to proceed.
-For asking input from a list of multiple choices, you can use the advanced version of input.</p>
-
-<figure class='code'><figcaption><span>Input from list of choices</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'>   <span class="n">sh</span> <span class="s2">&quot;source scripts/findCL.sh &gt; choiceLists.txt&quot;</span>
-</span><span class='line'>   <span class="kt">def</span> <span class="n">choiceOptions</span> <span class="o">=</span> <span class="n">readFile</span> <span class="s2">&quot;${env.WORKSPACE}/choiceLists.txt&quot;</span>
-</span><span class='line'>   <span class="kt">def</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">input</span><span class="o">(</span>
-</span><span class='line'>   <span class="nl">id:</span> <span class="s1">&#39;CHOICE_LIST&#39;</span><span class="o">,</span> <span class="nl">message:</span><span class="s1">&#39;Choose a CL&#39;</span> <span class="o">,</span> <span class="nl">parameters:</span> <span class="o">[</span>
-</span><span class='line'>    <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;ChoiceParameterDefinition&#39;</span><span class="o">,</span> <span class="nl">name:</span><span class="s1">&#39;CHOICE_LIST_SELECTED&#39;</span><span class="o">,</span> <span class="nl">description:</span><span class="s1">&#39;Select one&#39;</span><span class="o">,</span> <span class="nl">choices:</span><span class="n">choiceOptions</span><span class="o">]</span>
-</span><span class='line'>  <span class="o">])</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
-</ul>
-
-
-<h3><code>checkout</code> step</h3>
+<h3><code>checkout</code>/<code>git</code> step</h3>
 
 <p><code>scm</code> is the global variable for the current commit AND branch AND repository of Jenkinsfile.
 <code>checkout scm</code> means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
@@ -370,6 +343,84 @@ To check out another repository, you need to specify the paremeters to <code>che
 <li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/"><code>findFiles</code> step</a></li>
 <li>Related: <code>readFile</code>, <code>writeFile</code>.</li>
 </ul>
+
+
+<h3><code>input</code> step</h3>
+
+<p>Simple <code>input</code> step can be used to ask for approval to proceed.
+For asking input from a list of multiple choices, you can use the advanced version of input.</p>
+
+<figure class='code'><figcaption><span>Input from list of choices</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'>   <span class="n">sh</span> <span class="s2">&quot;source scripts/findCL.sh &gt; choiceLists.txt&quot;</span>
+</span><span class='line'>   <span class="kt">def</span> <span class="n">choiceOptions</span> <span class="o">=</span> <span class="n">readFile</span> <span class="s2">&quot;${env.WORKSPACE}/choiceLists.txt&quot;</span>
+</span><span class='line'>   <span class="kt">def</span> <span class="n">choice</span> <span class="o">=</span> <span class="n">input</span><span class="o">(</span>
+</span><span class='line'>   <span class="nl">id:</span> <span class="s1">&#39;CHOICE_LIST&#39;</span><span class="o">,</span> <span class="nl">message:</span><span class="s1">&#39;Choose a CL&#39;</span> <span class="o">,</span> <span class="nl">parameters:</span> <span class="o">[</span>
+</span><span class='line'>    <span class="o">[</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;ChoiceParameterDefinition&#39;</span><span class="o">,</span> <span class="nl">name:</span><span class="s1">&#39;CHOICE_LIST_SELECTED&#39;</span><span class="o">,</span> <span class="nl">description:</span><span class="s1">&#39;Select one&#39;</span><span class="o">,</span> <span class="nl">choices:</span><span class="n">choiceOptions</span><span class="o">]</span>
+</span><span class='line'>  <span class="o">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
+</ul>
+
+
+<h3><code>sendSlack</code> step</h3>
+
+<p>Standard Jenkinsfile for testing Slack</p>
+
+<figure class='code'><figcaption><span>Jenkinsfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span><span class="o">(</span><span class="s1">&#39;test-agent&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">checkout</span> <span class="n">scm</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Main&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">withCredentials</span><span class="o">([</span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;matrixsfdc-slack&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;TOKEN&#39;</span><span class="o">)])</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">slackSend</span> <span class="o">(</span> <span class="nl">teamDomain:</span> <span class="s1">&#39;matrixsfdc&#39;</span><span class="o">,</span> <span class="nl">channel:</span> <span class="s1">&#39;#jenkins-pcloud&#39;</span><span class="o">,</span> <span class="nl">token:</span> <span class="n">env</span><span class="o">.</span><span class="na">TOKEN</span><span class="o">,</span>
+</span><span class='line'>                   <span class="nl">baseUrl:</span> <span class="s1">&#39;https://matrixsfdc.slack.com/services/hooks/jenkins-ci/&#39;</span><span class="o">,</span>
+</span><span class='line'>                   <span class="nl">color:</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="o">,</span>
+</span><span class='line'>                   <span class="nl">message:</span> <span class="s2">&quot;STARTED: Job &#39;${env.JOB_NAME} [${env.BUILD_NUMBER}]&#39; (${env.BUILD_URL})&quot;</span>
+</span><span class='line'>                   <span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">input</span> <span class="s1">&#39;Finished with K8S pod?&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3><code>withCredentials</code> step</h3>
+
+<p>There are different variations of <code>withCredentials</code> step.
+The most common ones are:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">TODO</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>References</h3>
