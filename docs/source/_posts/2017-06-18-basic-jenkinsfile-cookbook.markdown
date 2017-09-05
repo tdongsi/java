@@ -12,25 +12,7 @@ This post shows how to customize standard Pipeline "steps" in Jenkinsfile (exclu
 
 <!--more-->
 
-### `input` step
-
-Simple `input` step can be used to ask for approval to proceed.
-For asking input from a list of multiple choices, you can use the advanced version of input.
-
-``` groovy Input from list of choices
-       sh "source scripts/findCL.sh > choiceLists.txt"
-       def choiceOptions = readFile "${env.WORKSPACE}/choiceLists.txt"
-       def choice = input(
-       id: 'CHOICE_LIST', message:'Choose a CL' , parameters: [
-        [$class: 'ChoiceParameterDefinition', name:'CHOICE_LIST_SELECTED', description:'Select one', choices:choiceOptions]
-      ])
-```
-
-Reference:
-
-* [`input` step](https://jenkins.io/doc/pipeline/steps/pipeline-input-step/)
-
-### `checkout` step
+### `checkout`/`git` step
 
 `scm` is the global variable for the current commit AND branch AND repository of Jenkinsfile. 
 `checkout scm` means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
@@ -84,6 +66,28 @@ Reference:
 
 * [`findFiles` step](https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/)
 * Related: `readFile`, `writeFile`.
+
+### `input` step
+
+Simple `input` step can be used to ask for approval to proceed.
+For asking input from a list of multiple choices, you can use the advanced version of input.
+
+``` groovy Input from list of choices
+       sh "source scripts/findCL.sh > choiceLists.txt"
+       def choiceOptions = readFile "${env.WORKSPACE}/choiceLists.txt"
+       def choice = input(
+       id: 'CHOICE_LIST', message:'Choose a CL' , parameters: [
+        [$class: 'ChoiceParameterDefinition', name:'CHOICE_LIST_SELECTED', description:'Select one', choices:choiceOptions]
+      ])
+```
+
+Reference:
+
+* [`input` step](https://jenkins.io/doc/pipeline/steps/pipeline-input-step/)
+
+### `sendSlack` step
+
+
 
 ### References
 
