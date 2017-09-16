@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-09-05T16:53:36-07:00</updated>
+  <updated>2017-09-16T00:36:01-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -264,17 +264,59 @@ In Blue Ocean interface, these will be displayed in a separate tab.</p>
 }
 
 stage('FindBugs-Reports'){
-    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
+    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', 
+    excludePattern: '', healthy: '', includePattern: '', 
+    pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
 }
 
 stage('PMD-Reports'){
-    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
+    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', 
+    healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
 }
 
 stage('CheckStyle-Reports'){
-    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
+    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', 
+    healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
 }
 </code></pre>
+
+<h3><code>podTemplate</code> step</h3>
+
+<p>This step is used to specify a new pod template for running jobs on Kubernetes cluster.</p>
+
+<pre><code class="groovy Kubernetes plugin">podTemplate(label:'base-agent', containers: [
+    containerTemplate(name: 'maven', 
+        image: 'ops0-artifactrepo1-0-prd.data.sfdc.net/tdongsi/matrix-jenkins-aqueduct-agent:13',
+        workingDir: '/home/jenkins',
+        volumes: [hostPathVolume(mountPath: '/srv/jenkins', hostPath: '/usr/local/npm'),
+        secretVolume(mountPath: '/etc/mount2', secretName: 'my-secret')],
+        imagePullSecrets: 'sfregistry')
+]) {
+    node('base-agent') {
+        stage('Checkout') {
+            checkout scm
+        }
+
+        stage('main') {
+            sh 'java -version'
+            sh 'mvn -version'
+            sh 'python -V'
+        }
+
+        input 'Finished with K8S pod?'
+    }
+}
+</code></pre>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin">Kubernetes plugin</a></li>
+<li><a href="https://www.infoq.com/articles/scaling-docker-with-kubernetes">Tutorial</a></li>
+<li><a href="https://github.com/jenkinsci/kubernetes-plugin">Github repo</a></li>
+<li><a href="https://jenkins.io/doc/pipeline/steps/kubernetes/">Pipeline steps</a></li>
+</ul>
+
 
 <h3><code>sendSlack</code> step</h3>
 
@@ -304,8 +346,85 @@ stage('CheckStyle-Reports'){
 <p>There are different variations of <code>withCredentials</code> step.
 The most common ones are:</p>
 
-<pre><code class="groovy">TODO
+<pre><code class="groovy Binding secret to username and password separately">node {
+    withCredentials([usernamePassword(credentialsId: 'amazon', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        // available as an env variable, but will be masked if you try to print it out any which way
+        sh 'echo $PASSWORD'
+        // also available as a Groovy variable—note double quotes for string interpolation
+        echo "$USERNAME"
+    }
+}
 </code></pre>
+
+<pre><code class="groovy Binding secret to $username:$password">node {
+  withCredentials([usernameColonPassword(credentialsId: 'mylogin', variable: 'USERPASS')]) {
+    sh '''
+      set +x
+      curl -u $USERPASS https://private.server/ &gt; output
+    '''
+  }
+}
+</code></pre>
+
+<pre><code class="groovy Binding secret string to a variable">node {
+  withCredentials([string(credentialsId: 'secretString', variable: 'MY_STRING')]) {
+    sh '''
+      echo $MY_STRING
+    '''
+  }
+}
+</code></pre>
+
+<p>For secret file, the file will be passed into some secret location and that secret location will be bound to some variable.
+If you want the secret files in specific locations, the workaround is to create symlinks to those secret files.</p>
+
+<pre><code class="groovy Binding secret file">        withCredentials( [file(credentialsId: 'host-cert', variable: 'HOST_CERT'),
+                        file(credentialsId: 'host-key', variable: 'HOST_KEY'),
+                        file(credentialsId: 'cert-ca', variable: 'CERT_CA')
+                        ]) 
+        {
+            sh """
+                mkdir download
+                ln -s ${env.HOST_CERT} download/hostcert.crt
+                ln -s ${env.HOST_KEY} download/hostcert.key
+                ln -s ${env.CERT_CA} download/ca.crt
+            """
+
+            // The Python script read those files download/*.* by default
+            sh "python python/main.py"
+        }
+</code></pre>
+
+<p>For &ldquo;private key with passphrase&rdquo; Credential type, <code>sshagent</code> is only usage that I know (credential ID is <code>jenkins_ssh_key</code> in this example):</p>
+
+<pre><code class="groovy Binding private key with passphrase">node('my-agent'){
+  stage 'Checkout'
+  checkout scm
+
+  if (env.BRANCH_NAME == 'master') {
+    stage 'Commit'
+    println "Pushing Jenkins Shared Library"
+
+    sshagent(['jenkins_ssh_key']) {
+      sh """
+        git branch master
+        git checkout master
+        ssh-keyscan -H -p 12222 \${JENKINS_ADDR} &gt;&gt; ~/.ssh/known_hosts
+        git remote add jenkins ssh://tdongsi@\${JENKINS_ADDR}:12222/workflowLibs.git
+        git push --force jenkins master
+      """
+    }
+
+  }
+}
+</code></pre>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://wiki.jenkins.io/display/JENKINS/Credentials+Binding+Plugin?focusedCommentId=80184884">Credentials Binding plugin</a></li>
+</ul>
+
 
 <h3>References</h3>
 

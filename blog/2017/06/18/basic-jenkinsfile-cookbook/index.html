@@ -225,22 +225,91 @@ In Blue Ocean interface, these will be displayed in a separate tab.</p>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
 </pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;JUnit-Reports&#39;</span><span class="o">){</span>
 </span><span class='line'>    <span class="n">junit</span> <span class="nl">allowEmptyResults:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">testResults:</span> <span class="s1">&#39;**/build/test-results/*.xml&#39;</span>
 </span><span class='line'><span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;FindBugs-Reports&#39;</span><span class="o">){</span>
-</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;FindBugsPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">excludePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">includePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/findbugs/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;FindBugsPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span>
+</span><span class='line'>    <span class="nl">excludePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">includePattern:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span>
+</span><span class='line'>    <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/findbugs/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
 </span><span class='line'><span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;PMD-Reports&#39;</span><span class="o">){</span>
-</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;PmdPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/pmd/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;PmdPublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span>
+</span><span class='line'>    <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/pmd/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
 </span><span class='line'><span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;CheckStyle-Reports&#39;</span><span class="o">){</span>
-</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;CheckStylePublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/checkstyle/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
+</span><span class='line'>    <span class="n">step</span><span class="o">([</span><span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;CheckStylePublisher&#39;</span><span class="o">,</span> <span class="nl">canComputeNew:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">defaultEncoding:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span>
+</span><span class='line'>    <span class="nl">healthy:</span> <span class="s1">&#39;&#39;</span><span class="o">,</span> <span class="nl">pattern:</span> <span class="s1">&#39;**/build/reports/checkstyle/*.xml&#39;</span><span class="o">,</span> <span class="nl">unHealthy:</span> <span class="s1">&#39;&#39;</span><span class="o">])</span>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+<h3><code>podTemplate</code> step</h3>
+
+<p>This step is used to specify a new pod template for running jobs on Kubernetes cluster.</p>
+
+<figure class='code'><figcaption><span>Kubernetes plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">podTemplate</span><span class="o">(</span><span class="nl">label:</span><span class="s1">&#39;base-agent&#39;</span><span class="o">,</span> <span class="nl">containers:</span> <span class="o">[</span>
+</span><span class='line'>    <span class="n">containerTemplate</span><span class="o">(</span><span class="nl">name:</span> <span class="s1">&#39;maven&#39;</span><span class="o">,</span>
+</span><span class='line'>        <span class="nl">image:</span> <span class="s1">&#39;ops0-artifactrepo1-0-prd.data.sfdc.net/tdongsi/matrix-jenkins-aqueduct-agent:13&#39;</span><span class="o">,</span>
+</span><span class='line'>        <span class="nl">workingDir:</span> <span class="s1">&#39;/home/jenkins&#39;</span><span class="o">,</span>
+</span><span class='line'>        <span class="nl">volumes:</span> <span class="o">[</span><span class="n">hostPathVolume</span><span class="o">(</span><span class="nl">mountPath:</span> <span class="s1">&#39;/srv/jenkins&#39;</span><span class="o">,</span> <span class="nl">hostPath:</span> <span class="s1">&#39;/usr/local/npm&#39;</span><span class="o">),</span>
+</span><span class='line'>        <span class="n">secretVolume</span><span class="o">(</span><span class="nl">mountPath:</span> <span class="s1">&#39;/etc/mount2&#39;</span><span class="o">,</span> <span class="nl">secretName:</span> <span class="s1">&#39;my-secret&#39;</span><span class="o">)],</span>
+</span><span class='line'>        <span class="nl">imagePullSecrets:</span> <span class="s1">&#39;sfregistry&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">node</span><span class="o">(</span><span class="s1">&#39;base-agent&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">checkout</span> <span class="n">scm</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;main&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">sh</span> <span class="s1">&#39;java -version&#39;</span>
+</span><span class='line'>            <span class="n">sh</span> <span class="s1">&#39;mvn -version&#39;</span>
+</span><span class='line'>            <span class="n">sh</span> <span class="s1">&#39;python -V&#39;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">input</span> <span class="s1">&#39;Finished with K8S pod?&#39;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin">Kubernetes plugin</a></li>
+<li><a href="https://www.infoq.com/articles/scaling-docker-with-kubernetes">Tutorial</a></li>
+<li><a href="https://github.com/jenkinsci/kubernetes-plugin">Github repo</a></li>
+<li><a href="https://jenkins.io/doc/pipeline/steps/kubernetes/">Pipeline steps</a></li>
+</ul>
 
 
 <h3><code>sendSlack</code> step</h3>
@@ -289,9 +358,151 @@ In Blue Ocean interface, these will be displayed in a separate tab.</p>
 <p>There are different variations of <code>withCredentials</code> step.
 The most common ones are:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">TODO</span>
+<figure class='code'><figcaption><span>Binding secret to username and password separately</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">withCredentials</span><span class="o">([</span><span class="n">usernamePassword</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;amazon&#39;</span><span class="o">,</span> <span class="nl">usernameVariable:</span> <span class="s1">&#39;USERNAME&#39;</span><span class="o">,</span> <span class="nl">passwordVariable:</span> <span class="s1">&#39;PASSWORD&#39;</span><span class="o">)])</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// available as an env variable, but will be masked if you try to print it out any which way</span>
+</span><span class='line'>        <span class="n">sh</span> <span class="s1">&#39;echo $PASSWORD&#39;</span>
+</span><span class='line'>        <span class="c1">// also available as a Groovy variable—note double quotes for string interpolation</span>
+</span><span class='line'>        <span class="n">echo</span> <span class="s2">&quot;$USERNAME&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Binding secret to $username:$password</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">withCredentials</span><span class="o">([</span><span class="n">usernameColonPassword</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;mylogin&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;USERPASS&#39;</span><span class="o">)])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sh</span> <span class="s1">&#39;&#39;&#39;</span>
+</span><span class='line'><span class="s1">      set +x</span>
+</span><span class='line'><span class="s1">      curl -u $USERPASS https://private.server/ &gt; output</span>
+</span><span class='line'><span class="s1">    &#39;&#39;&#39;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Binding secret string to a variable</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">withCredentials</span><span class="o">([</span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;secretString&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;MY_STRING&#39;</span><span class="o">)])</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">sh</span> <span class="s1">&#39;&#39;&#39;</span>
+</span><span class='line'><span class="s1">      echo $MY_STRING</span>
+</span><span class='line'><span class="s1">    &#39;&#39;&#39;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For secret file, the file will be passed into some secret location and that secret location will be bound to some variable.
+If you want the secret files in specific locations, the workaround is to create symlinks to those secret files.</p>
+
+<figure class='code'><figcaption><span>Binding secret file</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'>    <span class="n">withCredentials</span><span class="o">(</span> <span class="o">[</span><span class="n">file</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;host-cert&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;HOST_CERT&#39;</span><span class="o">),</span>
+</span><span class='line'>                    <span class="n">file</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;host-key&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;HOST_KEY&#39;</span><span class="o">),</span>
+</span><span class='line'>                    <span class="n">file</span><span class="o">(</span><span class="nl">credentialsId:</span> <span class="s1">&#39;cert-ca&#39;</span><span class="o">,</span> <span class="nl">variable:</span> <span class="s1">&#39;CERT_CA&#39;</span><span class="o">)</span>
+</span><span class='line'>                    <span class="o">])</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="n">sh</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s2">            mkdir download</span>
+</span><span class='line'><span class="s2">            ln -s ${env.HOST_CERT} download/hostcert.crt</span>
+</span><span class='line'><span class="s2">            ln -s ${env.HOST_KEY} download/hostcert.key</span>
+</span><span class='line'><span class="s2">            ln -s ${env.CERT_CA} download/ca.crt</span>
+</span><span class='line'><span class="s2">        &quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// The Python script read those files download/*.* by default</span>
+</span><span class='line'>        <span class="n">sh</span> <span class="s2">&quot;python python/main.py&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For &ldquo;private key with passphrase&rdquo; Credential type, <code>sshagent</code> is only usage that I know (credential ID is <code>jenkins_ssh_key</code> in this example):</p>
+
+<figure class='code'><figcaption><span>Binding private key with passphrase</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">node</span><span class="o">(</span><span class="s1">&#39;my-agent&#39;</span><span class="o">){</span>
+</span><span class='line'>  <span class="n">stage</span> <span class="s1">&#39;Checkout&#39;</span>
+</span><span class='line'>  <span class="n">checkout</span> <span class="n">scm</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nf">if</span> <span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_NAME</span> <span class="o">==</span> <span class="s1">&#39;master&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">stage</span> <span class="s1">&#39;Commit&#39;</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;Pushing Jenkins Shared Library&quot;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sshagent</span><span class="o">([</span><span class="s1">&#39;jenkins_ssh_key&#39;</span><span class="o">])</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">sh</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s2">        git branch master</span>
+</span><span class='line'><span class="s2">        git checkout master</span>
+</span><span class='line'><span class="s2">        ssh-keyscan -H -p 12222 \${JENKINS_ADDR} &gt;&gt; ~/.ssh/known_hosts</span>
+</span><span class='line'><span class="s2">        git remote add jenkins ssh://tdongsi@\${JENKINS_ADDR}:12222/workflowLibs.git</span>
+</span><span class='line'><span class="s2">        git push --force jenkins master</span>
+</span><span class='line'><span class="s2">      &quot;&quot;&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://wiki.jenkins.io/display/JENKINS/Credentials+Binding+Plugin?focusedCommentId=80184884">Credentials Binding plugin</a></li>
+</ul>
 
 
 <h3>References</h3>
