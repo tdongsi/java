@@ -108,6 +108,33 @@ stage('CheckStyle-Reports'){
 }
 ```
 
+### `podTemplate` step
+
+``` groovy Kubernetes plugin
+podTemplate(label:'base-agent', containers: [
+    containerTemplate(name: 'maven', 
+        image: 'ops0-artifactrepo1-0-prd.data.sfdc.net/tdongsi/matrix-jenkins-aqueduct-agent:13',
+        workingDir: '/home/jenkins',
+        volumes: [hostPathVolume(mountPath: '/srv/jenkins', hostPath: '/usr/local/npm'),
+        secretVolume(mountPath: '/etc/mount2', secretName: 'my-secret')],
+        imagePullSecrets: 'sfregistry')
+]) {
+    node('base-agent') {
+        stage('Checkout') {
+            checkout scm
+        }
+
+        stage('main') {
+            sh 'java -version'
+            sh 'mvn -version'
+            sh 'python -V'
+        }
+        
+        input 'Finished with K8S pod?'
+    }
+}
+```
+
 ### `sendSlack` step
 
 Standard Jenkinsfile for testing Slack
