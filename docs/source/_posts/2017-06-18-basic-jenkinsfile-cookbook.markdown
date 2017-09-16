@@ -96,19 +96,25 @@ stage('JUnit-Reports'){
 }
 
 stage('FindBugs-Reports'){
-    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
+    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', 
+    excludePattern: '', healthy: '', includePattern: '', 
+    pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
 }
 
 stage('PMD-Reports'){
-    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
+    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', 
+    healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
 }
 
 stage('CheckStyle-Reports'){
-    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
+    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', 
+    healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
 }
 ```
 
 ### `podTemplate` step
+
+This step is used to specify a new pod template for running jobs on Kubernetes cluster.
 
 ``` groovy Kubernetes plugin
 podTemplate(label:'base-agent', containers: [
@@ -134,6 +140,13 @@ podTemplate(label:'base-agent', containers: [
     }
 }
 ```
+
+Reference:
+
+* [Kubernetes plugin](https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin)
+* [Tutorial](https://www.infoq.com/articles/scaling-docker-with-kubernetes)
+* [Github repo](https://github.com/jenkinsci/kubernetes-plugin)
+* [Pipeline steps](https://jenkins.io/doc/pipeline/steps/kubernetes/)
 
 ### `sendSlack` step
 
@@ -164,6 +177,17 @@ node('test-agent') {
 There are different variations of `withCredentials` step.
 The most common ones are:
 
+``` groovy Binding secret to username and password separately
+node {
+    withCredentials([usernamePassword(credentialsId: 'amazon', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        // available as an env variable, but will be masked if you try to print it out any which way
+        sh 'echo $PASSWORD'
+        // also available as a Groovy variable—note double quotes for string interpolation
+        echo "$USERNAME"
+    }
+}
+```
+
 ``` groovy Binding secret to $username:$password
 node {
   withCredentials([usernameColonPassword(credentialsId: 'mylogin', variable: 'USERPASS')]) {
@@ -175,13 +199,23 @@ node {
 }
 ```
 
+``` groovy Binding secret string to a variable
+node {
+  withCredentials([string(credentialsId: 'secretString', variable: 'MY_STRING')]) {
+    sh '''
+      echo $MY_STRING
+    '''
+  }
+}
+```
+
 For secret file, the file will be passed into some secret location and that secret location will be bound to some variable.
 If you want the secret files in specific locations, the workaround is to create symlinks to those secret files.
 
 ``` groovy Binding secret file
-        withCredentials( [file(credentialsId: 'ajna-host-cert', variable: 'HOST_CERT'),
-                        file(credentialsId: 'ajna-host-key', variable: 'HOST_KEY'),
-                        file(credentialsId: 'ajna-cert-ca', variable: 'CERT_CA')
+        withCredentials( [file(credentialsId: 'host-cert', variable: 'HOST_CERT'),
+                        file(credentialsId: 'host-key', variable: 'HOST_KEY'),
+                        file(credentialsId: 'cert-ca', variable: 'CERT_CA')
                         ]) 
         {
             sh """
@@ -195,6 +229,35 @@ If you want the secret files in specific locations, the workaround is to create 
             sh "python python/main.py"
         }
 ```
+
+For "private key with passphrase" Credential type, `sshagent` is only usage that I know (credential ID is `jenkins_ssh_key` in this example):
+
+``` groovy Binding private key with passphrase
+node('my-agent'){
+  stage 'Checkout'
+  checkout scm
+
+  if (env.BRANCH_NAME == 'master') {
+    stage 'Commit'
+    println "Pushing Jenkins Shared Library"
+
+    sshagent(['jenkins_ssh_key']) {
+      sh """
+        git branch master
+        git checkout master
+        ssh-keyscan -H -p 12222 \${JENKINS_ADDR} >> ~/.ssh/known_hosts
+        git remote add jenkins ssh://tdongsi@\${JENKINS_ADDR}:12222/workflowLibs.git
+        git push --force jenkins master
+      """
+    }
+  
+  }
+}
+```
+
+Reference:
+
+* [Credentials Binding plugin](https://wiki.jenkins.io/display/JENKINS/Credentials+Binding+Plugin?focusedCommentId=80184884)
 
 ### References
 
