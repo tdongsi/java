@@ -137,8 +137,36 @@ node('test-agent') {
 There are different variations of `withCredentials` step.
 The most common ones are:
 
-``` groovy
-TODO
+``` groovy Binding secret to $username:$password
+node {
+  withCredentials([usernameColonPassword(credentialsId: 'mylogin', variable: 'USERPASS')]) {
+    sh '''
+      set +x
+      curl -u $USERPASS https://private.server/ > output
+    '''
+  }
+}
+```
+
+For secret file, the file will be passed into some secret location and that secret location will be bound to some variable.
+If you want the secret files in specific locations, the workaround is to create symlinks to those secret files.
+
+``` groovy Binding secret file
+        withCredentials( [file(credentialsId: 'ajna-host-cert', variable: 'HOST_CERT'),
+                        file(credentialsId: 'ajna-host-key', variable: 'HOST_KEY'),
+                        file(credentialsId: 'ajna-cert-ca', variable: 'CERT_CA')
+                        ]) 
+        {
+            sh """
+                mkdir download
+                ln -s ${env.HOST_CERT} download/hostcert.crt
+                ln -s ${env.HOST_KEY} download/hostcert.key
+                ln -s ${env.CERT_CA} download/ca.crt
+            """
+
+            // The Python script read those files download/*.* by default
+            sh "python python/main.py"
+        }
 ```
 
 ### References
