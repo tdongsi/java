@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-09-16T00:36:01-07:00</updated>
+  <updated>2017-09-24T22:33:48-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -2270,7 +2270,7 @@ More importantly, it allows you to liberally print lots of information needed fo
 
 <h3>Recipes</h3>
 
-<p><strong>Recipe 1</strong>: <code>mvn</code> exit normally wieth test failures.</p>
+<p><strong>Recipe 1</strong>: <code>mvn</code> exit normally with test failures.</p>
 
 <figure class='code'><figcaption><span>Exit normally with test failure</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"</span></code></pre></td></tr></table></div></figure>
@@ -2316,11 +2316,80 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
 
 <p><strong>Recipe 3</strong>: Install a jar file into local repository. See <a href="http://tdongsi.github.io/blog/2015/11/17/pushing-local-jar-file-into-your-local-maven-m2-repository/">here</a>.</p>
 
+<h3>Conventions</h3>
+
+<p>Maven follows the principle &ldquo;Conventions over configurations&rdquo;.
+While it helps to get you started quickly, it is hard to understand what&rsquo;s going on underneath without knowing the defaults and conventions.</p>
+
+<h4><a href="https://www.safaribooksonline.com/library/view/apache-maven-cookbook/9781785286124/ch08s04.html">Plugins</a></h4>
+
+<p>You will recall that when using the Maven JaCoCo plugin, to generate code coverage we had to explicitly specify the <code>projectId</code> and <code>artifactId</code> values of the plugin to it from the command line.
+However, for most other plugins, we specified the plugin name without additional information.
+To avoid it, open the settings.xml file and add the following section:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;pluginGroups&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;pluginGroup&gt;</span>org.jacoco<span class="nt">&lt;/pluginGroup&gt;</span>
+</span><span class='line'><span class="nt">&lt;/pluginGroups&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Run the following command on the same project for which you ran JaCoCo earlier:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Before
+</span><span class='line'>mvn clean org.jacoco:jacoco-maven-plugin:0.7.9:prepare-agent test org.jacoco:jacoco-maven-plugin:0.7.9:report
+</span><span class='line'>
+</span><span class='line'># After
+</span><span class='line'>mvn clean jacoco:prepare-agent test jacoco:report</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are two types of Maven plugins, which are as follows:</p>
+
+<ul>
+<li>Plugins maintained by the Maven team itself (let us call them official plugins). These are in the default plugin groups <strong>org.apache.maven.plugins</strong> and <strong>org.codehaus.mojo</strong>.</li>
+<li>All other plugins (let&rsquo;s say third-party plugins).</li>
+</ul>
+
+
+<p>All official plugins have the same <code>groupId</code>, namely <strong>org.apache.maven.plugins</strong>.
+They also have a convention for <code>artifactId</code>: &ldquo;maven-${prefix}-plugin&rdquo;, where <code>prefix</code> stands for the plugin prefix, the short name to refer to the plugin.</p>
+
+<p>The prefix used to reference the plugin can be customized as well.
+The prefix can be specified directly through the <code>goalPrefix</code> configuration parameter on the Maven-plugin-plugin of the plugin&rsquo;s pom file.</p>
+
+<p>So, when we run mvn clean, Maven looks for the &ldquo;maven-clean-plugin&rdquo; in the <strong>org.apache.maven.plugins</strong> group.</p>
+
+<p>What about third-party plugins? <code>pluginGroups</code> lets Maven know the <code>groupId</code> where it should search for additional plugins.
+So in the earlier case, Maven searched for plugins in the org.jacoco group.
+Third-party plugins should be named differently from official plugins.
+The conventional way to define the <code>artifactId</code> for third-party plugins is &ldquo;${prefix}-maven-plugin&rdquo;.
+When specified in this way, Maven automatically identifies the shortcut name for the plugin.
+In the earlier case, as the artifactId is jacoco-maven-plugin, the shortcut is jacoco.</p>
+
+<p>Maven will always search specified pluginGroups before it searches the following default groups:</p>
+
+<ul>
+<li>org.apache.maven.plugins</li>
+<li>org.codehaus.mojo</li>
+</ul>
+
+
+<p>Maven takes the first match for the shortcut that it finds.
+For instance, if there is a clean shortcut in a user-specified plugin in pluginGroups, it will take precedence over a Maven Clean plugin.</p>
+
 <h3>Reference</h3>
 
 <ul>
 <li><a href="https://maven.apache.org/settings.html">settings.xml</a></li>
 <li><a href="http://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html">resource directory</a></li>
+<li><a href="https://www.safaribooksonline.com/library/view/apache-maven-cookbook/9781785286124/ch08s04.html">Apache Maven Cookbook</a> by Raghuram Bharathan</li>
 </ul>
 
 ]]></content>
