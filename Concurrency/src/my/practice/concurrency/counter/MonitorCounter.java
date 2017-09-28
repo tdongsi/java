@@ -25,12 +25,12 @@ public class MonitorCounter implements Counter {
 	}
 
 	@Override
-	public synchronized int current() {
+	public int current() {
 		return count;
 	}
 
 	@Override
-	public synchronized void reset() {
+	public void reset() {
 		count = 0;
 	}
 }

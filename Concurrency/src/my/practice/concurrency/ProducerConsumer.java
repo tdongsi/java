@@ -31,8 +31,8 @@ public class ProducerConsumer {
 	 */
 	public static void produceAndConsume(Counter queue, Producer producer, Consumer consumer) {
 		
-		Thread t1 = new Thread((Runnable) producer);
-		Thread t2 = new Thread((Runnable) consumer);
+		Thread t1 = new Thread(producer);
+		Thread t2 = new Thread(consumer);
 		
 		t1.start();
 		t2.start();
