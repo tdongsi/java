@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-09-24T22:39:16-07:00</updated>
+  <updated>2017-09-30T22:44:34-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -2315,6 +2315,64 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
 
 
 <p><strong>Recipe 3</strong>: Install a jar file into local repository. See <a href="http://tdongsi.github.io/blog/2015/11/17/pushing-local-jar-file-into-your-local-maven-m2-repository/">here</a>.</p>
+
+<p><strong>Recipe 4</strong>: Findbugs and Checkstyle. See <a href="https://www.safaribooksonline.com/library/view/continuous-integration-ci/9781491986547/video307702.html">here</a>.
+Run <code>mvn clean install site</code> to generate Findbugs and Checkstyle reports.</p>
+
+<figure class='code'><figcaption><span>Adding Findbugs and Checkstyle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;reporting&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>findbugs-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>3.0.4<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;xmlOutput&gt;</span>true<span class="nt">&lt;/xmlOutput&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;findbugsXmlOutput&gt;</span>true<span class="nt">&lt;/findbugsXmlOutput&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;findbugsXmlWithMessages&gt;</span>true<span class="nt">&lt;/findbugsXmlWithMessages&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-checkstyle-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.17<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;reportSets&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;reportSet&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;reports&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;report&gt;</span>checkstyle<span class="nt">&lt;/report&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;/reports&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/reportSet&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/resportSets&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;/reporting&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h3>Conventions</h3>
 
