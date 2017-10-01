@@ -44,6 +44,38 @@ To switch between them, create a [minimal settings.xml](https://maven.apache.org
 
 **Recipe 3**: Install a jar file into local repository. See [here](http://tdongsi.github.io/blog/2015/11/17/pushing-local-jar-file-into-your-local-maven-m2-repository/).
 
+**Recipe 4**: Findbugs and Checkstyle. See [here](https://www.safaribooksonline.com/library/view/continuous-integration-ci/9781491986547/video307702.html).
+Run `mvn clean install site` to generate Findbugs and Checkstyle reports. 
+
+``` xml Adding Findbugs and Checkstyle
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.4</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <reportSets>
+                    <reportSet>
+                      <reports>
+                        <report>checkstyle</report>
+                      </reports>
+                    </reportSet>
+                </resportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+```
+
 ### Conventions
 
 Maven follows the principle "Conventions over configurations".
