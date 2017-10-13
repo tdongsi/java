@@ -33,6 +33,14 @@
 <lastmod>2016-08-29T01:38:40-07:00</lastmod>
 </url>
 <url>
+<loc>http://tdongsi.github.io/java/blog/2015/11/26/concurrency-race-condition/</loc>
+<lastmod>2015-11-26T18:13:05-08:00</lastmod>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/2015/11/19/concurrency-tutorial-in-java-part-1-producer-consumer-problem/</loc>
+<lastmod>2015-11-19T14:57:21-08:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook/</loc>
 <lastmod>2015-06-19T14:07:37-07:00</lastmod>
 </url>
@@ -55,6 +63,9 @@
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/maven/</loc>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/categories/concurrency/</loc>
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/tutorial/</loc>
