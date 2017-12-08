@@ -8,9 +8,20 @@ categories:
 - Groovy
 ---
 
-This post shows how to customize standard Pipeline "steps" in Jenkinsfile (excluding their common usage).
+This post shows how to customize standard Pipeline "steps" in Jenkinsfile besides their common usage.
 
 <!--more-->
+
+List of basic Jenkinsfile steps in this post:
+
+* `checkout`/`git`
+* `findFiles`
+* `input`
+* `junit`
+* `parameters`
+* `podTemplates`
+* `sendSlack`
+* `withCredentials`
 
 ### `checkout`/`git` step
 
