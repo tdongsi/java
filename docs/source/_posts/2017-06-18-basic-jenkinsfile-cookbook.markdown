@@ -18,7 +18,7 @@ List of basic Jenkinsfile steps in this post:
 * `findFiles`
 * `input`
 * `junit`
-* `parameters`
+* `parameters`/`properties`
 * `podTemplates`
 * `sendSlack`
 * `withCredentials`
@@ -122,6 +122,68 @@ stage('CheckStyle-Reports'){
     healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
 }
 ```
+
+### `parameters`/`properties` step
+
+`parameters` step adds certain job parameters for the overall pipeline job.
+In the Jenkins interface, this will be converted to read-only form when you click on "View Configuration" for that job.
+
+``` groovy parameters step in Declarative pipeline
+pipeline {
+    agent { node { label 'aqueduct-agent' } }
+    parameters {
+        choice(name: 'ClusterName', choices: 'func\ninteg\nperf', description: 'Name of the cluster to test.')
+    }
+    stages {
+        stage("Build") {
+            steps {
+                echo "Hello"
+                ...
+            }
+        } //  end of stage
+    }
+    post {
+        always {
+            ...
+        }
+    }
+}
+```
+
+TODO: Add screenshot
+
+In Scripted pipeline, its equivalent counterpart is `properties` step, as shown below.
+
+``` groovy parameters step for Scripted pipeline
+properties(
+    [
+        [
+            $class  : 'jenkins.model.BuildDiscarderProperty',
+            strategy: [
+                $class      : 'LogRotator',
+                numToKeepStr: '500'
+            ]
+        ],
+        pipelineTriggers(
+            [
+                [
+                    $class: 'hudson.triggers.TimerTrigger',
+                    spec  : "H/20 * * * *"
+                ]
+            ]
+        )
+    ]
+)
+
+node('agent') {
+    stage('Checkout') {
+        checkout scm
+    }
+    ...
+}
+```
+
+TODO: Add screenshot
 
 ### `podTemplate` step
 
