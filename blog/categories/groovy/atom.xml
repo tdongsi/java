@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-10-13T16:55:54-07:00</updated>
+  <updated>2017-12-10T15:14:03-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -14,935 +14,164 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Advanced Jenkinsfile Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/06/19/jenkinsfile-cookbook/"/>
-    <updated>2017-06-19T14:23:01-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/06/19/jenkinsfile-cookbook</id>
-    <content type="html"><![CDATA[<p>This post details some of the more advanced Jenkins pipelines using Jenkinsfile.</p>
+    <title type="html"><![CDATA[Groovy Fundamentals: Part 5: Demos]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-5/"/>
+    <updated>2017-12-08T17:17:20-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-5</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Groovy Fundamentals: Part 4: Closures & Operators]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-4/"/>
+    <updated>2017-12-08T17:17:09-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-4</id>
+    <content type="html"><![CDATA[<h3>Closures</h3>
 
-<!--more-->
+<pre><code class="groovy Iterating list with closure">List nums = [9,6,7,5,8,6,4,2,3]
+for (int num: nums) {
+    println num
+}
 
+// Pro: not much. You don't have to specify type
+for (num in nums) {
+    // println num
+}
 
-<h3>Nexus authentication in Maven</h3>
-
-<p>More detailed discussion is in <a href="/blog/2017/06/17/groovy-in-jenkinsfile/">here</a>.</p>
-
-<pre><code class="groovy Jenkinsfile">def myScript
-
-pipeline {
-   agent { node { label 'test-agent' } }
-   stages {
-       stage("compile") {
-           steps {
-               checkout scm
-               withCredentials([
-                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
-                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
-               ]) {
-                   script {
-                       myScript = load 'jenkins/xml.groovy'
-                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
-                       String xmlFile = myScript.transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
-
-                       String myPath = 'temp.xml'
-                       writeFile file: myPath, text: xmlFile
-
-                       sh "mvn -B clean compile -s ${myPath}"
-
-                       sh "rm ${myPath}"
-                   }
-               }
-           }
-           post {
-           failure {
-               echo "Sending email for compile failed (TBD)"
-            }
-           }
-       }
-   }
+// Idiomatic in Groovy.
+nums.each { num -&gt;
+    println num
+}
+nums.eachWithIndex { num, idx -&gt;
+    println "nums[$idx] == $num"
 }
 </code></pre>
 
-<pre><code class="groovy xml.groovy">import groovy.xml.StreamingMarkupBuilder
-import groovy.xml.XmlUtil
+<pre><code class="groovy Iterating map with closure">Map m = [a:1, b:2, c:2]
 
-@NonCPS
-def transformXml(String xmlContent, String username, String password) {
-  def xml = new XmlSlurper(false, false).parseText(xmlContent)
-
-  echo 'Start tranforming XML'
-  xml.servers.server.each { node -&gt;
-    node.username = username
-    node.password = password
-  }
-
-  def outWriter = new StringWriter()
-  XmlUtil.serialize( xml, outWriter )
-  return outWriter.toString()
+// Java idiom
+for (String key : m.keySet()) {
+    ...
 }
 
-return this
-</code></pre>
-
-<h3>Running test suite in parallel</h3>
-
-<pre><code class="groovy Jenkinsfile">node('remote') {
-  git 'https://github.com/jenkinsci/parallel-test-executor-plugin-sample.git'
-  stash name: 'sources', includes: 'pom.xml,src/'
+// Groovy idiom
+// One parameter closure gives Map.Entry
+m.each { e -&gt;
+    println "${e.key} ${e.value}"
 }
-def splits = splitTests count(2)
-def branches = [:]
-for (int i = 0; i &lt; splits.size(); i++) {
-  def index = i // fresh variable per iteration; i will be mutated
-  branches["split${i}"] = {
-    node('remote') {
-      deleteDir()
-      unstash 'sources'
-      def exclusions = splits.get(index);
-      writeFile file: 'exclusions.txt', text: exclusions.join("\n")
-      sh "${tool 'M3'}/bin/mvn -B -Dmaven.test.failure.ignore test"
-      junit 'target/surefire-reports/*.xml'
-    }
-  }
+// Two parameter closure gives key, value
+m.each { k, v -&gt;
+
 }
-parallel branches
 </code></pre>
 
-<p>When you run this Pipeline for the first time, it will check out a project and run all of its tests in sequence.
-The second and subsequent times you run it, the <code>splitTests</code> task will partition your tests into two sets of roughly equal runtime.
-The rest of the Pipeline then runs these in parallel — so if you look at <strong>trend</strong> (in the <strong>Build History</strong> widget) you will see the second and subsequent builds taking roughly half the time of the first.
-If you only have the one agent configured with its two executors, this won&rsquo;t save as much time, but you may have multiple agents on different hardware matching the same label expression.</p>
+<pre><code class="groovy collect method">println nums.collect { it * 2 } // map
+    .findAll { it % 3 == 0 }    // filter
+    .sum()                      // reduce
 
-<p>This script is more complex than the previous ones so it bears some examination.
-You start by grabbing an agent, checking out sources, and making a copy of them using the <code>stash</code> step:</p>
-
-<pre><code class="groovy">stash name: 'sources', includes: 'pom.xml,src/'
+def factor = 2
+println nums.collect { it*factor }
+// Spread dot operator
+println nums *. multiply(2)
+// Demo
+String HOMEPAGE = 'http://oreilly.com'
+println HOMEPAGE.toURL().text.readLines() *. size()
 </code></pre>
 
-<p>Later, you <code>unstash</code> these same files back into <strong>other</strong> workspaces.
-You could have just run <code>git</code> anew in each agent&rsquo;s workspace, but this would result in duplicated changelog entries, as well as contacting the Git server twice.
-* A Pipeline build is permitted to run as many SCM checkouts as it needs to, which is useful for projects working with multiple repositories, but not what we want here.
-* More importantly, if anyone pushes a new Git commit at  the wrong time, you might be testing different sources in some branches - which is prevented when you do the checkout just once and distribute sources to agents yourself.</p>
+<h3>Geocoding demo: XML query and parsing</h3>
 
-<p>The command <code>splitTests</code> returns a list of lists of strings.
-From each (list) entry, you construct one branch to run; the label (map key) is akin to a thread name, and will appear in the build log.
-The Maven project is set up to expect a file <code>exclusions.txt</code> at its root, and it will run all tests <em>not</em> mentioned there, which we set up via the <code>writeFile</code> step.
-When you run the <code>parallel</code> step, each branch is started at the same time, and the overall step completes when all the branches finish: “fork &amp; join”.</p>
+<pre><code class="groovy">String XML_BASE = 'https://maps.googleapis.com/maps/api/geocode/xml?'
+List address = ['2700 Coast Ave', 'Mountain View', 'CA']
 
-<p>There are several new ideas at work here:
-* A single Pipeline build allocates several executors, potentially on different agents, at the same time.
-You can see these starting and finishing in the Jenkins executor widget on the main screen.</p>
+String encoded = address.collect {
+    URLEncoder.encode(it, 'UTF-8')
+}.join(',')
+
+String queryString = "address=$encoded"
+String url = "$XML_BASE$queryString"
+// println url.toURL().text
+
+def root = new XmlSlurper().parse(url)
+def loc = root.result[0].geometry.location // Navigate DOM using dot
+println "Coordinates: ${loc.lat}, ${loc.lng}"
+</code></pre>
+
+<h3>ICNDB demo: JSON query and parsing</h3>
+
+<pre><code class="groovy">String JSON_BASE = 'http://api.icndb.com/jokes/random?'
+// Only the POTUS can claim such hyperbole.
+def params = [limitTo:'[nerdy]', firstName: 'Donald', lastName: 'Trump']
+def qs = params.collect {k,v -&gt; "$k=$v"}.join('&amp;')
+String jsonTxt = "$JSON_BASE$qs".toURL().text
+// println jsonTxt
+def json = new JsonSlurper().parseText(jsonTxt)
+println json.value.joke
+</code></pre>
+
+<h3>Operators</h3>
+
+<pre><code class="groovy Misc operators in Groovy">// Safe navigation ?.
+class Department {
+    Manager boss
+}
+class Manager {
+    String name
+}
+Department d1 = new Department(boss: new Manager(name: 'ABC'))
+Department d2 = new Department()
+println d1 ?. boss ?. name
+// Standard d2.boss.name will throw NPE.
+println d2 ?. boss ?. name
+
+// Spaceship operator: Comparable interface
+println 1 &lt;=&gt; 2
+
+// See Groovy truth
+// Elvis operator
+String input
+String greet = 'Hello ' + (input ?: 'World')
+println greet
+</code></pre>
+
+<p>Groovy truth:</p>
 
 <ul>
-<li>Each call to <code>node</code> gets its own workspace.
-This kind of flexibility is impossible in a freestyle project, each build of which is tied to exactly one workspace.The Parallel Test Executor plugin works around that for its freestyle build step by triggering multiple builds of the project, making the history hard to follow.</li>
-</ul>
-
-
-<p>Do not use <code>env</code> in this case:</p>
-
-<pre><code class="groovy">env.PATH = "${mvnHome}/bin:${env.PATH}"
-</code></pre>
-
-<p>because environment variable overrides are  limited to being global to a pipeline run, not local to the current thread (and thus agent).
-You could, however, use the <code>withEnv</code> step as noted above.</p>
-
-<p>You may also have noticed that you are running <code>JUnitResultArchiver</code> several times, something that is not possible in a freestyle project.
-The test results recorded in the build are cumulative.</p>
-
-<p>When you view the log for a build with multiple branches, the output from each will be intermixed.
-It can be useful to click on the <em>Pipeline Steps</em> link on the build’s sidebar.
-This will display a tree-table view of all the steps run so far in the build, grouped by logical block, for example <code>parallel</code> branch.
-You can click on individual steps and get more details, such as the log output for that step in isolation, the workspace associated with a <code>node</code> step, and so on.</p>
-
-<h4>Reference</h4>
-
-<ul>
-<li><a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/TUTORIAL.md">TUTORIAL</a></li>
-<li><a href="https://jenkins.io/blog/2016/06/16/parallel-test-executor-plugin/">More in Blog post</a></li>
-<li><a href="https://wiki.jenkins-ci.org/display/JENKINS/Parallel+Test+Executor+Plugin">Plugin page</a>: <code>splitTests</code> defined by this plugin.</li>
+<li>non-zero numbers</li>
+<li>non-null references</li>
+<li>non-empty strings</li>
+<li>non-empty collections</li>
+<li>regex with a match</li>
+<li>boolean true</li>
 </ul>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Basic Jenkinsfile Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook/"/>
-    <updated>2017-06-18T11:20:20-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook</id>
-    <content type="html"><![CDATA[<p>This post shows how to customize standard Pipeline &ldquo;steps&rdquo; in Jenkinsfile (excluding their common usage).</p>
-
-<!--more-->
-
-
-<h3><code>checkout</code>/<code>git</code> step</h3>
-
-<p><code>scm</code> is the global variable for the current commit AND branch AND repository of Jenkinsfile.
-<code>checkout scm</code> means checking out all other files with same version as the Jenkinsfile associated with running pipeline.
-To check out another repository, you need to specify the paremeters to <code>checkout</code> step.</p>
-
-<pre><code class="groovy Checkout from another Git repo">checkout([$class: 'GitSCM', branches: [[name: '*/master']],
-     userRemoteConfigs: [[url: 'http://git-server/user/repository.git']]])
-
-// From README file.
-checkout scm: [$class: 'MercurialSCM', source: 'ssh://hg@bitbucket.org/user/repo', clean: true, credentialsId: '1234-5678-abcd'], poll: false
-// If scm is the only parameter, you can omit its name, but Groovy syntax then requires parentheses around the value:
-checkout([$class: 'MercurialSCM', source: 'ssh://hg@bitbucket.org/user/repo'])
-
-// Short hand form for Git
-git branch: 'develop', url: 'https://github.com/WtfJoke/Any.git'
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/git/#git-git"><code>git</code> step</a></li>
-<li><a href="https://stackoverflow.com/questions/14843696/checkout-multiple-git-repos-into-same-jenkins-workspace"><code>git</code> example</a></li>
-<li><a href="https://jenkins.io/doc/pipeline/steps/workflow-scm-step/#checkout-general-scm"><code>checkout</code> step</a></li>
-<li><a href="https://github.com/jenkinsci/workflow-scm-step-plugin/blob/master/README.md"><code>checkout</code> README</a></li>
-</ul>
-
-
-<h3><code>findFiles</code> step</h3>
-
-<p>Doing in Bash:</p>
-
-<pre><code class="groovy Doing in Bash">    sh '''
-    for file in target/surefire-reports/*.txt;
-    do
-        echo $file &gt;&gt; testresult
-    done
-    cat testresult
-    '''
-    def result = readFile "testresult"
-</code></pre>
-
-<pre><code class="groovy Doing in Groovy">    def files = findFiles(glob: 'target/surefire-reports/*.txt')
-    for file in files:
-      echo """
-      ${files[0].name} ${files[0].path} ${files[0].directory} 
-      ${files[0].length} ${files[0].lastModified}
-      """
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/"><code>findFiles</code> step</a></li>
-<li>Related: <code>readFile</code>, <code>writeFile</code>.</li>
-</ul>
-
-
-<h3><code>input</code> step</h3>
-
-<p>Simple <code>input</code> step can be used to ask for approval to proceed.
-For asking input from a list of multiple choices, you can use the advanced version of input.</p>
-
-<pre><code class="groovy Input from list of choices">       sh "source scripts/findCL.sh &gt; choiceLists.txt"
-       def choiceOptions = readFile "${env.WORKSPACE}/choiceLists.txt"
-       def choice = input(
-       id: 'CHOICE_LIST', message:'Choose a CL' , parameters: [
-        [$class: 'ChoiceParameterDefinition', name:'CHOICE_LIST_SELECTED', description:'Select one', choices:choiceOptions]
-      ])
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/"><code>input</code> step</a></li>
-</ul>
-
-
-<h3><code>junit</code> step</h3>
-
-<p>JUnit tests + PMD, FindBugs, CheckStyle.
-In Blue Ocean interface, these will be displayed in a separate tab.</p>
-
-<pre><code class="groovy Related steps">stage('JUnit-Reports'){
-    junit allowEmptyResults: true, testResults: '**/build/test-results/*.xml'
-}
-
-stage('FindBugs-Reports'){
-    step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', 
-    excludePattern: '', healthy: '', includePattern: '', 
-    pattern: '**/build/reports/findbugs/*.xml', unHealthy: ''])
-}
-
-stage('PMD-Reports'){
-    step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', 
-    healthy: '', pattern: '**/build/reports/pmd/*.xml', unHealthy: ''])
-}
-
-stage('CheckStyle-Reports'){
-    step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', 
-    healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
-}
-</code></pre>
-
-<h3><code>podTemplate</code> step</h3>
-
-<p>This step is used to specify a new pod template for running jobs on Kubernetes cluster.</p>
-
-<pre><code class="groovy Kubernetes plugin">podTemplate(label:'base-agent', containers: [
-    containerTemplate(name: 'maven', 
-        image: 'ops0-artifactrepo1-0-prd.data.sfdc.net/tdongsi/matrix-jenkins-aqueduct-agent:13',
-        workingDir: '/home/jenkins',
-        volumes: [hostPathVolume(mountPath: '/srv/jenkins', hostPath: '/usr/local/npm'),
-        secretVolume(mountPath: '/etc/mount2', secretName: 'my-secret')],
-        imagePullSecrets: 'sfregistry')
-]) {
-    node('base-agent') {
-        stage('Checkout') {
-            checkout scm
-        }
-
-        stage('main') {
-            sh 'java -version'
-            sh 'mvn -version'
-            sh 'python -V'
-        }
-
-        input 'Finished with K8S pod?'
-    }
-}
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://wiki.jenkins.io/display/JENKINS/Kubernetes+Plugin">Kubernetes plugin</a></li>
-<li><a href="https://www.infoq.com/articles/scaling-docker-with-kubernetes">Tutorial</a></li>
-<li><a href="https://github.com/jenkinsci/kubernetes-plugin">Github repo</a></li>
-<li><a href="https://jenkins.io/doc/pipeline/steps/kubernetes/">Pipeline steps</a></li>
-</ul>
-
-
-<h3><code>sendSlack</code> step</h3>
-
-<p>Standard Jenkinsfile for testing Slack</p>
-
-<pre><code class="groovy Jenkinsfile">node('test-agent') {
-    stage('Checkout') {
-        checkout scm
-    }
-
-    stage('Main') {
-        withCredentials([string(credentialsId: 'matrixsfdc-slack', variable: 'TOKEN')]) {
-            slackSend ( teamDomain: 'matrixsfdc', channel: '#jenkins-pcloud', token: env.TOKEN,
-                   baseUrl: 'https://matrixsfdc.slack.com/services/hooks/jenkins-ci/',
-                   color: '#FFFF00', 
-                   message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
-                   )
-        }
-    }
-
-    input 'Finished with K8S pod?'
-}
-</code></pre>
-
-<h3><code>withCredentials</code> step</h3>
-
-<p>There are different variations of <code>withCredentials</code> step.
-The most common ones are:</p>
-
-<pre><code class="groovy Binding secret to username and password separately">node {
-    withCredentials([usernamePassword(credentialsId: 'amazon', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        // available as an env variable, but will be masked if you try to print it out any which way
-        sh 'echo $PASSWORD'
-        // also available as a Groovy variable—note double quotes for string interpolation
-        echo "$USERNAME"
-    }
-}
-</code></pre>
-
-<pre><code class="groovy Binding secret to $username:$password">node {
-  withCredentials([usernameColonPassword(credentialsId: 'mylogin', variable: 'USERPASS')]) {
-    sh '''
-      set +x
-      curl -u $USERPASS https://private.server/ &gt; output
-    '''
-  }
-}
-</code></pre>
-
-<pre><code class="groovy Binding secret string to a variable">node {
-  withCredentials([string(credentialsId: 'secretString', variable: 'MY_STRING')]) {
-    sh '''
-      echo $MY_STRING
-    '''
-  }
-}
-</code></pre>
-
-<p>For secret file, the file will be passed into some secret location and that secret location will be bound to some variable.
-If you want the secret files in specific locations, the workaround is to create symlinks to those secret files.</p>
-
-<pre><code class="groovy Binding secret file">        withCredentials( [file(credentialsId: 'host-cert', variable: 'HOST_CERT'),
-                        file(credentialsId: 'host-key', variable: 'HOST_KEY'),
-                        file(credentialsId: 'cert-ca', variable: 'CERT_CA')
-                        ]) 
-        {
-            sh """
-                mkdir download
-                ln -s ${env.HOST_CERT} download/hostcert.crt
-                ln -s ${env.HOST_KEY} download/hostcert.key
-                ln -s ${env.CERT_CA} download/ca.crt
-            """
-
-            // The Python script read those files download/*.* by default
-            sh "python python/main.py"
-        }
-</code></pre>
-
-<p>For &ldquo;private key with passphrase&rdquo; Credential type, <code>sshagent</code> is only usage that I know (credential ID is <code>jenkins_ssh_key</code> in this example):</p>
-
-<pre><code class="groovy Binding private key with passphrase">node('my-agent'){
-  stage 'Checkout'
-  checkout scm
-
-  if (env.BRANCH_NAME == 'master') {
-    stage 'Commit'
-    println "Pushing Jenkins Shared Library"
-
-    sshagent(['jenkins_ssh_key']) {
-      sh """
-        git branch master
-        git checkout master
-        ssh-keyscan -H -p 12222 \${JENKINS_ADDR} &gt;&gt; ~/.ssh/known_hosts
-        git remote add jenkins ssh://tdongsi@\${JENKINS_ADDR}:12222/workflowLibs.git
-        git push --force jenkins master
-      """
-    }
-
-  }
-}
-</code></pre>
-
-<p>Reference:</p>
-
-<ul>
-<li><a href="https://wiki.jenkins.io/display/JENKINS/Credentials+Binding+Plugin?focusedCommentId=80184884">Credentials Binding plugin</a></li>
-</ul>
-
-
-<h3>References</h3>
-
-<ul>
-<li><a href="https://jenkins.io/doc/pipeline/steps/">Basic Jenkinsfile steps</a></li>
-</ul>
-
+    <title type="html"><![CDATA[Groovy Fundamentals: Part 3: POGOs & Collections]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-3/"/>
+    <updated>2017-12-08T17:17:05-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-3</id>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Groovy in Jenkinsfile]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile/"/>
-    <updated>2017-06-17T12:08:15-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/06/17/groovy-in-jenkinsfile</id>
-    <content type="html"><![CDATA[<p>Groovy is supported in Jenkinsfile for quick scripting.
-However, lots of features in the Groovy language is not supported and simple works in Groovy can be really tricky in Jenkinsfile.</p>
-
-<!--more-->
-
-
-<h3>Different ways to process XML file</h3>
-
-<p>In summary, if it is possible, use another script language (e.g., Python) for <strong>file manipulation</strong> in Jenkinsfile.
-It is time consuming to navigate all tricky stuffs of Groovy implementaiton in Jenkins:</p>
-
-<ul>
-<li>In-process Script Approval: you have to approve every single class and method <em>one by one</em>.</li>
-<li>Some features of Groovy is not supported and it takes time to figure out what is not supported and how to work around. When in doubt, use <code>@NonCPS</code>.</li>
-</ul>
-
-
-<h4>Groovy method in Jenkinsfile</h4>
-
-<pre><code class="groovy Jenkinsfile">import groovy.xml.StreamingMarkupBuilder
-import groovy.xml.XmlUtil
-
-def settingsFile = 'temp.xml'
-
-@NonCPS
-def xmlTransform(txt, username, password) {
-
-    def xmlRoot = new XmlSlurper(false, false).parseText(txt)
-    echo 'Start tranforming XML'
-    xmlRoot.servers.server.each { node -&gt;
-       node.username = username
-       node.password = password
-    }
-
-    // TRICKY: FileWriter does NOT work
-    def outWriter = new StringWriter()
-    XmlUtil.serialize( xmlRoot, outWriter )
-    return outWriter.toString()
-}
-
-pipeline {
-   agent { node { label 'test-agent' } }
-   stages {
-       stage("compile") {
-           steps {
-               checkout scm
-               withCredentials([
-                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
-                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
-               ]) {
-                   script {
-                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
-                       def xmlFile = xmlTransform(xmlTemplate, env.nexusUsername, env.nexusPassword)
-                       writeFile file: settingsFile, text: xmlFile
-
-                       sh "mvn -B -s ${settingsFile} clean compile"
-                   }
-               }
-           }
-           post {
-           failure {
-               echo "Sending email for compile failed (TBD)"
-            }
-           }
-       }
-   }
-}
-</code></pre>
-
-<p>Some notes:</p>
-
-<ul>
-<li><code>import</code> statements must be at the top, right after the shebang and before anything else.</li>
-<li>The Groovy methods must be annotated with <code>@NonCPS</code> or Jenkins will report the error &ldquo;java.io.NotSerializableException&rdquo;.</li>
-<li>The Groovy methods can not be defined inside a <code>step</code> block. It must be defined at the top.</li>
-<li><code>@NonCPS</code> is required since the Groovy method uses several non-serializble objects.</li>
-</ul>
-
-
-<h4>Groovy method in separate script</h4>
-
-<pre><code class="groovy Jenkinsfile">def myScript
-
-pipeline {
-   agent { node { label 'test-agent' } }
-   stages {
-       stage("compile") {
-           steps {
-               checkout scm
-               withCredentials([
-                 [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
-                 [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
-               ]) {
-                   script {
-                       myScript = load 'jenkins/xml.groovy'
-                       def xmlTemplate = readFile( 'jenkins/settings.xml' )
-                       String xmlFile = myScript.transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
-
-                       String myPath = 'temp.xml'
-                       def mCommand = "cat &gt;${myPath} &lt;&lt;EOF"
-                       mCommand += "\n${xmlFile}\nEOF"
-                       sh mCommand
-
-                       sh "mvn -B clean compile -s ${myPath}"
-
-                       sh "rm ${myPath}"
-                   }
-               }
-           }
-           post {
-           failure {
-               echo "Sending email for compile failed (TBD)"
-            }
-           }
-       }
-   }
-}
-</code></pre>
-
-<pre><code class="groovy xml.groovy">import groovy.xml.StreamingMarkupBuilder
-import groovy.xml.XmlUtil
-
-@NonCPS
-def transformXml(String xmlContent, String username, String password) {
-  def xml = new XmlSlurper(false, false).parseText(xmlContent)
-
-  echo 'Start tranforming XML'
-  xml.servers.server.each { node -&gt;
-    node.username = username
-    node.password = password
-  }
-
-  def outWriter = new StringWriter()
-  XmlUtil.serialize( xml, outWriter )
-  return outWriter.toString()
-}
-
-return this
-</code></pre>
-
-<h4>Groovy method in shared library</h4>
-
-<p>The above Nexus authentication code is likely repeated across multiple Maven builds.
-Therefore, it is worth converting it into a DSL into a Shared Library in Jenkins.
-The DSL takes two parameters:</p>
-
-<ul>
-<li>templateFile: settings.xml template with Nexus credentials info redacted.</li>
-<li>command: Maven command with settings file NOT specified (i.e., NO &ldquo;-s&rdquo; option in the command).</li>
-</ul>
-
-
-<p>The example usage is as follows:</p>
-
-<pre><code class="groovy Jenkinsfile">pipeline {
-   agent { node { label 'test-agent' } }
-   stages {
-       stage("compile") {
-           steps {
-               checkout scm
-               script {
-                    withNexusMaven {
-                        templateFile = 'jenkins/settings.xml'
-                        command = "mvn -B clean compile"
-                    }
-               }
-           }
-           post {
-           failure {
-               echo "Sending email for compile failed (TBD)"
-            }
-           }
-       }
-   }
-}
-</code></pre>
-
-<p>The Jenksinfile is much cleaner since most of implementation details have been moved inside the DSL:</p>
-
-<pre><code class="groovy withNexusMaven.groovy">#!groovy
-import groovy.xml.XmlUtil
-
-@NonCPS
-def transformXml(String xmlContent, String username, String password) {
-  def xml = new XmlSlurper(false, false).parseText(xmlContent)
-
-  echo 'Start tranforming XML'
-  xml.servers.server.each { node -&gt;
-    node.username = username
-    node.password = password
-  }
-
-  def outWriter = new StringWriter()
-  XmlUtil.serialize( xml, outWriter )
-  return outWriter.toString()
-}
-
-def call(Closure body) {
-
-    def config = [:]
-    if (body != null) {
-        body.resolveStrategy = Closure.DELEGATE_FIRST
-        body.delegate = config
-        body()
-    }
-
-    def templateFile = config.templateFile ?: '/home/data/settings.xml'
-    def command = config.command ?: "mvn -B clean compile"
-
-    withCredentials([
-        [$class: 'StringBinding', credentialsId: 'nexusUsername', variable: 'nexusUsername'],
-        [$class: 'StringBinding', credentialsId: 'nexusPassword', variable: 'nexusPassword']
-    ]) {
-        def xmlTemplate = readFile templateFile
-        String xmlFile = transformXml(xmlTemplate, env.nexusUsername, env.nexusPassword)
-
-        String tempFile = 'temp.xml'
-        writeFile file: tempFile, text: xmlFile
-
-        sh "${command} -s ${tempFile}"
-
-        // Clean up
-        sh "rm ${tempFile}"
-    }
-}
-</code></pre>
+    <title type="html"><![CDATA[Groovy Fundamentals: Part 2: Numbers & Strings]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2/"/>
+    <updated>2017-12-08T17:16:49-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2</id>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[XML Processing in Groovy]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy/"/>
-    <updated>2017-06-14T09:57:51-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/06/14/xml-processing-in-groovy</id>
-    <content type="html"><![CDATA[<p>This post discusses XML processing in Groovy.</p>
-
-<!--more-->
-
-
-<h3>Parsing: XmlParser vs XmlSlurper</h3>
-
-<p>Both are in <code>groovy.util</code> packages and both have the same approach to parse an xml: both are based on <code>SAX</code> (low memory footprint) and both can update/transform the XML.</p>
-
-<p>Based on this <a href="https://stackoverflow.com/questions/7558019/groovy-xmlslurper-vs-xmlparser">StackOverflow answer</a>, when to use <code>XmlParser</code> versus <code>XmlSlurper</code> is as follows:</p>
-
-<ul>
-<li><code>XmlSlurper</code>: when you want to transform an existing XML document to another.</li>
-<li><code>XmlSlurper</code>: when you just want to read a few nodes since <code>XmlSlurper</code> evaluates the structure lazily.</li>
-<li><code>XmlParser</code>: when you want to update and read at the same time.</li>
-</ul>
-
-
-<h4>Example usage:</h4>
-
-<pre><code class="groovy XmlSlurper">def text = '''
-    &lt;list&gt;
-        &lt;technology&gt;
-            &lt;name&gt;Groovy&lt;/name&gt;
-        &lt;/technology&gt;
-    &lt;/list&gt;
-'''
-
-def list = new XmlSlurper().parseText(text) 
-
-assert list instanceof groovy.util.slurpersupport.GPathResult 
-assert list.technology.name == 'Groovy'
-</code></pre>
-
-<pre><code class="groovy XmlParser">def list = new XmlParser().parseText(text) 
-
-assert list instanceof groovy.util.Node 
-assert list.technology.name.text() == 'Groovy'
-</code></pre>
-
-<p>Another option is DOMCategory:</p>
-
-<pre><code class="groovy DOMCateogry">def reader = new StringReader(CAR_RECORDS)
-def doc = DOMBuilder.parse(reader) 
-def records = doc.documentElement
-
-use(DOMCategory) { 
-    assert records.car.size() == 3
-}
-</code></pre>
-
-<h3>Navigation with GPath</h3>
-
-<p>From <a href="http://groovy-lang.org/processing-xml.html">here</a>:</p>
-
-<pre><code class="groovy GPath example">static final String books = '''
-    &lt;response version-api="2.0"&gt;
-        &lt;value&gt;
-            &lt;books&gt;
-                &lt;book available="20" id="1"&gt;
-                    &lt;title&gt;Don Xijote&lt;/title&gt;
-                    &lt;author id="1"&gt;Manuel De Cervantes&lt;/author&gt;
-                &lt;/book&gt;
-                &lt;book available="14" id="2"&gt;
-                    &lt;title&gt;Catcher in the Rye&lt;/title&gt;
-                   &lt;author id="2"&gt;JD Salinger&lt;/author&gt;
-               &lt;/book&gt;
-               &lt;book available="13" id="3"&gt;
-                   &lt;title&gt;Alice in Wonderland&lt;/title&gt;
-                   &lt;author id="3"&gt;Lewis Carroll&lt;/author&gt;
-               &lt;/book&gt;
-               &lt;book available="5" id="4"&gt;
-                   &lt;title&gt;Don Xijote&lt;/title&gt;
-                   &lt;author id="4"&gt;Manuel De Cervantes&lt;/author&gt;
-               &lt;/book&gt;
-           &lt;/books&gt;
-       &lt;/value&gt;
-    &lt;/response&gt;
-'''
-
-def response = new XmlSlurper().parseText(books)
-
-def book = response.value.books.book[0] 
-def bookAuthorId1 = book.@id 
-def bookAuthorId2 = book['@id'] 
-
-assert bookAuthorId1 == '1'
-
-// .'*' could be replaced by .children()
-def catcherInTheRye = response.value.books.'*'.find { node-&gt;
-    // node.@id == 2 could be expressed as node['@id'] == 2
-    node.name() == 'book' &amp;&amp; node.@id == '2'
-}
-
-assert catcherInTheRye.title.text() == 'Catcher in the Rye'
-
-// .'**' could be replaced by .depthFirst()
-def bookId = response.'**'.find { book-&gt;
-    book.author.text() == 'Lewis Carroll'
-}.@id
-
-assert bookId == 3
-
-// find(Closure cl) finds just the first occurrence. To find all titles:
-def titles = response.'**'.findAll{ node-&gt; node.name() == 'title' }*.text()
-
-assert titles.size() == 4
-</code></pre>
-
-<p>As you can see there are two types of notations to get attributes, the</p>
-
-<ul>
-<li>direct notation with <code>@nameoftheattribute</code></li>
-<li>map notation using <code>['@nameoftheattribute']</code></li>
-</ul>
-
-
-<h3>Writing XML</h3>
-
-<pre><code class="groovy Standard usage of MarkupBuilder">def writer = new StringWriter()
-def xml = new MarkupBuilder(writer) 
-
-xml.records() { 
-    car(name:'HSV Maloo', make:'Holden', year:2006) {
-        country('Australia')
-        record(type:'speed', 'Production Pickup Truck with speed of 271kph')
-    }
-    car(name:'Royale', make:'Bugatti', year:1931) {
-        country('France')
-        record(type:'price', 'Most Valuable Car at $15 million')
-    }
-}
-
-def records = new XmlSlurper().parseText(writer.toString()) 
-
-assert records.car.first().name.text() == 'HSV Maloo'
-assert records.car.last().name.text() == 'Royale'
-</code></pre>
-
-<p>See documentation for the following use cases:</p>
-
-<ul>
-<li>Namespace aware</li>
-<li>Generate elements inside XML document.</li>
-</ul>
-
-
-<p>Using <code>StreamingMarkupBuilder</code> is very similar to using <code>MarkupBuilder</code>.
-The <code>bind</code> method returns a <code>Writable</code> instance that can be used to stream the markup.</p>
-
-<pre><code class="groovy Standard usage of StreamingMarkupBuilder">def xml = new StreamingMarkupBuilder().bind { 
-    records {
-        car(name:'HSV Maloo', make:'Holden', year:2006) { 
-            country('Australia')
-            record(type:'speed', 'Production Pickup Truck with speed of 271kph')
-        }
-        car(name:'P50', make:'Peel', year:1962) {
-            country('Isle of Man')
-            record(type:'size', 'Smallest Street-Legal Car at 99cm wide and 59 kg in weight')
-        }
-        car(name:'Royale', make:'Bugatti', year:1931) {
-            country('France')
-            record(type:'price', 'Most Valuable Car at $15 million')
-        }
-    }
-}
-
-def records = new XmlSlurper().parseText(xml.toString()) 
-
-assert records.car.size() == 3
-assert records.car.find { it.@name == 'P50' }.country.text() == 'Isle of Man'
-</code></pre>
-
-<h4>MarkupBuilderHelper</h4>
-
-<p>This helper normally can be accessed from within an instance of class MarkupBuilder or an instance of StreamingMarkupBuilder as <code>mkp</code> property.</p>
-
-<pre><code class="groovy Using mkp for comments and escape in XML">def xmlWriter = new StringWriter()
-def xmlMarkup = new MarkupBuilder(xmlWriter).rules {
-    mkp.comment('THIS IS THE MAIN RULE') 
-    rule(sentence: mkp.yield('3 &gt; n')) 
-}
-
-assert xmlWriter.toString().contains('3 &amp;gt; n')
-assert xmlWriter.toString().contains('&lt;!-- THIS IS THE MAIN RULE --&gt;')
-</code></pre>
-
-<h3>Code recipes</h3>
-
-<p>The input XML file is based on typical Maven &ldquo;settings.xml&rdquo; file.</p>
-
-<p><strong>Recipe 1</strong>: Read, transform, and write to file. Based on <a href="https://stackoverflow.com/questions/2245641/load-modify-and-write-an-xml-document-in-groovy">this</a>.</p>
-
-<pre><code class="groovy XML transform to file">import groovy.xml.StreamingMarkupBuilder
-import groovy.xml.XmlUtil
-
-def transformXml(String filePath, String username, String password) {
-  String TMP_PATH = '/tmp/temp.xml'
-
-  def inFile = new File( filePath )
-  def outFile = new File( TMP_PATH )
-  def xml = new XmlSlurper(false, false).parse(inFile)
-
-  xml.servers.server.each { node -&gt;
-    node.username = username
-    node.password = password
-  }
-
-  def outBuilder = new StreamingMarkupBuilder()
-  def outWriter = outFile.newWriter()
-
-  // Option 1: Write XML to one line
-  outWriter &lt;&lt; outBuilder.bind{ mkp.yield xml }
-  // Option 2: Pretty print XML
-  XmlUtil.serialize( xml, outWriter )
-
-  return TMP_PATH
-}
-</code></pre>
-
-<p>For overwriting the original file (based on <a href="https://stackoverflow.com/questions/18385062/writing-updated-xml-to-originally-parsed-file">this</a>):</p>
-
-<pre><code class="groovy Write the transformed XML to original file">inFile.withWriter { outWriter -&gt;
-    XmlUtil.serialize( new StreamingMarkupBuilder().bind{ mkp.yield xml }, outWriter )
-}
-</code></pre>
-
-<p><strong>Recipe 2</strong>: Read, transform, and write to string.</p>
-
-<pre><code class="groovy XML transform to String">import groovy.xml.XmlUtil
-
-@NonCPS
-def transformXml(String xmlContent, String username, String password) {
-  def xml = new XmlSlurper(false, false).parseText(xmlContent)
-
-  echo 'Start tranforming XML'
-  xml.servers.server.each { node -&gt;
-    node.username = username
-    node.password = password
-  }
-
-  def outWriter = new StringWriter()
-  XmlUtil.serialize( xml, outWriter )
-  return outWriter.toString()
-}
-</code></pre>
-
-<h3>Tips</h3>
-
-<ul>
-<li><code>XmlSlurper(false, false)</code> is used due to <a href="https://stackoverflow.com/questions/9197588/tag0-namespace-added-for-elements-in-default-namespace">this</a></li>
-</ul>
-
-
-<h3>References</h3>
-
-<ul>
-<li><a href="http://groovy-lang.org/processing-xml.html">Processing XML</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Tutorial: Quick-start for Groovy Programming Test]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/"/>
-    <updated>2017-05-10T00:07:18-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test</id>
-    <content type="html"><![CDATA[<p>Eclipse &amp; Maven.</p>
+    <title type="html"><![CDATA[Groovy Fundamentals: Part 1: Basics]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-1/"/>
+    <updated>2017-12-08T17:16:47-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-1</id>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   

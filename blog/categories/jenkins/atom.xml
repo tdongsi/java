@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jenkins | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/jenkins/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-10-13T16:55:54-07:00</updated>
+  <updated>2017-12-10T15:14:03-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -171,9 +171,23 @@ You can click on individual steps and get more details, such as the log output f
     <link href="http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook/"/>
     <updated>2017-06-18T11:20:20-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/06/18/basic-jenkinsfile-cookbook</id>
-    <content type="html"><![CDATA[<p>This post shows how to customize standard Pipeline &ldquo;steps&rdquo; in Jenkinsfile (excluding their common usage).</p>
+    <content type="html"><![CDATA[<p>This post shows how to customize standard Pipeline &ldquo;steps&rdquo; in Jenkinsfile besides their common usage.</p>
 
 <!--more-->
+
+
+<p>List of basic Jenkinsfile steps in this post:</p>
+
+<ul>
+<li><code>checkout</code>/<code>git</code></li>
+<li><code>findFiles</code></li>
+<li><code>input</code></li>
+<li><code>junit</code></li>
+<li><code>parameters</code>/<code>properties</code></li>
+<li><code>podTemplates</code></li>
+<li><code>sendSlack</code></li>
+<li><code>withCredentials</code></li>
+</ul>
 
 
 <h3><code>checkout</code>/<code>git</code> step</h3>
@@ -279,6 +293,66 @@ stage('CheckStyle-Reports'){
     healthy: '', pattern: '**/build/reports/checkstyle/*.xml', unHealthy: ''])
 }
 </code></pre>
+
+<h3><code>parameters</code>/<code>properties</code> step</h3>
+
+<p><code>parameters</code> step adds certain job parameters for the overall pipeline job.
+In the Jenkins interface, this will be converted to read-only form when you click on &ldquo;View Configuration&rdquo; for that job.</p>
+
+<pre><code class="groovy parameters step in Declarative pipeline">pipeline {
+    agent { node { label 'aqueduct-agent' } }
+    parameters {
+        choice(name: 'ClusterName', choices: 'func\ninteg\nperf', description: 'Name of the cluster to test.')
+    }
+    stages {
+        stage("Build") {
+            steps {
+                echo "Hello"
+                ...
+            }
+        } //  end of stage
+    }
+    post {
+        always {
+            ...
+        }
+    }
+}
+</code></pre>
+
+<p>TODO: Add screenshot</p>
+
+<p>In Scripted pipeline, its equivalent counterpart is <code>properties</code> step, as shown below.</p>
+
+<pre><code class="groovy parameters step for Scripted pipeline">properties(
+    [
+        [
+            $class  : 'jenkins.model.BuildDiscarderProperty',
+            strategy: [
+                $class      : 'LogRotator',
+                numToKeepStr: '500'
+            ]
+        ],
+        pipelineTriggers(
+            [
+                [
+                    $class: 'hudson.triggers.TimerTrigger',
+                    spec  : "H/20 * * * *"
+                ]
+            ]
+        )
+    ]
+)
+
+node('agent') {
+    stage('Checkout') {
+        checkout scm
+    }
+    ...
+}
+</code></pre>
+
+<p>TODO: Add screenshot</p>
 
 <h3><code>podTemplate</code> step</h3>
 
