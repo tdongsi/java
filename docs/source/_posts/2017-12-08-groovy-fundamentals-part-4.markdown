@@ -9,11 +9,57 @@ categories:
 
 ### Closures
 
-``` groovy Closure demo
+``` groovy Iterating list with closure
+List nums = [9,6,7,5,8,6,4,2,3]
+for (int num: nums) {
+    println num
+}
+
+// Pro: not much. You don't have to specify type
+for (num in nums) {
+    // println num
+}
+
+// Idiomatic in Groovy.
+nums.each { num ->
+    println num
+}
+nums.eachWithIndex { num, idx ->
+    println "nums[$idx] == $num"
+}
+```
+
+``` groovy Iterating map with closure
+Map m = [a:1, b:2, c:2]
+
+// Java idiom
+for (String key : m.keySet()) {
+    ...
+}
+
+// Groovy idiom
+// One parameter closure gives Map.Entry
+m.each { e ->
+    println "${e.key} ${e.value}"
+}
+// Two parameter closure gives key, value
+m.each { k, v ->
+
+}
+```
+
+``` groovy collect method
+println nums.collect { it * 2 } // map
+    .findAll { it % 3 == 0 }    // filter
+    .sum()                      // reduce
+
+def factor = 2
+println nums.collect { it*factor }
+// Spread dot operator
+println nums *. multiply(2)
 // Demo
 String HOMEPAGE = 'http://oreilly.com'
 println HOMEPAGE.toURL().text.readLines() *. size()
-
 ```
 
 ### Geocoding demo: XML query and parsing
