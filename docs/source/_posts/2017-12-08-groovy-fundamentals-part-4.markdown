@@ -7,6 +7,10 @@ categories:
 - groovy
 ---
 
+This post corresponds to "Basic Closures" and "Misc Operators" sections of [this course](https://www.safaribooksonline.com/library/view/groovy-programming-fundamentals/9781491926253/).
+
+<!--more-->
+
 ### Closures
 
 ``` groovy Iterating list with closure
