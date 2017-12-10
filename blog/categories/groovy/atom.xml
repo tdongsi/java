@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-10T15:14:03-08:00</updated>
+  <updated>2017-12-10T15:17:36-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -27,7 +27,12 @@
     <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-4/"/>
     <updated>2017-12-08T17:17:09-08:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-4</id>
-    <content type="html"><![CDATA[<h3>Closures</h3>
+    <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Basic Closures&rdquo; and &ldquo;Misc Operators&rdquo; sections of <a href="https://www.safaribooksonline.com/library/view/groovy-programming-fundamentals/9781491926253/">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Closures</h3>
 
 <pre><code class="groovy Iterating list with closure">List nums = [9,6,7,5,8,6,4,2,3]
 for (int num: nums) {
