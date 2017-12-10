@@ -94,3 +94,37 @@ def json = new JsonSlurper().parseText(jsonTxt)
 println json.value.joke
 ```
 
+### Operators
+
+``` groovy Misc operators in Groovy
+// Safe navigation ?.
+class Department {
+    Manager boss
+}
+class Manager {
+    String name
+}
+Department d1 = new Department(boss: new Manager(name: 'ABC'))
+Department d2 = new Department()
+println d1 ?. boss ?. name
+// Standard d2.boss.name will throw NPE.
+println d2 ?. boss ?. name
+
+// Spaceship operator: Comparable interface
+println 1 <=> 2
+
+// See Groovy truth
+// Elvis operator
+String input
+String greet = 'Hello ' + (input ?: 'World')
+println greet
+```
+
+Groovy truth:
+
+* non-zero numbers
+* non-null references
+* non-empty strings
+* non-empty collections
+* regex with a match
+* boolean true
