@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-10T15:17:36-08:00</updated>
+  <updated>2017-12-15T16:15:43-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java 9]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2017/12/06/java-9/"/>
+    <updated>2017-12-06T12:11:16-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2017/12/06/java-9</id>
+    <content type="html"><![CDATA[<p>JDK 9 was released in September and includes many changes to the Java platform.
+The biggest is the Java Platform Module System (often referred to as Project Jigsaw).</p>
+
+<!--more-->
+
+
+<p>This new JPMS breaks up the existing rt.jar file into 97 modules (28 of them are SE) but also encapsulates internal APIs, such as sun.misc.Unsafe that have previously been available to developers.
+This note summarizes some intersting points from a guest speaker about the new JDK 9 and other intersting changes in Java Community.</p>
+
+<h3>JDK 9 Features</h3>
+
+<p>Java Platform Module System</p>
+
+<ul>
+<li>Initially, leave everything on the classpath.</li>
+<li>Anything on the classpath is in the unamed module
+
+<ul>
+<li>All packages are exported</li>
+<li>The unamed module depends on all modules</li>
+</ul>
+</li>
+<li>Migrate to modules as required</li>
+</ul>
+
+
+<p><code>--illegal-access</code> option is the Kill Switch to turn off encapsulation:</p>
+
+<ul>
+<li>permit: Warning for first use of an encapsulated API</li>
+<li>warn: Warning for every use</li>
+<li>debug: Warning and stack trace for every use</li>
+<li>deny: No access.</li>
+</ul>
+
+
+<p><code>--add-exports</code> option allows direct access to encapsulated APIs.
+<code>--add-opens</code> option allows reflective access to encapulated APIs.</p>
+
+<p><code>jlink</code>: The Java Linker (JEP 282).
+The implication of <code>jlink</code> is that the slogan &ldquo;Write once, run anywhere&rdquo; might not be true anymore.
+<code>jlink</code> generated runtime may not include all Java SE modules.
+It is still a conformant Java implementation.</p>
+
+<h3>Java Development Changes</h3>
+
+<p>OpenJDK have a new release model: more agile, every six months.
+Features are included when ready instead of targeted for specific release when started.</p>
+
+<p>JDK Version Numbering: new scheme introduced (JEP 223).</p>
+
+<ul>
+<li>JDK MAJOR.MINOR.SECURITY</li>
+<li>Semantic versioning</li>
+</ul>
+
+
+<p>However, there is a new scheme proposed in JEP 322: FEATURE.INTERIM.UPDATE.PATCH.</p>
+
+<p>Availability of JDK updates: Oracle is switching to LTS model.</p>
+
+<ul>
+<li>JDK 8 is a LTS release.
+
+<ul>
+<li>It will have updates for more than 3 years.</li>
+</ul>
+</li>
+<li>JDK 9 is a feature release.
+
+<ul>
+<li>Public updates are only available until next feature release.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Deprecated features in JDK 9</h3>
+
+<ul>
+<li>Applets as a deployment mechanism</li>
+<li>CMS garbage collector</li>
+<li>Java policy tool, jconsole, Doclet API</li>
+<li>No more 32-bit Oracle JDK binaries. No more ARM binaries.
+
+<ul>
+<li>Only Mac, Windows, Linux, SPARC supported. All 64-bit.</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Common Interview Questions]]></title>
@@ -453,157 +552,6 @@ java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt d
         System.out.println("Queue at the end: " + queue.current());
     }
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[HttpClient Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook/"/>
-    <updated>2015-06-08T17:14:29-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook</id>
-    <content type="html"><![CDATA[<p>Apache HttpClient library is regularly used in Java program to query REST endpoints.</p>
-
-<!--more-->
-
-
-<h3>Beginner Cookbook</h3>
-
-<p>Based on HttpClient Tutorial (version 4.3).</p>
-
-<p><strong>Recipe 1</strong>: For simple use cases, it is better to use <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html">Fluent API</a>.</p>
-
-<pre><code class="java Fluent API">    private static String API_ENDPOINT = "http://api.icndb.com/jokes/random";
-    String see = Request.Get(API_ENDPOINT)
-            .execute()
-            .returnContent()
-            .asString();
-    assertFalse(see.isEmpty());
-    System.out.println(see);
-</code></pre>
-
-<p><strong>Recipe 2</strong>: Consuming response entities originate from a trusted HTTP server and are known to be of limited length. From <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html">here</a>. <a href="http://www.vogella.com/tutorials/ApacheHttpClient/article.html">Another variant</a>.</p>
-
-<pre><code class="java Consuming entity content">CloseableHttpClient httpclient = HttpClients.createDefault();
-HttpGet httpget = new HttpGet("http://localhost/");
-CloseableHttpResponse response = httpclient.execute(httpget);
-try {
-    HttpEntity entity = response.getEntity();
-    if (entity != null) {
-        long len = entity.getContentLength();
-        if (len != -1 &amp;&amp; len &lt; 2048) {
-            System.out.println(EntityUtils.toString(entity));
-        } else {
-            // Stream content out
-        }
-    }
-} finally {
-    response.close();
-}
-</code></pre>
-
-<h3>Advanced Cookbook</h3>
-
-<h4>Version 4.1.x -> 4.2.1</h4>
-
-<p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
-
-<p><strong>Recipe 1</strong>: Proxy setup. Based on <a href="https://stackoverflow.com/questions/9811828/common-httpclient-and-proxy">this</a>:</p>
-
-<pre><code class="java Setting up proxy">    HttpHost proxy = new HttpHost("127.0.0.1", 8080, "http");
-
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    try {
-        httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-
-        HttpHost target = new HttpHost("issues.apache.org", 443, "https");
-        HttpGet req = new HttpGet("/");
-
-        System.out.println("executing request to " + target + " via " + proxy);
-        HttpResponse rsp = httpclient.execute(target, req);
-        ...
-    } finally {
-        // When HttpClient instance is no longer needed,
-        // shut down the connection manager to ensure
-        // immediate deallocation of all system resources
-        httpclient.getConnectionManager().shutdown();
-    }
-</code></pre>
-
-<p>With proxy authentication? Check out <a href="https://stackoverflow.com/questions/13288038/httpclient-4-2-2-and-proxy-with-username-password">this</a></p>
-
-<p><strong>Recipe 2</strong>: Connection timeout. Based on <a href="https://gist.github.com/tychobrailleur/9fbf521727539b403c90">this</a>:</p>
-
-<pre><code class="java Conneciton timeout">public class RunTest {
-
-    @Test
-    public void runDefaultClient() throws Exception {
-        URI uri = new URL("http://localhost:3000/").toURI();
-
-        HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 2000);
-        httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
-
-        HttpGet message = new HttpGet("/");
-        HttpResponse response = httpClient.execute(host, message);
-
-        System.out.println(response.getStatusLine());
-    }
-}
-</code></pre>
-
-<h4>Later version</h4>
-
-<p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
-
-<pre><code class="java Setting up proxy">public class ClientExecuteProxy {
-
-    public static void main(String[] args)throws Exception {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try {
-            HttpHost target = new HttpHost("httpbin.org", 443, "https");
-            HttpHost proxy = new HttpHost("127.0.0.1", 8080, "http");
-
-            RequestConfig config = RequestConfig.custom()
-                    .setProxy(proxy)
-                    .build();
-            HttpGet request = new HttpGet("/");
-            request.setConfig(config);
-
-            System.out.println("Executing request " + request.getRequestLine() + " to " + target + " via " + proxy);
-
-            CloseableHttpResponse response = httpclient.execute(target, request);
-            try {
-                System.out.println("----------------------------------------");
-                System.out.println(response.getStatusLine());
-                System.out.println(EntityUtils.toString(response.getEntity()));
-            } finally {
-                response.close();
-            }
-        } finally {
-            httpclient.close();
-        }
-    }
-
-}
-</code></pre>
-
-<h3>Reference</h3>
-
-<ul>
-<li><a href="https://hc.apache.org/index.html">Project Home</a></li>
-<li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
-<li>Alternative: <a href="https://www.eclipse.org/jetty/documentation/9.4.6.v20170531/http-client.html">Jetty HttpClient</a>.</li>
-</ul>
-
-
-<p>Apache HttpClient 4.2.1</p>
-
-<ul>
-<li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
-</ul>
-
 ]]></content>
   </entry>
   
