@@ -8,7 +8,11 @@ import java.util.stream.Stream;
  */
 public class LambdasDemo {
 
-    private static void sessionOne() {
+    private static void lambdas() {
+
+        final int MULTIPLIER = 2;
+        int aMultiplier = 3;
+
         // Simplest lambda form
         Stream.of(3, 1, 4, 1, 5, 9)
                 .forEach(n -> System.out.println(n));
@@ -16,7 +20,7 @@ public class LambdasDemo {
         // Full lambda form
         Stream.of(3, 1, 4, 1, 5, 9)
                 .forEach((Integer n) -> {
-                    System.out.println(n);
+                    System.out.println(n * MULTIPLIER);
                 });
 
         // Classic equivalent: anonymous inner class
@@ -24,17 +28,21 @@ public class LambdasDemo {
                 .forEach(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer integer) {
-                        System.out.println("Second: " + integer);
+                        System.out.println("Second: " + integer * aMultiplier );
                     }
                 });
 
+        // Uncomment the following line will fail with error:
+        // "local variables referenced from a lambda expression/inner class must be final or effectively final"
+        // aMultiplier = 4;
+
         // Assigning consumer
-        Consumer<Integer> printIt = n -> System.out.println("Third: " + n);
+        Consumer<Integer> printIt = n -> System.out.println("Third: " + n * aMultiplier);
         Stream.of(1,2,3).forEach( printIt );
     }
 
     public static void main(String[] args) {
-        sessionOne();
+        lambdas();
     }
 
 }

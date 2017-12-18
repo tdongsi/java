@@ -1,0 +1,35 @@
+---
+layout: post
+title: "Java 8"
+date: 2016-12-17 22:37:46 -0800
+comments: true
+categories: 
+- Java
+---
+
+### Lambdas
+
+``` java Different forms
+final int MULTIPLIER = 2;
+// "local variables referenced from a lambda expression/inner class must be final or effectively final"
+int aMultiplier = 3;
+
+// Simplest lambda form
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach(n -> System.out.println(n));
+
+// Full lambda form
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach((Integer n) -> {
+            System.out.println(n * MULTIPLIER);
+        });
+
+// Classic equivalent: anonymous inner class
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) {
+                System.out.println("Second: " + integer * aMultiplier );
+            }
+        });
+```
