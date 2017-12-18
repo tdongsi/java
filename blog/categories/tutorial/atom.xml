@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-15T16:15:43-08:00</updated>
+  <updated>2017-12-17T21:30:25-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -236,12 +236,19 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 <!--more-->
 
 
+<p>(0) The following steps assume computers with no previous setup.
+For work computers, they usually have corporate <code>settings.xml</code> already set up.
+You might have to override such corporate settings with standard Maven settings by using minimal <code>settings.xml</code> as shown in <a href="/blog/2015/06/19/maven-cookbook/">this</a>.</p>
+
 <p>(1) Use this command to setup an Eclipse empty project.</p>
 
 <pre><code class="plain Create an Eclipse project">mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 </code></pre>
 
-<p>(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
+<p>(2a) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
+
+<p>(2b) In IntellJ, Import Project > select the <code>pom.xml</code>.
+On work computer, you might want to go to Environment Settings > Override <code>settings.xml</code>.</p>
 
 <p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
 
