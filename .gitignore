@@ -21,4 +21,4 @@ derby.log
 site
 .recommenders/
 *.project
-Concurrency/.idea
+**/.idea
