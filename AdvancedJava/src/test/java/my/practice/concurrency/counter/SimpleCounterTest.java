@@ -9,6 +9,7 @@ import my.practice.concurrency.consumer.SimpleConsumer;
 import my.practice.concurrency.counter.SimpleCounter;
 import my.practice.concurrency.producer.SimpleProducer;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -20,7 +21,12 @@ import org.junit.Test;
  */
 public class SimpleCounterTest {
 
+	/**
+	 * This test will likely fail due to race condition.
+     * Remove @Ignore to demonstrate thread-safety.
+	 */
 	@Test
+	@Ignore
 	public void testThreadSafety() {
 		final int TRIAL_NUM = 10;
 		Counter queue = new SimpleCounter();
