@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-17T21:30:25-08:00</updated>
+  <updated>2017-12-17T21:34:53-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -243,7 +243,7 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 
 <p>(0) The following steps assume computers with no previous setup.
 For work computers, they usually have corporate <code>settings.xml</code> already set up.
-You might have to override such corporate settings with standard Maven settings by using minimal <code>settings.xml</code> as shown in <a href="/blog/2015/06/19/maven-cookbook/">this</a>.</p>
+You might have to override such corporate settings with standard Maven settings by using <a href="/blog/2015/06/19/maven-cookbook/">minimal <code>settings.xml</code></a>.</p>
 
 <p>(1) Use this command to setup an Eclipse empty project.</p>
 
@@ -286,8 +286,8 @@ On work computer, you might want to go to Environment Settings > Override <code>
                 &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
                 &lt;version&gt;3.1&lt;/version&gt;
                 &lt;configuration&gt;
-                    &lt;source&gt;1.7&lt;/source&gt;
-                    &lt;target&gt;1.7&lt;/target&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
                 &lt;/configuration&gt;
             &lt;/plugin&gt;
         &lt;/plugins&gt;
