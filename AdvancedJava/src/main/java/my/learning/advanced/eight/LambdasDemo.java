@@ -1,5 +1,7 @@
 package my.learning.advanced.eight;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -8,6 +10,9 @@ import java.util.stream.Stream;
  */
 public class LambdasDemo {
 
+    /**
+     * Demo of lambdas
+     */
     private static void lambdas() {
 
         final int MULTIPLIER = 2;
@@ -39,10 +44,24 @@ public class LambdasDemo {
         // Assigning consumer
         Consumer<Integer> printIt = n -> System.out.println("Third: " + n * aMultiplier);
         Stream.of(1,2,3).forEach( printIt );
+
+        // Using method reference
+        Stream.of(1,2,3).forEach(System.out::println);
+    }
+
+    /**
+     * Demo of FileFilter
+     */
+    private static void fileFilter() {
+        File directory = new File("./src/main/java/my/learning");
+        Arrays.stream(
+                directory.list((dir, name) -> name.endsWith("java"))
+        ).forEach(System.out::println);
     }
 
     public static void main(String[] args) {
         lambdas();
+        fileFilter();
     }
 
 }
