@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutorial | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/tutorial/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-17T21:34:53-08:00</updated>
+  <updated>2017-12-22T00:13:08-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -216,7 +216,68 @@ Read the Gradle User Guide for more information (the PDF is easy to search).</p>
     <link href="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/"/>
     <updated>2017-05-10T00:07:18-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test</id>
-    <content type="html"><![CDATA[<p>Eclipse &amp; Maven.</p>
+    <content type="html"><![CDATA[<p>This post lists out steps to get started quickly for a <strong>Groovy</strong> programming test, using Eclipse and Maven.</p>
+
+<!--more-->
+
+
+<h3>Maven-based Java project</h3>
+
+<p>The simplest way is to generate a Maven-based Java project and add Groovy codes and dependencies to it.
+In IntelliJ IDEA, all you need to do is to add this into the pom.xml file:</p>
+
+<pre><code class="xml Groovy dependencies">    &lt;dependency&gt;
+      &lt;groupId&gt;org.codehaus.groovy&lt;/groupId&gt;
+      &lt;artifactId&gt;groovy-all&lt;/artifactId&gt;
+      &lt;version&gt;2.4.13&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+
+<p>Then, you can start adding package and Groovy file, e.g., HelloWorld.groovy, into &ldquo;src/main/groovy&rdquo; folder.
+See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26759224316576">example commit</a>.</p>
+
+<p>In Eclipse, according to <a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">this blog</a>, you might need the following plugins:</p>
+
+<pre><code class="xml ">&lt;build&gt;
+...
+&lt;plugins&gt;
+  &lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.1&lt;/version&gt;
+    &lt;configuration&gt;
+      &lt;compilerId&gt;groovy-eclipse-compiler&lt;/compilerId&gt;
+    &lt;/configuration&gt;
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.codehaus.groovy&lt;/groupId&gt;
+        &lt;artifactId&gt;groovy-eclipse-compiler&lt;/artifactId&gt;
+        &lt;version&gt;2.8.0-01&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.codehaus.groovy&lt;/groupId&gt;
+        &lt;artifactId&gt;groovy-eclipse-batch&lt;/artifactId&gt;
+        &lt;version&gt;2.4.13&lt;/version&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/plugin&gt;
+  ...
+&lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+
+<p>Note that the versions must match between <code>groovy-eclipse-batch</code> and <code>groovy-all</code>.</p>
+
+<h3>Pure Groovy project</h3>
+
+<p>Alternatively, you can create pure Groovy project in IntelliJ IDEA.</p>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">Compiling Groovy in Eclipse</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
@@ -236,19 +297,12 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 <!--more-->
 
 
-<p>(0) The following steps assume computers with no previous setup.
-For work computers, they usually have corporate <code>settings.xml</code> already set up.
-You might have to override such corporate settings with standard Maven settings by using <a href="/blog/2015/06/19/maven-cookbook/">minimal <code>settings.xml</code></a>.</p>
-
 <p>(1) Use this command to setup an Eclipse empty project.</p>
 
 <pre><code class="plain Create an Eclipse project">mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 </code></pre>
 
-<p>(2a) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
-
-<p>(2b) In IntellJ, Import Project > select the <code>pom.xml</code>.
-On work computer, you might want to go to Environment Settings > Override <code>settings.xml</code>.</p>
+<p>(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
 
 <p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
 
@@ -281,8 +335,8 @@ On work computer, you might want to go to Environment Settings > Override <code>
                 &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
                 &lt;version&gt;3.1&lt;/version&gt;
                 &lt;configuration&gt;
-                    &lt;source&gt;1.8&lt;/source&gt;
-                    &lt;target&gt;1.8&lt;/target&gt;
+                    &lt;source&gt;1.7&lt;/source&gt;
+                    &lt;target&gt;1.7&lt;/target&gt;
                 &lt;/configuration&gt;
             &lt;/plugin&gt;
         &lt;/plugins&gt;

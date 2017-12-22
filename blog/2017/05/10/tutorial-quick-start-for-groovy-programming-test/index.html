@@ -9,8 +9,7 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="Eclipse &amp; Maven.
-">
+  <meta name="description" content="This post lists out steps to get started quickly for a Groovy programming test, using Eclipse and Maven. Maven-based Java project The simplest way is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,7 +86,101 @@
   </header>
 
 
-<div class="entry-content"><p>Eclipse &amp; Maven.</p>
+<div class="entry-content"><p>This post lists out steps to get started quickly for a <strong>Groovy</strong> programming test, using Eclipse and Maven.</p>
+
+<!--more-->
+
+
+<h3>Maven-based Java project</h3>
+
+<p>The simplest way is to generate a Maven-based Java project and add Groovy codes and dependencies to it.
+In IntelliJ IDEA, all you need to do is to add this into the pom.xml file:</p>
+
+<figure class='code'><figcaption><span>Groovy dependencies</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>groovy-all<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>2.4.13<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dependency&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, you can start adding package and Groovy file, e.g., HelloWorld.groovy, into &ldquo;src/main/groovy&rdquo; folder.
+See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26759224316576">example commit</a>.</p>
+
+<p>In Eclipse, according to <a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">this blog</a>, you might need the following plugins:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;version&gt;</span>3.1<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;compilerId&gt;</span>groovy-eclipse-compiler<span class="nt">&lt;/compilerId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>groovy-eclipse-compiler<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;version&gt;</span>2.8.0-01<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>groovy-eclipse-batch<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;version&gt;</span>2.4.13<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>  ...
+</span><span class='line'><span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;/build&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that the versions must match between <code>groovy-eclipse-batch</code> and <code>groovy-all</code>.</p>
+
+<h3>Pure Groovy project</h3>
+
+<p>Alternatively, you can create pure Groovy project in IntelliJ IDEA.</p>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">Compiling Groovy in Eclipse</a></li>
+</ul>
+
 </div>
 
 
@@ -108,7 +201,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/java/blog/categories/groovy/'>groovy</a>, <a class='category' href='/java/blog/categories/todo/'>todo</a>, <a class='category' href='/java/blog/categories/tutorial/'>tutorial</a>
+    <a class='category' href='/java/blog/categories/groovy/'>groovy</a>, <a class='category' href='/java/blog/categories/tutorial/'>tutorial</a>
   
 </span>
 
@@ -193,7 +286,7 @@
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (6)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (2)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (6)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
 </section>
 
 
