@@ -18,13 +18,20 @@ This post lists out steps to get started quickly for a **Java** programming test
 
 <!--more-->
 
+(0) The following steps assume computers with no previous setup.
+For work computers, they usually have corporate `settings.xml` already set up.
+You might have to override such corporate settings with standard Maven settings by using [minimal `settings.xml`](/blog/2015/06/19/maven-cookbook/).
+
 (1) Use this command to setup an Eclipse empty project.
 
 ``` plain Create an Eclipse project
 mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 ```
 
-(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.
+(2a) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.
+
+(2b) In IntellJ, Import Project > select the `pom.xml`.
+On work computer, you might want to go to Environment Settings > Override `settings.xml`.
 
 (3) Update pom.xml for "Executable jar file" + "specified Java version". Replace `my.interview.CompanyName` with the correct name of your main class.
 
@@ -58,8 +65,8 @@ mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -Darchety
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
