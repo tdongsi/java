@@ -1,8 +1,13 @@
 package my.learning.advanced.eight;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,9 +51,29 @@ public class StreamsDemo {
     }
 
     public static void main(String args[]) {
-        StreamsDemo demo = new StreamsDemo();
+        // Here demo file processing with stream
 
-        System.out.println(demo.joinStream());
-        System.out.println(demo.joinUpperCase());
+        try {
+            // sorting
+            Files.lines(
+                    Paths.get("/", "usr", "share", "dict", "web2")
+            ).filter(s -> s.length() > 10)
+            .map(String::toLowerCase)
+            .sorted(Comparator.comparingInt(String::length).reversed())
+            .limit(10)
+            .forEach((String w) ->
+                System.out.printf("%s (%d)%n", w, w.length())
+            );
+
+            // find max. Demo of Optional
+            Optional<String> max = Files.lines(Paths.get("/", "usr", "share", "dict", "web2"))
+                    .filter(s -> s.length() > 10)
+                    .map(String::toLowerCase)
+                    .sorted(Comparator.comparingInt(String::length).reversed())
+                    .findFirst();
+            System.out.println(max.orElse("not found"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
