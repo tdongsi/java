@@ -33,3 +33,15 @@ Stream.of(3, 1, 4, 1, 5, 9)
             }
         });
 ```
+
+### Streams
+
+There are many ways to produce streams.
+
+* Stream.of()
+* Stream.iterate()
+* Stream.generate()
+* Special methods in classes. E.g.:
+  * Collections.stream()
+  * Random.doubles()
+
