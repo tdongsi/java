@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-22T00:13:08-08:00</updated>
+  <updated>2017-12-25T19:08:04-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -176,7 +176,100 @@ println greet
     <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-1/"/>
     <updated>2017-12-08T17:16:47-08:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-1</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Installing Groovy&rdquo; section of <a href="https://www.safaribooksonline.com/library/view/groovy-programming-fundamentals/9781491926253/">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Anatomy of Groovy bytecode</h3>
+
+<p>There is no requirement of filename matching class name like in Java (e.g., Foo.java for Foo class).
+However, the convention is that filesnames with lower cases and underscore are used for script (e.g., hello_world.groovy) and filesnames with camel cases are used for Groovy class (e.g., Foo.groovy for Foo class).</p>
+
+<pre><code class="plain">tdongsi-ltm4:docs tdongsi$ groovy hello_world.groovy
+Hello World
+
+
+tdongsi-ltm4:docs tdongsi$ groovyc hello_world.groovy
+tdongsi-ltm4:docs tdongsi$ ls
+hello_world.class
+hello_world.groovy
+tdongsi-ltm4:docs tdongsi$ groovy hello_world
+Hello World
+</code></pre>
+
+<p>The above code snippets show that you can run command <code>groovy</code> with source code directly, giving the impression of interpreting language.
+However, what actually happens is that it compiles and runs the bytecode but does not save the byte code.
+On the other hand, you can compile with <code>groovyc</code> command to obtain the bytecode and run like Java code.</p>
+
+<pre><code class="plain Anatomy of bytecode from Groovy code">tdongsi-ltm4:docs tdongsi$ java hello_world
+Error: Could not find or load main class hello_world
+
+tdongsi-ltm4:docs tdongsi$ javap hello_world
+Compiled from "hello_world.groovy"
+public class hello_world extends groovy.lang.Script {
+  public static transient boolean __$stMC;
+  public hello_world();
+  public hello_world(groovy.lang.Binding);
+  public static void main(java.lang.String...);
+  public java.lang.Object run();
+  protected groovy.lang.MetaClass $getStaticMetaClass();
+}
+</code></pre>
+
+<p>The above code snippets show that <code>hello_world.class</code> is also JVM bytecode.
+Although, we cannot execute <code>java hello_world</code> directly, the <code>javap</code> command confirms that it is Java bytecode.
+With the right class dependencies, provided in <code>groovy-all-2.4.8.jar</code> in <code>GROOVY_HOME</code>, we can execute the bytecode compiled from Groovy code using <code>java</code> code, as shown below.</p>
+
+<pre><code class="plain Exceute Groovy code with Java">tdongsi-ltm4:docs tdongsi$ which groovyc
+/usr/local/bin/groovyc
+tdongsi-ltm4:docs tdongsi$ ls -l /usr/local/bin/groovyc
+lrwxr-xr-x  1 tdongsi  staff  34 Feb 10  2017 /usr/local/bin/groovyc -&gt; ../Cellar/groovy/2.4.8/bin/groovyc
+
+tdongsi-ltm4:docs tdongsi$ java -cp /usr/local/Cellar/groovy/2.4.8/libexec/embeddable/groovy-all-2.4.8.jar:. hello_world
+Hello World
+</code></pre>
+
+<p>The implication is that, in any production system or development environment, you can add/execute any Groovy code by simply adding a single jar file.
+For example, in Maven projects, all you need to do is to add this into the pom.xml file:</p>
+
+<pre><code class="xml Groovy dependencies">    &lt;dependency&gt;
+      &lt;groupId&gt;org.codehaus.groovy&lt;/groupId&gt;
+      &lt;artifactId&gt;groovy-all&lt;/artifactId&gt;
+      &lt;version&gt;2.4.13&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+
+<p>After that, you can start adding package and Groovy file, e.g., HelloWorld.groovy, into &ldquo;src/main/groovy&rdquo; folder.
+See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26759224316576">example commit</a>.</p>
+
+<h3>Default imports</h3>
+
+<p>In Groovy, if you don&rsquo;t add any <code>import</code> statements, you get the following package by default:</p>
+
+<ul>
+<li>java.lang.*</li>
+<li>java.util.*</li>
+<li>java.net.*</li>
+<li>java.io.*</li>
+<li>java.math.BigInteger</li>
+<li>java.math.BigDecimal</li>
+<li>groovy.lang.*</li>
+<li>groovy.util.*</li>
+</ul>
+
+
+<h3><code>def</code> keyword</h3>
+
+<p>In Groovy, a variable can be dynamic type, using <code>def</code> keyword, or static type (Java-style).</p>
+
+<pre><code class="groovy Dynamic and weak typing">def x = 1
+println x.class.name
+x = 'abc'
+println x.class.name
+</code></pre>
+
+<p>The best practice is to use static typing when you know what type a variable is at the time of writing.</p>
 ]]></content>
   </entry>
   

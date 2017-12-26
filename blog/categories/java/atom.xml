@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-22T00:13:08-08:00</updated>
+  <updated>2017-12-25T19:08:04-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -105,6 +105,57 @@ Features are included when ready instead of targeted for specific release when s
 
 <ul>
 <li>Only Mac, Windows, Linux, SPARC supported. All 64-bit.</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java 8]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2016/12/17/java-8/"/>
+    <updated>2016-12-17T22:37:46-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2016/12/17/java-8</id>
+    <content type="html"><![CDATA[<h3>Lambdas</h3>
+
+<pre><code class="java Different forms">final int MULTIPLIER = 2;
+// "local variables referenced from a lambda expression/inner class must be final or effectively final"
+int aMultiplier = 3;
+
+// Simplest lambda form
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach(n -&gt; System.out.println(n));
+
+// Full lambda form
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach((Integer n) -&gt; {
+            System.out.println(n * MULTIPLIER);
+        });
+
+// Classic equivalent: anonymous inner class
+Stream.of(3, 1, 4, 1, 5, 9)
+        .forEach(new Consumer&lt;Integer&gt;() {
+            @Override
+            public void accept(Integer integer) {
+                System.out.println("Second: " + integer * aMultiplier );
+            }
+        });
+</code></pre>
+
+<h3>Streams</h3>
+
+<p>There are many ways to produce streams.</p>
+
+<ul>
+<li>Stream.of()</li>
+<li>Stream.iterate()</li>
+<li>Stream.generate()</li>
+<li>Special methods in classes. E.g.:
+
+<ul>
+<li>Collections.stream()</li>
+<li>Random.doubles()</li>
 </ul>
 </li>
 </ul>
@@ -241,12 +292,19 @@ Most of the test takers are experienced and skilled programmers, but they tend t
 <!--more-->
 
 
+<p>(0) The following steps assume computers with no previous setup.
+For work computers, they usually have corporate <code>settings.xml</code> already set up.
+You might have to override such corporate settings with standard Maven settings by using <a href="/blog/2015/06/19/maven-cookbook/">minimal <code>settings.xml</code></a>.</p>
+
 <p>(1) Use this command to setup an Eclipse empty project.</p>
 
 <pre><code class="plain Create an Eclipse project">mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 </code></pre>
 
-<p>(2) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
+<p>(2a) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
+
+<p>(2b) In IntellJ, Import Project > select the <code>pom.xml</code>.
+On work computer, you might want to go to Environment Settings > Override <code>settings.xml</code>.</p>
 
 <p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
 
@@ -279,8 +337,8 @@ Most of the test takers are experienced and skilled programmers, but they tend t
                 &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
                 &lt;version&gt;3.1&lt;/version&gt;
                 &lt;configuration&gt;
-                    &lt;source&gt;1.7&lt;/source&gt;
-                    &lt;target&gt;1.7&lt;/target&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
                 &lt;/configuration&gt;
             &lt;/plugin&gt;
         &lt;/plugins&gt;
@@ -369,189 +427,6 @@ java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt d
     <updated>2015-11-26T18:13:05-08:00</updated>
     <id>http://tdongsi.github.io/java/blog/2015/11/26/concurrency-race-condition</id>
     <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Process Synchronization (Pt. 1): Producer-Consumer Problem]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2015/11/19/concurrency-tutorial-in-java-part-1-producer-consumer-problem/"/>
-    <updated>2015-11-19T14:57:21-08:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2015/11/19/concurrency-tutorial-in-java-part-1-producer-consumer-problem</id>
-    <content type="html"><![CDATA[<p><figure class='code'><figcaption><span> (Counter.java)</span> <a href='/download/code/java/Concurrency/src/Counter.java'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Simulate a queue in Producer-Consumer problem</span>
-</span><span class='line'><span class="cm"> * </span>
-</span><span class='line'><span class="cm"> * @author cdongsi</span>
-</span><span class='line'><span class="cm"> *</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Counter</span> <span class="o">{</span>
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Increment counter value by one.</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">increment</span><span class="o">();</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Decrement counter value by one.</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">decrement</span><span class="o">();</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Return the current counter value.</span>
-</span><span class='line'><span class="cm">	 * </span>
-</span><span class='line'><span class="cm">	 * @return</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">current</span><span class="o">();</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Reset the counter value. For multiple experiment runs.</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">reset</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p><figure class='code'><figcaption><span> (Producer.java)</span> <a href='/download/code/java/Concurrency/src/Producer.java'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Producer</span> <span class="kd">extends</span> <span class="n">Runnable</span> <span class="o">{</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Add some item into a common item queue</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">produce</span><span class="o">();</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Use Counter as an item queue</span>
-</span><span class='line'><span class="cm">	 * </span>
-</span><span class='line'><span class="cm">	 * @param queue</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">useQueue</span><span class="o">(</span><span class="n">Counter</span> <span class="n">queue</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p><figure class='code'><figcaption><span> (Consumer.java)</span> <a href='/download/code/java/Concurrency/src/Consumer.java'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Consumer</span> <span class="kd">extends</span> <span class="n">Runnable</span> <span class="o">{</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Remove some item from a common item queue</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">consume</span><span class="o">();</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="cm">/**</span>
-</span><span class='line'><span class="cm">	 * Use Counter as an item queue</span>
-</span><span class='line'><span class="cm">	 * </span>
-</span><span class='line'><span class="cm">	 * @param queue</span>
-</span><span class='line'><span class="cm">	 */</span>
-</span><span class='line'>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">useQueue</span><span class="o">(</span><span class="n">Counter</span> <span class="n">queue</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<pre><code class="java Producer-Consumer simulation (one producer, one consumer)">    /**
-     * Run the simulation of producer-consumer problem
-     * with the given queue.
-     * 
-     * At the end of simulation run, the queue should have 0 item.
-     */
-    public static void produceAndConsume(Counter queue, Producer producer, Consumer consumer) {
-
-        Thread t1 = new Thread((Runnable) producer);
-        Thread t2 = new Thread((Runnable) consumer);
-
-        t1.start();
-        t2.start();
-
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            // Nothing
-      return;
-        }
-
-    }
-</code></pre>
-
-<p>Once you have concrete implementations of your queue (implementing Counter interface), producer (Producer interface), and consumer (Consumer interface), you can run the simulation easily. One example is as follows:</p>
-
-<pre><code class="java Run Producer-Consumer with concrete implementations">    public static void main(String[] args) {
-
-        Counter queue = new SimpleCounter();
-        Producer producer = new SimpleProducer(queue);
-        Consumer consumer = new SimpleConsumer(queue);
-        produceAndConsume(queue, producer, consumer);
-        System.out.println("Queue at the end: " + queue.current());
-    }
-</code></pre>
 ]]></content>
   </entry>
   

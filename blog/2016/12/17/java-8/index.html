@@ -5,11 +5,34 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tutorial: Quick-start for Groovy Programming Test - Personal Interview Notes</title>
+  <title>Java 8 - Personal Interview Notes</title>
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This post lists out steps to get started quickly for a Groovy programming test, using Eclipse and Maven. Maven-based Java project The simplest way is &hellip;">
+  <meta name="description" content="Lambdas Different forms1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+final int MULTIPLIER = 2;
+// &quot;local variables referenced from a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +41,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/">
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2016/12/17/java-8/">
   <link href="/java/favicon.png" rel="icon">
   <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
@@ -70,7 +93,7 @@
   
   <header>
     
-      <h1 class="entry-title">Tutorial: Quick-start for Groovy Programming Test</h1>
+      <h1 class="entry-title">Java 8</h1>
     
     
       <p class="meta">
@@ -79,42 +102,16 @@
 
 
 
-<time class='entry-date' datetime='2017-05-10T00:07:18-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:07 am</span></time>
+<time class='entry-date' datetime='2016-12-17T22:37:46-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:37 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>This post lists out steps to get started quickly for a <strong>Groovy</strong> programming test, using Eclipse and Maven.</p>
+<div class="entry-content"><h3>Lambdas</h3>
 
-<!--more-->
-
-
-<h3>Maven-based Java project</h3>
-
-<p>The simplest way is to generate a Maven-based Java project and add Groovy codes and dependencies to it.
-In IntelliJ IDEA, all you need to do is to add this into the pom.xml file:</p>
-
-<figure class='code'><figcaption><span>Groovy dependencies</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;dependency&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>groovy-all<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;version&gt;</span>2.4.13<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dependency&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then, you can start adding package and Groovy file, e.g., HelloWorld.groovy, into &ldquo;src/main/groovy&rdquo; folder.
-See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26759224316576">example commit</a>.</p>
-
-<p>In Eclipse, according to <a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">this blog</a>, you might need the following plugins:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>Different forms</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -136,49 +133,46 @@ See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
-</span><span class='line'>...
-</span><span class='line'><span class="nt">&lt;plugins&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;plugin&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;version&gt;</span>3.1<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;compilerId&gt;</span>groovy-eclipse-compiler<span class="nt">&lt;/compilerId&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/configuration&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;dependencies&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;dependency&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>groovy-eclipse-compiler<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;version&gt;</span>2.8.0-01<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/dependency&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;dependency&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;groupId&gt;</span>org.codehaus.groovy<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>groovy-eclipse-batch<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;version&gt;</span>2.4.13<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/dependency&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/dependencies&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/plugin&gt;</span>
-</span><span class='line'>  ...
-</span><span class='line'><span class="nt">&lt;/plugins&gt;</span>
-</span><span class='line'><span class="nt">&lt;/build&gt;</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kt">int</span> <span class="n">MULTIPLIER</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+</span><span class='line'><span class="c1">// &quot;local variables referenced from a lambda expression/inner class must be final or effectively final&quot;</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">aMultiplier</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Simplest lambda form</span>
+</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">n</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Full lambda form</span>
+</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">Integer</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Classic equivalent: anonymous inner class</span>
+</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="k">new</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">accept</span><span class="o">(</span><span class="n">Integer</span> <span class="n">integer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Second: &quot;</span> <span class="o">+</span> <span class="n">integer</span> <span class="o">*</span> <span class="n">aMultiplier</span> <span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Note that the versions must match between <code>groovy-eclipse-batch</code> and <code>groovy-all</code>.</p>
+<h3>Streams</h3>
 
-<h3>Pure Groovy project</h3>
-
-<p>Alternatively, you can create pure Groovy project in IntelliJ IDEA.</p>
-
-<h3>Reference</h3>
+<p>There are many ways to produce streams.</p>
 
 <ul>
-<li><a href="http://www.s0hel.com/blog/523/compile-groovy-files-with-maven-in-your-java-project/">Compiling Groovy in Eclipse</a></li>
+<li>Stream.of()</li>
+<li>Stream.iterate()</li>
+<li>Stream.generate()</li>
+<li>Special methods in classes. E.g.:
+
+<ul>
+<li>Collections.stream()</li>
+<li>Random.doubles()</li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -196,12 +190,12 @@ See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26
 
 
 
-<time class='entry-date' datetime='2017-05-10T00:07:18-07:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:07 am</span></time>
+<time class='entry-date' datetime='2016-12-17T22:37:46-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:37 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/java/blog/categories/groovy/'>groovy</a>, <a class='category' href='/java/blog/categories/tutorial/'>tutorial</a>
+    <a class='category' href='/java/blog/categories/java/'>java</a>
   
 </span>
 
@@ -210,7 +204,7 @@ See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2016/12/17/java-8/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2016/12/17/java-8/" >Tweet</a>
   
   
   
@@ -221,10 +215,10 @@ See <a href="https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14f095ea26
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/java/blog/2016/12/17/java-8/" title="Previous Post: Java 8">&laquo; Java 8</a>
+        <a class="basic-alignment left" href="/java/blog/2016/09/09/common-interview-questions/" title="Previous Post: Common interview questions">&laquo; Common interview questions</a>
       
       
-        <a class="basic-alignment right" href="/java/blog/2017/05/11/gradle-cookbook/" title="Next Post: Gradle cookbook">Gradle cookbook &raquo;</a>
+        <a class="basic-alignment right" href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/" title="Next Post: Tutorial: Quick-start for Groovy programming test">Tutorial: Quick-start for Groovy programming test &raquo;</a>
       
     </p>
   </footer>
