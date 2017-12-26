@@ -79,8 +79,26 @@ See [example commit](https://github.com/tdongsi/java/commit/3ce5202f9c575f735f14
 
 ### Default imports
 
+In Groovy, if you don't add any `import` statements, you get the following package by default:
 
+* java.lang.*
+* java.util.*
+* java.net.*
+* java.io.*
+* java.math.BigInteger
+* java.math.BigDecimal
+* groovy.lang.*
+* groovy.util.*
 
+### `def` keyword
 
+In Groovy, a variable can be dynamic type, using `def` keyword, or static type (Java-style).
 
+``` groovy Dynamic and weak typing
+def x = 1
+println x.class.name
+x = 'abc'
+println x.class.name
+```
 
+The best practice is to use static typing when you know what type a variable is at the time of writing.
