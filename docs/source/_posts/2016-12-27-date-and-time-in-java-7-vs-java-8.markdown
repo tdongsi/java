@@ -108,18 +108,12 @@ for ( int year=1901; year <= 2000; year++ )
 }
 ```
 
-As you can see, the code is pretty much similar.
-
-Java 7 is awekward.
-
-Traps and Pitfalls
-There are a few minor traps in the Calendar class that you should be aware of to avoid unnecessary headaches. I'll cover those in the following sections.
-
-The Month Trap
-The MONTH field of the Calendar class does not go from 1 to 12 like they do when we write dates otherwise. Instead the months run from 0 to 11, where 0 is January and 11 is December. This can cause a bit of errors and subsequent debugging if you are not aware of this.
-
-The Day of Week Trap
-The day of week runs from 1 to 7 as you might expect, but sunday, not monday is the first day of the week. That means that 1 = sunday, 2 = monday, ..., 7 = saturday. This has also caused me minor annoyances from time to time.
+As you can see, the code is pretty much similar although the Java 8 code seems more elegant IMO (no mutable object).
+Although it is not obvious in the examples above, the Java 7 date and time can be awkward with some subtle pitfalls.
+For example, the MONTH field of the Calendar class does not go from 1 to 12 like they do when we write dates otherwise.
+Instead the months run from 0 to 11, where 0 is January and 11 is December, as seen in `calendar.set(year, month, 1)` above.
+Further more, the day of week runs from 1 to 7 but Sunday, not Monday, is the first day of the week.
+These can cause subtle bugs if you are not aware and apply precaution.
 
 ### Reference
 
