@@ -57,8 +57,24 @@ public class JavaTimeDemos {
 
     }
 
+    // Solve the problem 19 of Project Euler
+    // https://projecteuler.net/problem=19
+    public static void solve() {
+        long count = 0;
+        for (int year = 1901; year <= 2000; year++) {
+            for (Month month: Month.values()) {
+                LocalDate date = LocalDate.of(year, month, 1);
+                if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    count++;
+                }
+            }
+        }
+
+        System.out.println("Answer: " + count);
+    }
+
     public static void main(String args[]) {
-        demos();
+        solve();
     }
 
 }
