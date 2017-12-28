@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Date and Time in Java 7 vs Java 8 - Personal Interview Notes</title>
+  <meta name="author" content="Cuong Dong-Si">
+
+  
+  <meta name="description" content="This post discuss how you handle date and time data in Java 8 and compare it with Java 7. Date and Time in Java 8 java.time is the new package in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">
+  <link href="/java/favicon.png" rel="icon">
+  <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
+  <script src="/java/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/java/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/java/">Personal Interview Notes</a></h1>
+  
+    <h2>Neither success nor failure is ever final.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tdongsi.github.io/java">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/java/">Blog Home</a></li>
+  <li><a href="/java/blog/archives">Archives</a></li>
+  <li><a href="http://tdongsi.github.io/SqlTests/syllabus/">Syllabus</a></li>
+  <li><a href="http://tdongsi.github.io">Personal Home</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Date and Time in Java 7 vs Java 8</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-12-27T18:50:15-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>6:50 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This post discuss how you handle date and time data in Java 8 and compare it with Java 7.</p>
+
+<!--more-->
+
+
+<h3>Date and Time in Java 8</h3>
+
+<p><code>java.time</code> is the new package in Java 8 for handling date and time.
+It is heavily based on <code>joda-time</code> package which is the de facto standard Java package for handling date &amp; time before Java 8.
+This hopefully will put an end to the messy Date &amp; Time classes in <code>java.util</code> package.</p>
+
+<figure class='code'><figcaption><span>java.time demos</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// Instant</span>
+</span><span class='line'><span class="n">Instant</span> <span class="n">now</span> <span class="o">=</span> <span class="n">Instant</span><span class="o">.</span><span class="na">now</span><span class="o">();</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Instant.now(): %s%n&quot;</span><span class="o">,</span> <span class="n">now</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Duration</span>
+</span><span class='line'><span class="n">Instant</span> <span class="n">then</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">DAYS</span><span class="o">);</span>
+</span><span class='line'><span class="n">Duration</span> <span class="n">elapsed</span> <span class="o">=</span> <span class="n">Duration</span><span class="o">.</span><span class="na">between</span><span class="o">(</span><span class="n">now</span><span class="o">,</span> <span class="n">then</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Duration: %s%n&quot;</span><span class="o">,</span> <span class="n">elapsed</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Duration in hours: %d hours %n&quot;</span><span class="o">,</span> <span class="n">elapsed</span><span class="o">.</span><span class="na">toHours</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">then</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">DAYS</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">HALF_DAYS</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">HOURS</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="n">ChronoUnit</span><span class="o">.</span><span class="na">MINUTES</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="na">plusSeconds</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Then: %s %n&quot;</span><span class="o">,</span> <span class="n">then</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// LocalDate</span>
+</span><span class='line'><span class="n">LocalDate</span> <span class="n">localNow</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">();</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;LocalDate.now(): %s%n&quot;</span><span class="o">,</span> <span class="n">localNow</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Factory method</span>
+</span><span class='line'><span class="n">LocalDate</span> <span class="n">firstDayOfSpring</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">2017</span><span class="o">,</span> <span class="n">Month</span><span class="o">.</span><span class="na">MARCH</span><span class="o">,</span> <span class="mi">20</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;First day of spring %s falls on %s%n&quot;</span><span class="o">,</span> <span class="n">firstDayOfSpring</span><span class="o">,</span> <span class="n">firstDayOfSpring</span><span class="o">.</span><span class="na">getDayOfWeek</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Time zones</span>
+</span><span class='line'><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">allTimeZones</span> <span class="o">=</span> <span class="n">ZoneId</span><span class="o">.</span><span class="na">getAvailableZoneIds</span><span class="o">();</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Total number of time zones: %d%n&quot;</span><span class="o">,</span> <span class="n">allTimeZones</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+</span><span class='line'><span class="n">allTimeZones</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="n">name</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot;America&quot;</span><span class="o">)).</span><span class="na">forEach</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// ZonedDateTime</span>
+</span><span class='line'><span class="n">ZonedDateTime</span> <span class="n">missing</span> <span class="o">=</span> <span class="n">ZonedDateTime</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+</span><span class='line'>    <span class="n">LocalDate</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">2016</span><span class="o">,</span> <span class="n">Month</span><span class="o">.</span><span class="na">MARCH</span><span class="o">,</span> <span class="mi">13</span><span class="o">),</span>
+</span><span class='line'>    <span class="n">LocalTime</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span>
+</span><span class='line'>    <span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&quot;America/New_York&quot;</span><span class="o">));</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">missing</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// DateTimeFormatter</span>
+</span><span class='line'><span class="n">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="n">DateTimeFormatter</span><span class="o">.</span><span class="na">ofLocalizedDateTime</span><span class="o">(</span><span class="n">FormatStyle</span><span class="o">.</span><span class="na">LONG</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">.</span><span class="na">withLocale</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">FRANCE</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">formatter</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">missing</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// From Javadoc</span>
+</span><span class='line'><span class="n">LocalDate</span> <span class="n">customerBirthday</span> <span class="o">=</span> <span class="n">firstDayOfSpring</span><span class="o">;</span>
+</span><span class='line'><span class="n">LocalDate</span> <span class="n">today</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">now</span><span class="o">();</span>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">customerBirthday</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">today</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'><span class="n">LocalDate</span> <span class="n">specialOfferExpiryDate</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="na">plusWeeks</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">TemporalAdjusters</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="n">DayOfWeek</span><span class="o">.</span><span class="na">FRIDAY</span><span class="o">));</span>
+</span><span class='line'><span class="c1">// customer.sendBirthdaySpecialOffer(specialOfferExpiryDate);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Compared with Java 7</h3>
+
+<p>Handling date time data in Java 8 seems more elegant although not obvious.
+As an example, the code for solving the same date time problem (<a href="https://projecteuler.net/problem=19">Project Euler number 19</a>) in Java 7 and 8 are shown below:</p>
+
+<figure class='code'><figcaption><span>Solving Project Euler 19 in Java 8</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">year</span> <span class="o">=</span> <span class="mi">1901</span><span class="o">;</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">2000</span><span class="o">;</span> <span class="n">year</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span><span class="n">Month</span> <span class="nl">month:</span> <span class="n">Month</span><span class="o">.</span><span class="na">values</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">LocalDate</span> <span class="n">date</span> <span class="o">=</span> <span class="n">LocalDate</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">year</span><span class="o">,</span> <span class="n">month</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">date</span><span class="o">.</span><span class="na">getDayOfWeek</span><span class="o">()</span> <span class="o">==</span> <span class="n">DayOfWeek</span><span class="o">.</span><span class="na">SUNDAY</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">count</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Solving Proiect Euler 19 in Java 7</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'><span class="n">Calendar</span> <span class="n">calendar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">GregorianCalendar</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// From year 1901 to 2000.</span>
+</span><span class='line'><span class="k">for</span> <span class="o">(</span> <span class="kt">int</span> <span class="n">year</span><span class="o">=</span><span class="mi">1901</span><span class="o">;</span> <span class="n">year</span> <span class="o">&lt;=</span> <span class="mi">2000</span><span class="o">;</span> <span class="n">year</span><span class="o">++</span> <span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="c1">// From month January to December</span>
+</span><span class='line'>    <span class="k">for</span> <span class="o">(</span> <span class="kt">int</span> <span class="n">month</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">month</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="o">;</span> <span class="n">month</span><span class="o">++</span> <span class="o">)</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Set to the first day of the month</span>
+</span><span class='line'>        <span class="n">calendar</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">year</span><span class="o">,</span> <span class="n">month</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// If the date is Sunday</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">calendar</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">Calendar</span><span class="o">.</span><span class="na">DAY_OF_WEEK</span><span class="o">)</span> <span class="o">==</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">SUNDAY</span> <span class="o">)</span>
+</span><span class='line'>        <span class="o">{</span>
+</span><span class='line'>            <span class="n">count</span><span class="o">++;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, the code is pretty much similar although the Java 8 code seems more elegant IMO (no mutable object).
+Although it is not obvious in the examples above, the Java 7 date and time can be awkward with some subtle pitfalls.
+For example, the MONTH field of the Calendar class does not go from 1 to 12 like they do when we write dates otherwise.
+Instead the months run from 0 to 11, where 0 is January and 11 is December, as seen in <code>calendar.set(year, month, 1)</code> above.
+Further more, the day of week runs from 1 to 7 but Sunday, not Monday, is the first day of the week.
+These can cause subtle bugs if you are not aware and apply precaution.</p>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="http://tutorials.jenkov.com/java-date-time/java-util-calendar.html">Java 7 examples</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Cuong Dong-Si</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-12-27T18:50:15-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>6:50 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/java/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/java/blog/2016/12/17/java-8/" title="Previous Post: Java 8">&laquo; Java 8</a>
+      
+      
+        <a class="basic-alignment right" href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/" title="Next Post: Tutorial: Quick-start for Groovy programming test">Tutorial: Quick-start for Groovy programming test &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>About This Blog</h1>
+    <p>Random interview experience and lessons.</p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-5/">Groovy Fundamentals: Part 5: Demos</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-4/">Groovy Fundamentals: Part 4: Closures & Operators</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-3/">Groovy Fundamentals: Part 3: POGOs & Collections</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/06/java-9/">Java 9</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/06/14/xml-processing-in-groovy/">XML Processing in Groovy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/05/11/gradle-cookbook/">Gradle Cookbook</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/">Tutorial: Quick-start for Groovy Programming Test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Date and Time in Java 7 vs Java 8</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (8)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Cuong Dong-Si -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

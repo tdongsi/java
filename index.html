@@ -366,7 +366,7 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
       
   <header>
     
-      <h1 class="entry-title"><a href="/java/blog/2016/12/17/java-8/">Java 8</a></h1>
+      <h1 class="entry-title"><a href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Date and Time in Java 7 vs Java 8</a></h1>
     
     
       <p class="meta">
@@ -375,81 +375,21 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
 
 
 
-<time class='entry-date' datetime='2016-12-17T22:37:46-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:37 pm</span></time>
+<time class='entry-date' datetime='2016-12-27T18:50:15-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>6:50 pm</span></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h3>Lambdas</h3>
-
-<figure class='code'><figcaption><span>Different forms</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kt">int</span> <span class="n">MULTIPLIER</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
-</span><span class='line'><span class="c1">// &quot;local variables referenced from a lambda expression/inner class must be final or effectively final&quot;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">aMultiplier</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Simplest lambda form</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">n</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span><span class="o">));</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Full lambda form</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">Integer</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">});</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Classic equivalent: anonymous inner class</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="k">new</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="nd">@Override</span>
-</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">accept</span><span class="o">(</span><span class="n">Integer</span> <span class="n">integer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Second: &quot;</span> <span class="o">+</span> <span class="n">integer</span> <span class="o">*</span> <span class="n">aMultiplier</span> <span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Streams</h3>
-
-<p>There are many ways to produce streams.</p>
-
-<ul>
-<li>Stream.of()</li>
-<li>Stream.iterate()</li>
-<li>Stream.generate()</li>
-<li>Special methods in classes. E.g.:
-
-<ul>
-<li>Collections.stream()</li>
-<li>Random.doubles()</li>
-</ul>
-</li>
-</ul>
+  <div class="entry-content"><p>This post discuss how you handle date and time data in Java 8 and compare it with Java 7.</p>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -509,7 +449,7 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
       </li>
     
       <li class="post">
-        <a href="/java/blog/2016/12/17/java-8/">Java 8</a>
+        <a href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Date and Time in Java 7 vs Java 8</a>
       </li>
     
   </ul>
@@ -517,7 +457,7 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (7)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (8)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
 </section>
 
 
