@@ -7,6 +7,11 @@ categories:
 - Java
 ---
 
+This post discusses various new features in Java 8.
+Java 8 is considered the latest Long-Term Support (LTS) release in new Java release schedule.
+
+<!--more-->
+
 ### Lambdas
 
 ``` java Different forms
