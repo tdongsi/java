@@ -4,6 +4,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Locale;
 import java.util.Set;
 
@@ -54,6 +56,14 @@ public class JavaTimeDemos {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
                 .withLocale(Locale.FRANCE);
         System.out.println(formatter.format(missing));
+
+        // From Javadoc
+        LocalDate customerBirthday = firstDayOfSpring;
+        LocalDate today = LocalDate.now();
+        if (customerBirthday.equals(today)) {
+            LocalDate specialOfferExpiryDate = today.plusWeeks(2).with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
+            // customer.sendBirthdaySpecialOffer(specialOfferExpiryDate);
+        }
 
     }
 
