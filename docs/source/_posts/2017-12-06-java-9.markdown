@@ -38,6 +38,8 @@ The implication of `jlink` is that the slogan "Write once, run anywhere" might n
 `jlink` generated runtime may not include all Java SE modules.
 It is still a conformant Java implementation.
 
+[**REFERENCE**](https://www.journaldev.com/13121/java-9-features-with-examples) with examples.
+
 ### Java Development Changes
 
 OpenJDK have a new release model: more agile, every six months.
