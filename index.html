@@ -9,8 +9,7 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="
-">
+  <meta name="description" content="How to create a Jenkins plugin. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +67,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/java/blog/2018/02/08/jenkins-plugin-development/">Jenkins Plugin Development</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-02-08T00:07:01-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>12:07 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>How to create a Jenkins plugin.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/java/blog/2018/02/08/jenkins-plugin-development/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -182,7 +215,62 @@
   </header>
 
 
-  <div class="entry-content">
+  <div class="entry-content"><figure class='code'><figcaption><span>Speak Groovy with Java accent</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="kt">void</span> <span class="nf">healthcheck</span><span class="o">(</span><span class="n">String</span> <span class="n">endpoint</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timeoutInSeconds</span> <span class="o">=</span> <span class="mi">120</span><span class="o">,</span> <span class="kt">int</span> <span class="n">expectedCode</span> <span class="o">=</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;Doing health check of &quot;</span> <span class="o">+</span> <span class="n">endpoint</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">code</span> <span class="o">!=</span> <span class="n">expectedCode</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">endpoint</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s2">&quot;GET&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">connection</span><span class="o">.</span><span class="na">connect</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">code</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Response code:&quot;</span> <span class="o">+</span> <span class="n">code</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="n">e</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">timeoutInSeconds</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s2">&quot;Healthcheck of &quot;</span> <span class="o">+</span> <span class="n">endpoint</span> <span class="o">+</span> <span class="s2">&quot; failed.&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">out</span> <span class="o">=</span> <span class="n">healthcheck</span><span class="o">(</span><span class="s2">&quot;https://my.service.com/&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
   
   
@@ -361,40 +449,6 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Date and Time in Java 7 vs Java 8</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-12-27T18:50:15-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>6:50 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This post discuss how you handle date and time data in Java 8 and compare it with Java 7.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/java/posts/2">&larr; Older</a>
@@ -411,6 +465,10 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2018/02/08/jenkins-plugin-development/">Jenkins Plugin Development</a>
+      </li>
     
       <li class="post">
         <a href="/java/blog/2017/12/08/groovy-fundamentals-part-5/">Groovy Fundamentals: Part 5: Demos</a>
@@ -448,10 +506,6 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
         <a href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/">Tutorial: Quick-start for Groovy Programming Test</a>
       </li>
     
-      <li class="post">
-        <a href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/">Date and Time in Java 7 vs Java 8</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -468,7 +522,7 @@ The biggest is the Java Platform Module System (often referred to as Project Jig
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - Cuong Dong-Si -
+  Copyright &copy; 2018 - Cuong Dong-Si -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

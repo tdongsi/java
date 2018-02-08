@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Groovy - Personal Interview Notes</title>
+  <title>Jenkins Plugin Development - Personal Interview Notes</title>
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="Category: groovy">
+  <meta name="description" content="How to create a Jenkins plugin. Basic plugin Reference: Tutorial
+Video Pipeline plugin Reference: Tutorial
+Slides
+Developer&rsquo;s guide Blue Ocean &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tdongsi.github.io/java/blog/categories/groovy/">
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development/">
   <link href="/java/favicon.png" rel="icon">
   <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
@@ -66,119 +69,111 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Groovy</h1>
+    
+      <h1 class="entry-title">Jenkins Plugin Development</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-02-08T00:07:01-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>12:07 am</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+<div class="entry-content"><p>How to create a Jenkins plugin.</p>
+
+<!--more-->
 
 
 
-  
-  <h2>2017</h2>
 
-<article>
-  
-<h1><a href="/java/blog/2017/12/08/groovy-fundamentals-part-5/">Groovy Fundamentals: Part 5: Demos</a></h1>
-<time datetime="2017-12-08T17:17:20-08:00" pubdate><span class='month'>Dec</span> <span class='day'>08</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
+<!-- Photos:
+IMG_[1110..1116]
+-->
 
 
-</article>
+<h3>Basic plugin</h3>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://github.com/MarkEWaite/hello-world-plugin/tree/jenkins-world-2017">Tutorial</a></li>
+<li><a href="https://www.youtube.com/watch?feature=player_embedded&amp;v=azyv183Ua6U">Video</a></li>
+</ul>
 
 
+<h3>Pipeline plugin</h3>
 
-<article>
-  
-<h1><a href="/java/blog/2017/12/08/groovy-fundamentals-part-4/">Groovy Fundamentals: Part 4: Closures & Operators</a></h1>
-<time datetime="2017-12-08T17:17:09-08:00" pubdate><span class='month'>Dec</span> <span class='day'>08</span> <span class='year'>2017</span></time>
+<p>Reference:</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
-
-
-</article>
+<ul>
+<li><a href="https://github.com/jglick/wfdev/tree/pipeline">Tutorial</a></li>
+<li><a href="https://github.com/jglick/wfdev/blob/master/preso.pdf">Slides</a></li>
+<li><a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/DEVGUIDE.md">Developer&rsquo;s guide</a></li>
+</ul>
 
 
+<h3>Blue Ocean plugin</h3>
 
-<article>
-  
-<h1><a href="/java/blog/2017/12/08/groovy-fundamentals-part-3/">Groovy Fundamentals: Part 3: POGOs & Collections</a></h1>
-<time datetime="2017-12-08T17:17:05-08:00" pubdate><span class='month'>Dec</span> <span class='day'>08</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
-
-
-</article>
+<figure class='code'><figcaption><span>Local development of Blue Ocean plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># this will build and run the plugin in local Jenkins
+</span><span class='line'>mvn install hpi:run
+</span><span class='line'># this will recompile js & less while editing
+</span><span class='line'>npm run bundle:watch</span></code></pre></td></tr></table></div></figure>
 
 
-
-<article>
-  
-<h1><a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a></h1>
-<time datetime="2017-12-08T17:16:49-08:00" pubdate><span class='month'>Dec</span> <span class='day'>08</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a></h1>
-<time datetime="2017-12-08T17:16:47-08:00" pubdate><span class='month'>Dec</span> <span class='day'>08</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/java/blog/2017/06/14/xml-processing-in-groovy/">XML Processing in Groovy</a></h1>
-<time datetime="2017-06-14T09:57:51-07:00" pubdate><span class='month'>Jun</span> <span class='day'>14</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/java/blog/2017/05/10/tutorial-quick-start-for-groovy-programming-test/">Tutorial: Quick-start for Groovy Programming Test</a></h1>
-<time datetime="2017-05-10T00:07:18-07:00" pubdate><span class='month'>May</span> <span class='day'>10</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/java/blog/categories/groovy/'>groovy</a>, <a class='category' href='/java/blog/categories/tutorial/'>tutorial</a></span>
-</footer>
-
-
-</article>
-
+<p><strong><em>Gotcha</em></strong>: extension changes won&rsquo;t update without a Jenkins restart.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Cuong Dong-Si</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2018-02-08T00:07:01-08:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>12:07 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/java/blog/2017/12/08/groovy-fundamentals-part-5/" title="Previous Post: Groovy Fundamentals: Part 5: Demos">&laquo; Groovy Fundamentals: Part 5: Demos</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

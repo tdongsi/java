@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development/</loc>
+<lastmod>2018-02-08T00:07:01-08:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-5/</loc>
 <lastmod>2017-12-08T17:17:20-08:00</lastmod>
 </url>
@@ -73,10 +77,10 @@
 <lastmod>2011-08-06T15:05:44-07:00</lastmod>
 </url>
 <url>
-<loc>http://tdongsi.github.io/java/blog/archives/</loc>
+<loc>http://tdongsi.github.io/java/</loc>
 </url>
 <url>
-<loc>http://tdongsi.github.io/java/</loc>
+<loc>http://tdongsi.github.io/java/blog/archives/</loc>
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/java/</loc>

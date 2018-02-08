@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-27T20:42:52-08:00</updated>
+  <updated>2018-02-08T00:48:22-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -61,6 +61,8 @@ This note summarizes some intersting points from a guest speaker about the new J
 The implication of <code>jlink</code> is that the slogan &ldquo;Write once, run anywhere&rdquo; might not be true anymore.
 <code>jlink</code> generated runtime may not include all Java SE modules.
 It is still a conformant Java implementation.</p>
+
+<p><a href="https://www.journaldev.com/13121/java-9-features-with-examples"><strong>REFERENCE</strong></a> with examples.</p>
 
 <h3>Java Development Changes</h3>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groovy | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/groovy/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-27T20:42:52-08:00</updated>
+  <updated>2018-02-08T00:48:22-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -167,7 +167,34 @@ println greet
     <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2/"/>
     <updated>2017-12-08T17:16:49-08:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<pre><code class="groovy Speak Groovy with Java accent">def void healthcheck(String endpoint, int timeoutInSeconds = 120, int expectedCode = 200) {
+    println "Doing health check of " + endpoint
+
+    int i = 0
+    int code = 0
+    while (code != expectedCode) {
+        try {
+            URL url = new URL(endpoint)
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection()
+            connection.setRequestMethod("GET")
+            connection.connect()
+            code = connection.getResponseCode()
+            println "Response code:" + code
+        } catch (Exception e) {
+            println e
+        }
+
+        Thread.sleep(1000)
+
+        i += 1
+        if (i == timeoutInSeconds) {
+            throw new RuntimeException("Healthcheck of " + endpoint + " failed.")
+        }
+    }
+}
+
+def out = healthcheck("https://my.service.com/")
+</code></pre>
 ]]></content>
   </entry>
   

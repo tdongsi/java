@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2017-12-27T20:42:52-08:00</updated>
+  <updated>2018-02-08T00:48:22-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Plugin Development]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development/"/>
+    <updated>2018-02-08T00:07:01-08:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/02/08/jenkins-plugin-development</id>
+    <content type="html"><![CDATA[<p>How to create a Jenkins plugin.</p>
+
+<!--more-->
+
+
+
+
+<!-- Photos:
+IMG_[1110..1116]
+-->
+
+
+<h3>Basic plugin</h3>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://github.com/MarkEWaite/hello-world-plugin/tree/jenkins-world-2017">Tutorial</a></li>
+<li><a href="https://www.youtube.com/watch?feature=player_embedded&amp;v=azyv183Ua6U">Video</a></li>
+</ul>
+
+
+<h3>Pipeline plugin</h3>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://github.com/jglick/wfdev/tree/pipeline">Tutorial</a></li>
+<li><a href="https://github.com/jglick/wfdev/blob/master/preso.pdf">Slides</a></li>
+<li><a href="https://github.com/jenkinsci/pipeline-plugin/blob/master/DEVGUIDE.md">Developer&rsquo;s guide</a></li>
+</ul>
+
+
+<h3>Blue Ocean plugin</h3>
+
+<figure class='code'><figcaption><span>Local development of Blue Ocean plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># this will build and run the plugin in local Jenkins
+</span><span class='line'>mvn install hpi:run
+</span><span class='line'># this will recompile js & less while editing
+</span><span class='line'>npm run bundle:watch</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em>Gotcha</em></strong>: extension changes won&rsquo;t update without a Jenkins restart.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Groovy Fundamentals: Part 5: Demos]]></title>
@@ -264,7 +318,62 @@
     <link href="http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2/"/>
     <updated>2017-12-08T17:16:49-08:00</updated>
     <id>http://tdongsi.github.io/java/blog/2017/12/08/groovy-fundamentals-part-2</id>
-    <content type="html"><![CDATA[
+    <content type="html"><![CDATA[<figure class='code'><figcaption><span>Speak Groovy with Java accent</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kt">def</span> <span class="kt">void</span> <span class="nf">healthcheck</span><span class="o">(</span><span class="n">String</span> <span class="n">endpoint</span><span class="o">,</span> <span class="kt">int</span> <span class="n">timeoutInSeconds</span> <span class="o">=</span> <span class="mi">120</span><span class="o">,</span> <span class="kt">int</span> <span class="n">expectedCode</span> <span class="o">=</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s2">&quot;Doing health check of &quot;</span> <span class="o">+</span> <span class="n">endpoint</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="n">code</span> <span class="o">!=</span> <span class="n">expectedCode</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">endpoint</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">HttpURLConnection</span> <span class="n">connection</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">connection</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s2">&quot;GET&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">connection</span><span class="o">.</span><span class="na">connect</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">code</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">()</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s2">&quot;Response code:&quot;</span> <span class="o">+</span> <span class="n">code</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="n">e</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">timeoutInSeconds</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s2">&quot;Healthcheck of &quot;</span> <span class="o">+</span> <span class="n">endpoint</span> <span class="o">+</span> <span class="s2">&quot; failed.&quot;</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">out</span> <span class="o">=</span> <span class="n">healthcheck</span><span class="o">(</span><span class="s2">&quot;https://my.service.com/&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
@@ -459,6 +568,8 @@ This note summarizes some intersting points from a guest speaker about the new J
 The implication of <code>jlink</code> is that the slogan &ldquo;Write once, run anywhere&rdquo; might not be true anymore.
 <code>jlink</code> generated runtime may not include all Java SE modules.
 It is still a conformant Java implementation.</p>
+
+<p><a href="https://www.journaldev.com/13121/java-9-features-with-examples"><strong>REFERENCE</strong></a> with examples.</p>
 
 <h3>Java Development Changes</h3>
 
