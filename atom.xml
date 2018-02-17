@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-02-08T00:48:22-08:00</updated>
+  <updated>2018-02-16T19:31:14-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -2458,6 +2458,81 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
 </span><span class='line'>  <span class="nt">&lt;proxies/&gt;</span>
 </span><span class='line'>  <span class="nt">&lt;profiles/&gt;</span>
 </span><span class='line'>  <span class="nt">&lt;activeProfiles/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Similarly, the <code>settings.xml</code> may need to be modified for specific environments, such as Jenkins.</p>
+
+<figure class='code'><figcaption><span>Jenkins settings.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;pluginGroups&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;pluginGroup&gt;</span>org.jenkins-ci.tools<span class="nt">&lt;/pluginGroup&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/pluginGroups&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>    <span class="c">&lt;!-- Give access to Jenkins plugins --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>jenkins<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;activation&gt;</span>
+</span><span class='line'>        <span class="c">&lt;!-- change this to false, if you don&#39;t like to have it on per default --&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;activeByDefault&gt;</span>true<span class="nt">&lt;/activeByDefault&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/activation&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;repositories&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;repository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/repository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/repositories&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginRepositories&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;pluginRepository&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/pluginRepository&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginRepositories&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;mirrors&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;mirror&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;mirrorOf&gt;</span>m.g.o-public<span class="nt">&lt;/mirrorOf&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/mirror&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/mirrors&gt;</span>
 </span><span class='line'><span class="nt">&lt;/settings&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 

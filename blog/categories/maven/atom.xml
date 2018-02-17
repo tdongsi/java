@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/maven/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-02-08T00:48:22-08:00</updated>
+  <updated>2018-02-16T19:31:14-08:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -49,6 +49,45 @@ To switch between them, create a <a href="https://maven.apache.org/settings.html
   &lt;proxies/&gt;
   &lt;profiles/&gt;
   &lt;activeProfiles/&gt;
+&lt;/settings&gt;
+</code></pre>
+
+<p>Similarly, the <code>settings.xml</code> may need to be modified for specific environments, such as Jenkins.</p>
+
+<pre><code class="xml Jenkins settings.xml">&lt;settings&gt;
+  &lt;pluginGroups&gt;
+    &lt;pluginGroup&gt;org.jenkins-ci.tools&lt;/pluginGroup&gt;
+  &lt;/pluginGroups&gt;
+
+  &lt;profiles&gt;
+    &lt;!-- Give access to Jenkins plugins --&gt;
+    &lt;profile&gt;
+      &lt;id&gt;jenkins&lt;/id&gt;
+      &lt;activation&gt;
+        &lt;!-- change this to false, if you don't like to have it on per default --&gt;
+        &lt;activeByDefault&gt;true&lt;/activeByDefault&gt; 
+      &lt;/activation&gt;
+      &lt;repositories&gt;
+        &lt;repository&gt;
+          &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
+          &lt;url&gt;https://repo.jenkins-ci.org/public/&lt;/url&gt;
+        &lt;/repository&gt;
+      &lt;/repositories&gt;
+      &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+          &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
+          &lt;url&gt;https://repo.jenkins-ci.org/public/&lt;/url&gt;
+        &lt;/pluginRepository&gt;
+      &lt;/pluginRepositories&gt;
+    &lt;/profile&gt;
+  &lt;/profiles&gt;
+  &lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;repo.jenkins-ci.org&lt;/id&gt;
+      &lt;url&gt;https://repo.jenkins-ci.org/public/&lt;/url&gt;
+      &lt;mirrorOf&gt;m.g.o-public&lt;/mirrorOf&gt;
+    &lt;/mirror&gt;
+  &lt;/mirrors&gt;
 &lt;/settings&gt;
 </code></pre>
 
