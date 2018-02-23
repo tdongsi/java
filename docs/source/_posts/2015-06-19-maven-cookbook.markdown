@@ -42,6 +42,46 @@ To switch between them, create a [minimal settings.xml](https://maven.apache.org
 </settings>
 ```
 
+Similarly, the `settings.xml` may need to be modified for specific environments, such as Jenkins.
+
+``` xml Jenkins settings.xml
+<settings>
+  <pluginGroups>
+    <pluginGroup>org.jenkins-ci.tools</pluginGroup>
+  </pluginGroups>
+
+  <profiles>
+    <!-- Give access to Jenkins plugins -->
+    <profile>
+      <id>jenkins</id>
+      <activation>
+        <!-- change this to false, if you don't like to have it on per default -->
+        <activeByDefault>true</activeByDefault> 
+      </activation>
+      <repositories>
+        <repository>
+          <id>repo.jenkins-ci.org</id>
+          <url>https://repo.jenkins-ci.org/public/</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>repo.jenkins-ci.org</id>
+          <url>https://repo.jenkins-ci.org/public/</url>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <mirrors>
+    <mirror>
+      <id>repo.jenkins-ci.org</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+      <mirrorOf>m.g.o-public</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>
+```
+
 **Recipe 3**: Install a jar file into local repository. See [here](http://tdongsi.github.io/blog/2015/11/17/pushing-local-jar-file-into-your-local-maven-m2-repository/).
 
 **Recipe 4**: Findbugs and Checkstyle. See [here](https://www.safaribooksonline.com/library/view/continuous-integration-ci/9781491986547/video307702.html).
