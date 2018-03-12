@@ -61,36 +61,6 @@ more( cakeRef, sconeRef ) { }
 more( sconeRef, cakeRef ) { }
 ```
 
-### Singleton question
+### Singleton design pattern
 
-This question seems to be common because it shows that if a candidate knows "design pattern", best practices, concurrency, and enum (one of newer Java features).
-
-TODO: Enum
-
-TODO: Standard singleton with lazy initlaization and private constructor.
-
-TODO: Is it thread-safe?
-
-TODO: How to make it thread-safe?
-
-TODO: How to make it more performant?
-
-Double-checked locking idiom for Singleton.
-http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
-
-``` java Double-checked locking idiom
-// Works with acquire/release semantics for volatile
-// Broken under current semantics for volatile
-  class Foo {
-        private volatile Helper helper = null;
-        public Helper getHelper() {
-            if (helper == null) {
-                synchronized(this) {
-                    if (helper == null)
-                        helper = new Helper();
-                }
-            }
-            return helper;
-        }
-    }
-```
+See [here](http://tdongsi.github.io/SqlTests/blog/2011/01/21/classic-interview-questions/).
