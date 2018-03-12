@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-02-16T19:31:14-08:00</updated>
+  <updated>2018-03-11T21:15:53-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -369,38 +369,9 @@ more( cakeRef, sconeRef ) { }
 more( sconeRef, cakeRef ) { }
 </code></pre>
 
-<h3>Singleton question</h3>
+<h3>Singleton design pattern</h3>
 
-<p>This question seems to be common because it shows that if a candidate knows &ldquo;design pattern&rdquo;, best practices, concurrency, and enum (one of newer Java features).</p>
-
-<p>TODO: Enum</p>
-
-<p>TODO: Standard singleton with lazy initlaization and private constructor.</p>
-
-<p>TODO: Is it thread-safe?</p>
-
-<p>TODO: How to make it thread-safe?</p>
-
-<p>TODO: How to make it more performant?</p>
-
-<p>Double-checked locking idiom for Singleton.
-<a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html</a></p>
-
-<pre><code class="java Double-checked locking idiom">// Works with acquire/release semantics for volatile
-// Broken under current semantics for volatile
-  class Foo {
-        private volatile Helper helper = null;
-        public Helper getHelper() {
-            if (helper == null) {
-                synchronized(this) {
-                    if (helper == null)
-                        helper = new Helper();
-                }
-            }
-            return helper;
-        }
-    }
-</code></pre>
+<p>See <a href="http://tdongsi.github.io/SqlTests/blog/2011/01/21/classic-interview-questions/">here</a>.</p>
 ]]></content>
   </entry>
   

@@ -172,53 +172,9 @@ Only use it when you need a safety-net, a reminder to call explicit termination 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Singleton question</h3>
+<h3>Singleton design pattern</h3>
 
-<p>This question seems to be common because it shows that if a candidate knows &ldquo;design pattern&rdquo;, best practices, concurrency, and enum (one of newer Java features).</p>
-
-<p>TODO: Enum</p>
-
-<p>TODO: Standard singleton with lazy initlaization and private constructor.</p>
-
-<p>TODO: Is it thread-safe?</p>
-
-<p>TODO: How to make it thread-safe?</p>
-
-<p>TODO: How to make it more performant?</p>
-
-<p>Double-checked locking idiom for Singleton.
-<a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html</a></p>
-
-<figure class='code'><figcaption><span>Double-checked locking idiom</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// Works with acquire/release semantics for volatile</span>
-</span><span class='line'><span class="c1">// Broken under current semantics for volatile</span>
-</span><span class='line'>  <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kd">private</span> <span class="kd">volatile</span> <span class="n">Helper</span> <span class="n">helper</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>        <span class="kd">public</span> <span class="n">Helper</span> <span class="nf">getHelper</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">helper</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="kd">synchronized</span><span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="o">(</span><span class="n">helper</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class='line'>                        <span class="n">helper</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Helper</span><span class="o">();</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">helper</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>See <a href="http://tdongsi.github.io/SqlTests/blog/2011/01/21/classic-interview-questions/">here</a>.</p>
 </div>
 
 
