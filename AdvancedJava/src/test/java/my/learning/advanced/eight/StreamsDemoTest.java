@@ -1,6 +1,11 @@
 package my.learning.advanced.eight;
 
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.hamcrest.number.IsCloseTo.*;
 
 import static org.junit.Assert.*;
@@ -9,6 +14,7 @@ import static org.junit.Assert.*;
  * Created by tdongsi on 12/22/17.
  */
 public class StreamsDemoTest {
+
     @Test
     public void sumRandom() throws Exception {
         demo.sumRandom(10);
@@ -36,6 +42,14 @@ public class StreamsDemoTest {
     @Test
     public void joinUpperCase() throws Exception {
         assertEquals( "THIS IS A LIST OF STRINGS", demo.joinUpperCase());
+    }
+
+    @Test
+    public void streamProblem() throws Exception {
+        List<Integer> myList =
+                Arrays.asList(1, 2, 3);
+        int result = myList.stream().mapToInt(Integer::intValue).sum();
+        assertEquals(6, result);
     }
 
 }
