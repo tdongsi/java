@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-03-11T21:15:53-07:00</updated>
+  <updated>2018-03-25T15:23:26-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Advanced Java Part 1]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/"/>
+    <updated>2018-03-25T14:35:11-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1</id>
+    <content type="html"><![CDATA[<p>Based on Part 1: &ldquo;Interfaces, Inheritances, and Objects&rdquo; of <a href="https://www.safaribooksonline.com/library/view/advanced-java-development/9781491960400/video247566.html">SafariBooks&rsquo;s Advanced Java Development</a>
+by Ken Kousen.</p>
+
+<!--more-->
+
+
+<h3>Exceptions</h3>
+
+<p>The following exmample demonstrates how &ldquo;try-with-resources&rdquo; clauses can simplify codes that would be otherwise verbose before Java 7.
+In this example, let&rsquo;s open a file and read it.
+Although it uses Java 7&rsquo;s NIO classes, all exception-related tasks apply.</p>
+
+<pre><code class="java ">    Path dir = Paths.get("src", "main", "java", "my", "learning", "advanced", "one");
+    try {
+        BufferedReader br = Files.newBufferedReader(dir.resolve("ExceptionDemo.java"));
+        System.out.println(br.readLine());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+</code></pre>
+
+<p>The missing piece in the above code is that you need to properly close the file should any exception happens.
+Now, the problem is that simply adding the following would not work since <code>br</code> is a local variable in <code>try</code> block.</p>
+
+<pre><code class="java">finally {
+    br.close();
+}
+</code></pre>
+
+<p>In the end, you would end up with so much additional works just to make sure the file is closed should any exception happens, as shown in the following code.</p>
+
+<ul>
+<li>Declare a null <code>br</code> outside of try-catch block to make it visible in <code>finally</code> block.</li>
+<li>Add <code>finally</code> block to close the file.</li>
+<li>Additional null-check for <code>br</code> before closing the file.</li>
+<li>Additional try-catch block for closing the file in <code>finally</code> block.</li>
+</ul>
+
+
+<pre><code class="java">    Path dir = Paths.get("src", "main", "java", "my", "learning", "advanced", "one");
+    BufferedReader br = null;
+    try {
+        br = Files.newBufferedReader(dir.resolve("ExceptionDemo.java"));
+        System.out.println(br.readLine());
+    } catch (IOException e) {
+        e.printStackTrace();
+    } finally {
+        if (br != null) {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+</code></pre>
+
+<p>Such code is verbose and obfuscating the simple purpose of closing the file.
+It is also distracting developers and reviewers from the main code of reading and processing the file.</p>
+
+<p>With Java 7&rsquo;s &ldquo;try-with-resources&rdquo;, the above problem is effectively solved:</p>
+
+<pre><code class="java">    Path dir = Paths.get("src", "main", "java", "my", "learning", "advanced", "one");
+    try( BufferedReader br = Files.newBufferedReader(dir.resolve("ExceptionDemo.java")) ) {
+        System.out.println(br.readLine());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+</code></pre>
+
+<p>We only need to move the BufferedReader instatiation into the <code>try()</code> statement.
+No additional line is required at all.
+The only requirement is that the BufferedReader class has to implement AutoCloseable interface, which it does.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java 9]]></title>
@@ -372,151 +453,6 @@ more( sconeRef, cakeRef ) { }
 <h3>Singleton design pattern</h3>
 
 <p>See <a href="http://tdongsi.github.io/SqlTests/blog/2011/01/21/classic-interview-questions/">here</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Tutorial: Quick-start for Java Programming Test]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2016/08/29/tutorial-timed-programming-test/"/>
-    <updated>2016-08-29T01:38:40-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2016/08/29/tutorial-timed-programming-test</id>
-    <content type="html"><![CDATA[<p>For <strong>timed</strong> programming tests, new test-takers usually underestimate how short two and a half hours can be.
-Remember that 30 minutes of that will go into reading the problem instructions and another 10 to 30 minutes go into setting up before you can start writing the first line of code.
-And if you are unlucky, you need another 15-30 minutes to debug any issue that comes up.
-That leaves you only about one hour for actually solving the problem.
-Most of the test takers are experienced and skilled programmers, but they tend to forget that many of those steps above are not needed in their everyday tasks, in their daily environments and routines.</p>
-
-<p>This post lists out steps to get started quickly for a <strong>Java</strong> programming test, using Eclipse and Maven.</p>
-
-<!--more-->
-
-
-<p>(0) The following steps assume computers with no previous setup.
-For work computers, they usually have corporate <code>settings.xml</code> already set up.
-You might have to override such corporate settings with standard Maven settings by using <a href="/blog/2015/06/19/maven-cookbook/">minimal <code>settings.xml</code></a>.</p>
-
-<p>(1) Use this command to setup an Eclipse empty project.</p>
-
-<pre><code class="plain Create an Eclipse project">mvn archetype:generate -DgroupId=my.interview -DartifactId=CompanyName -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
-</code></pre>
-
-<p>(2a) In Eclipse, go to File > Import > Existing Maven Project. Import the Eclipse project created above.</p>
-
-<p>(2b) In IntellJ, Import Project > select the <code>pom.xml</code>.
-On work computer, you might want to go to Environment Settings > Override <code>settings.xml</code>.</p>
-
-<p>(3) Update pom.xml for &ldquo;Executable jar file&rdquo; + &ldquo;specified Java version&rdquo;. Replace <code>my.interview.CompanyName</code> with the correct name of your main class.</p>
-
-<pre><code class="xml Add this into pom.xml">    &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
-                &lt;executions&gt;
-                    &lt;execution&gt;
-                        &lt;goals&gt;
-                            &lt;goal&gt;attached&lt;/goal&gt;
-                        &lt;/goals&gt;
-                        &lt;phase&gt;package&lt;/phase&gt;
-                        &lt;configuration&gt;
-                            &lt;descriptorRefs&gt;
-                                &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;
-                            &lt;/descriptorRefs&gt;
-                            &lt;archive&gt;
-                                &lt;manifest&gt;
-                                    &lt;mainClass&gt;my.interview.CompanyName&lt;/mainClass&gt;
-                                &lt;/manifest&gt;
-                            &lt;/archive&gt;
-                        &lt;/configuration&gt;
-                    &lt;/execution&gt;
-                &lt;/executions&gt;
-            &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.1&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;source&gt;1.8&lt;/source&gt;
-                    &lt;target&gt;1.8&lt;/target&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-</code></pre>
-
-<p>(4) Add logging. Ability to use logging frameworks shows off your skill and experience.
-More importantly, it allows you to liberally print lots of information needed for debugging without worrying about cleaning up console output later.</p>
-
-<ul>
-<li>Create <code>resources</code> source folder in <code>src/main</code>.</li>
-<li>Add <code>log4j.properties</code>. For simplicity, only log information to console.
-
-<ul>
-<li>Use <code>logger.debug</code> for printing debug information and turn on/off logging by setting <code>rootLogger</code> to <code>DEBUG</code>/<code>INFO</code>.</li>
-</ul>
-</li>
-<li>You need to add into <code>pom.xml</code> dependencies for the three followings: <code>slf4j-api</code> (interface), <code>slf4j-log4j12</code> (route slf4j calls to log4j), <code>log4j</code> (logging backend).</li>
-</ul>
-
-
-<p>Use the following content for <code>log4j.properties</code>, modified from <a href="https://logging.apache.org/log4j/1.2/manual.html">this example</a>.</p>
-
-<pre><code class="java log4j.properties file"># Set root logger level to DEBUG and its only appender to A1.
-log4j.rootLogger= INFO, A1
-
-# A1 is set to be a ConsoleAppender.
-log4j.appender.A1= org.apache.log4j.ConsoleAppender
-
-# A1 uses PatternLayout.
-log4j.appender.A1.layout= org.apache.log4j.PatternLayout
-log4j.appender.A1.layout.ConversionPattern= [%t][%-5p][%c] - %m%n
-</code></pre>
-
-<p>(5) At the end, your <code>pom.xml</code> shoulld looks like <a href="https://github.com/tdongsi/bart-parking/blob/f8511604bafa4564c468f952ca2fce1452f6a097/java/bart/pom.xml">this</a>. Check setup.</p>
-
-<pre><code class="plain Check running">mvn clean package
-java -jar target/xxx-jar-with-dependencies.jar
-</code></pre>
-
-<p>(6) Use <code>StreamEditor</code> interface for easy testing in Eclipse and CLI.</p>
-
-<pre><code class="java StreamEditor interface">public interface StreamEditor {
-    public void process(InputStream in, PrintStream out);
-}
-</code></pre>
-
-<pre><code class="java Main class calling Solver that implements StreamEditor interface">public class App {
-    public static void main(String[] args) {
-        InputStream in;
-        PrintStream out;
-
-        if (args.length == 2) {
-            try {
-                in = new FileInputStream(new File(args[0]));
-                out = new PrintStream(new File(args[1]));
-            } catch (FileNotFoundException e) {
-                System.err.println("Could not find file");
-                return;
-            }
-        } else {
-            in = System.in;
-            out = System.out;
-        }
-
-        Solver solver = new Solver();
-        solver.process(in, out);
-    }
-}
-</code></pre>
-
-<p>If the test requires specific input from/output to console or file, it&rsquo;s easy to do it either way.</p>
-
-<pre><code class="plain Commands to run when using StreamEditor interface">For console input/output:
-java -jar target\xxx-jar-with-dependencies.jar &lt; data\in.txt
-
-For file input/output:
-java -jar target\Salesforce-1.0-SNAPSHOT-jar-with-dependencies.jar data/in.txt data/out.txt
-</code></pre>
 ]]></content>
   </entry>
   

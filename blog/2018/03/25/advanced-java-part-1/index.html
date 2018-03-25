@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Advanced Java Part 1 - Personal Interview Notes</title>
+  <meta name="author" content="Cuong Dong-Si">
+
+  
+  <meta name="description" content="Based on Part 1: &ldquo;Interfaces, Inheritances, and Objects&rdquo; of SafariBooks&rsquo;s Advanced Java Development
+by Ken Kousen. Exceptions The &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/">
+  <link href="/java/favicon.png" rel="icon">
+  <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
+  <script src="/java/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/java/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/java/">Personal Interview Notes</a></h1>
+  
+    <h2>Neither success nor failure is ever final.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tdongsi.github.io/java">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/java/">Blog Home</a></li>
+  <li><a href="/java/blog/archives">Archives</a></li>
+  <li><a href="http://tdongsi.github.io/SqlTests/syllabus/">Syllabus</a></li>
+  <li><a href="http://tdongsi.github.io">Personal Home</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Advanced Java Part 1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-03-25T14:35:11-07:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>2:35 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Based on Part 1: &ldquo;Interfaces, Inheritances, and Objects&rdquo; of <a href="https://www.safaribooksonline.com/library/view/advanced-java-development/9781491960400/video247566.html">SafariBooks&rsquo;s Advanced Java Development</a>
+by Ken Kousen.</p>
+
+<!--more-->
+
+
+<h3>Exceptions</h3>
+
+<p>The following exmample demonstrates how &ldquo;try-with-resources&rdquo; clauses can simplify codes that would be otherwise verbose before Java 7.
+In this example, let&rsquo;s open a file and read it.
+Although it uses Java 7&rsquo;s NIO classes, all exception-related tasks apply.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The missing piece in the above code is that you need to properly close the file should any exception happens.
+Now, the problem is that simply adding the following would not work since <code>br</code> is a local variable in <code>try</code> block.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">br</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the end, you would end up with so much additional works just to make sure the file is closed should any exception happens, as shown in the following code.</p>
+
+<ul>
+<li>Declare a null <code>br</code> outside of try-catch block to make it visible in <code>finally</code> block.</li>
+<li>Add <code>finally</code> block to close the file.</li>
+<li>Additional null-check for <code>br</code> before closing the file.</li>
+<li>Additional try-catch block for closing the file in <code>finally</code> block.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">br</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">br</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Such code is verbose and obfuscating the simple purpose of closing the file.
+It is also distracting developers and reviewers from the main code of reading and processing the file.</p>
+
+<p>With Java 7&rsquo;s &ldquo;try-with-resources&rdquo;, the above problem is effectively solved:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span><span class="o">(</span> <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">))</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We only need to move the BufferedReader instatiation into the <code>try()</code> statement.
+No additional line is required at all.
+The only requirement is that the BufferedReader class has to implement AutoCloseable interface, which it does.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Cuong Dong-Si</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2018-03-25T14:35:11-07:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>2:35 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/java/blog/categories/book/'>book</a>, <a class='category' href='/java/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/java/blog/2018/02/08/jenkins-plugin-development/" title="Previous Post: Jenkins plugin development">&laquo; Jenkins plugin development</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>About This Blog</h1>
+    <p>Random interview experience and lessons.</p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2018/03/25/advanced-java-part-1/">Advanced Java Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2018/02/08/jenkins-plugin-development/">Jenkins Plugin Development</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-5/">Groovy Fundamentals: Part 5: Demos</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-4/">Groovy Fundamentals: Part 4: Closures & Operators</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-3/">Groovy Fundamentals: Part 3: POGOs & Collections</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/06/java-9/">Java 9</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/06/14/xml-processing-in-groovy/">XML Processing in Groovy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/05/11/gradle-cookbook/">Gradle Cookbook</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (1)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (7)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - Cuong Dong-Si -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

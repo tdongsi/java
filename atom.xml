@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-03-11T21:15:53-07:00</updated>
+  <updated>2018-03-25T15:23:26-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Advanced Java Part 1]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/"/>
+    <updated>2018-03-25T14:35:11-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1</id>
+    <content type="html"><![CDATA[<p>Based on Part 1: &ldquo;Interfaces, Inheritances, and Objects&rdquo; of <a href="https://www.safaribooksonline.com/library/view/advanced-java-development/9781491960400/video247566.html">SafariBooks&rsquo;s Advanced Java Development</a>
+by Ken Kousen.</p>
+
+<!--more-->
+
+
+<h3>Exceptions</h3>
+
+<p>The following exmample demonstrates how &ldquo;try-with-resources&rdquo; clauses can simplify codes that would be otherwise verbose before Java 7.
+In this example, let&rsquo;s open a file and read it.
+Although it uses Java 7&rsquo;s NIO classes, all exception-related tasks apply.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The missing piece in the above code is that you need to properly close the file should any exception happens.
+Now, the problem is that simply adding the following would not work since <code>br</code> is a local variable in <code>try</code> block.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">br</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the end, you would end up with so much additional works just to make sure the file is closed should any exception happens, as shown in the following code.</p>
+
+<ul>
+<li>Declare a null <code>br</code> outside of try-catch block to make it visible in <code>finally</code> block.</li>
+<li>Add <code>finally</code> block to close the file.</li>
+<li>Additional null-check for <code>br</code> before closing the file.</li>
+<li>Additional try-catch block for closing the file in <code>finally</code> block.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">br</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">br</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Such code is verbose and obfuscating the simple purpose of closing the file.
+It is also distracting developers and reviewers from the main code of reading and processing the file.</p>
+
+<p>With Java 7&rsquo;s &ldquo;try-with-resources&rdquo;, the above problem is effectively solved:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Path</span> <span class="n">dir</span> <span class="o">=</span> <span class="n">Paths</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;src&quot;</span><span class="o">,</span> <span class="s">&quot;main&quot;</span><span class="o">,</span> <span class="s">&quot;java&quot;</span><span class="o">,</span> <span class="s">&quot;my&quot;</span><span class="o">,</span> <span class="s">&quot;learning&quot;</span><span class="o">,</span> <span class="s">&quot;advanced&quot;</span><span class="o">,</span> <span class="s">&quot;one&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">try</span><span class="o">(</span> <span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">newBufferedReader</span><span class="o">(</span><span class="n">dir</span><span class="o">.</span><span class="na">resolve</span><span class="o">(</span><span class="s">&quot;ExceptionDemo.java&quot;</span><span class="o">))</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We only need to move the BufferedReader instatiation into the <code>try()</code> statement.
+No additional line is required at all.
+The only requirement is that the BufferedReader class has to implement AutoCloseable interface, which it does.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Jenkins Plugin Development]]></title>
