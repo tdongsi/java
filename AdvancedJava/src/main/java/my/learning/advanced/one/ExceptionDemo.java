@@ -14,20 +14,10 @@ public class ExceptionDemo {
     public static void main(String[] args) {
 
         Path dir = Paths.get("src", "main", "java", "my", "learning", "advanced", "one");
-        BufferedReader br = null;
-        try {
-            br = Files.newBufferedReader(dir.resolve("ExceptionDemo.java"));
+        try( BufferedReader br = Files.newBufferedReader(dir.resolve("ExceptionDemo.java")) ) {
             System.out.println(br.readLine());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
