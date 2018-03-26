@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-03-25T15:23:26-07:00</updated>
+  <updated>2018-03-25T21:15:49-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -22,6 +22,68 @@
 by Ken Kousen.</p>
 
 <!--more-->
+
+
+<h3>Default and static methods</h3>
+
+<h4>Why static method in interface?</h4>
+
+<p>Before Java 8, it is hard to add static methods that work on objects of the same type.
+For example, <code>sort</code> method should work on all Collection objects.
+However, we don’t have that in Collection interface.
+We end up working around by adding all static methods into Collections (plural) class.
+That is how we end up with <code>Collections.sort()</code>.</p>
+
+<p>After Java 8, the above problem is sorted out with static method in interfaces.
+For example, Stream is an interface but it has utility methods such as &ldquo;Stream.of(a, b, c)&rdquo; which is static method.</p>
+
+<h4>Default methods in interface</h4>
+
+<p>What if default methods in two interfaces have the same name and a class implements both interfaces?
+You have to override the method in the class to provide the specific implementation.
+Otherwise, you will get the compilation error.
+Note that, it is different from two abstract classes since it is usually required (before Java 8) for the class to provide concrete implementation for an interface method.
+You can still refer to the default methods in the interfaces as follows:</p>
+
+<figure class='code'><figcaption><span>Default methods with same name in interfaces</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Company</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">default</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="s">&quot;defaults.Company&quot;</span><span class="o">;</span> <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Contractor</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="nf">getFirst</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">String</span> <span class="nf">getLast</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">default</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s %s&quot;</span><span class="o">,</span> <span class="n">getFirst</span><span class="o">(),</span> <span class="n">getLast</span><span class="o">());</span> <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompanyContractor</span> <span class="kd">implements</span> <span class="n">Company</span><span class="o">,</span> <span class="n">Contractor</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Contractor</span><span class="o">.</span><span class="na">super</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; at &quot;</span> <span class="o">+</span> <span class="n">Company</span><span class="o">.</span><span class="na">super</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Exceptions</h3>

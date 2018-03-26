@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Book | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/book/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-03-25T15:23:26-07:00</updated>
+  <updated>2018-03-25T21:15:49-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -23,6 +23,48 @@ by Ken Kousen.</p>
 
 <!--more-->
 
+
+<h3>Default and static methods</h3>
+
+<h4>Why static method in interface?</h4>
+
+<p>Before Java 8, it is hard to add static methods that work on objects of the same type.
+For example, <code>sort</code> method should work on all Collection objects.
+However, we don’t have that in Collection interface.
+We end up working around by adding all static methods into Collections (plural) class.
+That is how we end up with <code>Collections.sort()</code>.</p>
+
+<p>After Java 8, the above problem is sorted out with static method in interfaces.
+For example, Stream is an interface but it has utility methods such as &ldquo;Stream.of(a, b, c)&rdquo; which is static method.</p>
+
+<h4>Default methods in interface</h4>
+
+<p>What if default methods in two interfaces have the same name and a class implements both interfaces?
+You have to override the method in the class to provide the specific implementation.
+Otherwise, you will get the compilation error.
+Note that, it is different from two abstract classes since it is usually required (before Java 8) for the class to provide concrete implementation for an interface method.
+You can still refer to the default methods in the interfaces as follows:</p>
+
+<pre><code class="java Default methods with same name in interfaces">public interface Company {
+    default String getName() { return "defaults.Company"; }
+}
+
+public interface Contractor {
+    String getFirst();
+    String getLast();
+    default String getName() { return String.format("%s %s", getFirst(), getLast()); }
+}
+
+public class CompanyContractor implements Company, Contractor {
+
+    ...
+
+    @Override
+    public String getName() {
+        return Contractor.super.getName() + " at " + Company.super.getName();
+    }
+}
+</code></pre>
 
 <h3>Exceptions</h3>
 
