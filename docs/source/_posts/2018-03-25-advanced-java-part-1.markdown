@@ -13,6 +13,49 @@ by Ken Kousen.
 
 <!--more-->
 
+### Default and static methods
+
+#### Why static method in interface?
+
+Before Java 8, it is hard to add static methods that work on objects of the same type. 
+For example, `sort` method should work on all Collection objects. 
+However, we don’t have that in Collection interface. 
+We end up working around by adding all static methods into Collections (plural) class. 
+That is how we end up with `Collections.sort()`.
+
+After Java 8, the above problem is sorted out with static method in interfaces. 
+For example, Stream is an interface but it has utility methods such as "Stream.of(a, b, c)" which is static method.
+
+#### Default methods in interface
+
+What if default methods in two interfaces have the same name and a class implements both interfaces? 
+You have to override the method in the class to provide the specific implementation. 
+Otherwise, you will get the compilation error.
+Note that, it is different from two abstract classes since it is usually required (before Java 8) for the class to provide concrete implementation for an interface method.
+You can still refer to the default methods in the interfaces as follows:
+
+``` java Default methods with same name in interfaces
+public interface Company {
+    default String getName() { return "defaults.Company"; }
+}
+
+public interface Contractor {
+    String getFirst();
+    String getLast();
+    default String getName() { return String.format("%s %s", getFirst(), getLast()); }
+}
+
+public class CompanyContractor implements Company, Contractor {
+
+    ...
+
+    @Override
+    public String getName() {
+        return Contractor.super.getName() + " at " + Company.super.getName();
+    }
+}
+```
+
 ### Exceptions
 
 The following exmample demonstrates how "try-with-resources" clauses can simplify codes that would be otherwise verbose before Java 7.
