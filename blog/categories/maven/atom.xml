@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/maven/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-03-25T21:15:49-07:00</updated>
+  <updated>2018-05-15T22:39:36-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -123,6 +123,18 @@ Run <code>mvn clean install site</code> to generate Findbugs and Checkstyle repo
         &lt;/plugins&gt;
     &lt;/reporting&gt;
 </code></pre>
+
+<h3>Recipe 5: &ldquo;dependencyManagement&rdquo; tag</h3>
+
+<p>From <a href="https://stackoverflow.com/questions/2619598/differences-between-dependencymanagement-and-dependencies-in-maven">here</a>.</p>
+
+<p>In the parent POM, the main difference between the <code>&lt;dependencies&gt;</code> and <code>&lt;dependencyManagement&gt;</code> is this:</p>
+
+<p>Artifacts specified in the <code>&lt;dependencies&gt;</code> section will ALWAYS be included as a dependency of the child module(s).</p>
+
+<p>Artifacts specified in the <code>&lt;dependencyManagement&gt;</code> section, will only be included in the child module if they were also specified in the <code>&lt;dependencies&gt;</code> section of the child module itself.
+Why is it good you ask? because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM.
+This can help you use unified versions for dependencies for child modules, without specifying the version in each child module.</p>
 
 <h3>Conventions</h3>
 
