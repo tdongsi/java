@@ -1,0 +1,12 @@
+// Not overriding any internal property
+ext.person = 'Dobby'
+
+task hello {
+    doLast {
+        println "Hello, $person!"
+    }
+}
+
+task hi(dependsOn: 'hello') << {
+    println 'Hello, World!'
+}

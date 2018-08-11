@@ -68,6 +68,74 @@ Important docs:
 * [User Guide](https://gradle.org/guides/)
 * [DSL reference](https://docs.gradle.org/current/dsl/)
 
+``` groovy Example Hello World build.gradle
+// Not overriding any internal property
+ext.person = 'Dobby'
+
+task hello {
+    doLast {
+        println "Hello, $person!"
+    }
+}
+
+task hi(dependsOn: 'hello') << {
+    println 'Hello, World!'
+}
+```
+
+``` plain
+> gradle tasks --all
+:tasks
+
+------------------------------------------------------------
+All tasks runnable from root project
+------------------------------------------------------------
+
+Build Setup tasks
+-----------------
+init - Initializes a new Gradle build.
+wrapper - Generates Gradle wrapper files.
+
+Help tasks
+----------
+buildEnvironment - Displays all buildscript dependencies declared in root project 'workspace'.
+components - Displays the components produced by root project 'workspace'. [incubating]
+dependencies - Displays all dependencies declared in root project 'workspace'.
+dependencyInsight - Displays the insight into a specific dependency in root project 'workspace'.
+dependentComponents - Displays the dependent components of components in root project 'workspace'. [incubating]
+help - Displays a help message.
+model - Displays the configuration model of root project 'workspace'. [incubating]
+projects - Displays the sub-projects of root project 'workspace'.
+properties - Displays the properties of root project 'workspace'.
+tasks - Displays the tasks runnable from root project 'workspace'.
+
+Other tasks
+-----------
+hello
+hi
+
+BUILD SUCCESSFUL
+
+Total time: 0.691 secs
+```
+
+``` plain
+> gradle hi
+The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+        at build_6vy9edw0bhsp70x0atckfxbnz.run(/Users/tuecuong/dev/hub/java/docs/source/workspace/build.gradle:7)
+:hello
+Hello, Dobby!
+:hi
+Hello, World!
+
+BUILD SUCCESSFUL
+
+Total time: 0.688 secs
+```
+
+Left-shift operator `<<` is the alias to the `doLast` command.
+Using `doLast` is preferrable since you can do more (e.g., setup, configuration) as opposed to actions only in `<<` clauses.
+
 ### Sample Build Files
 
 ### Where to Find Answers
