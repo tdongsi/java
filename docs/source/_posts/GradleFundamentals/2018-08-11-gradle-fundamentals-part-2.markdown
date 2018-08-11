@@ -14,9 +14,18 @@ This post corresponds to "Enough Groovy to Get By" section of [this course](http
 
 ### Static vs Dynamic Typing
 
+[Code](https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Hello.groovy).
+
 ### POGOs
 
+[Code](https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Pogo.groovy).
+
+`@Canonical` is equivalent to the following `@ToString`, `@EqualsAndHashCode`, and `@TupleConstructor` combined.
+
 ### Collections and Closures
+
+* [Collection](https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Collection.groovy).
+* [Closure](https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Closures.groovy).
 
 ### Google Geocoder sample
 
