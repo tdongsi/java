@@ -138,6 +138,20 @@ Using `doLast` is preferrable since you can do more (e.g., setup, configuration)
 
 ### Sample Build Files
 
+In version 3+, the guides and samples are not included in the Gradle installation.
+Instead, you can find it on
+
+* [Samples as shown in video](https://github.com/gradle/gradle/tree/master/subprojects/docs/src/samples)
+  * `userguide` folder > `tutorial` folder > sample build.gradle files.
+  * Example: [helloEnhanced](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/userguide/tutorial/helloEnhanced/build.gradle).
+* [Guide repo](https://github.com/gradle/guides) which directs to the Github Org
+* [gradle-guides Github org](https://github.com/gradle-guides)
+
 ### Where to Find Answers
 
+* [Blog](https://blog.gradle.org/)
+* [Forum](https://discuss.gradle.org/)
+* Stackoverflow
+* [Book](https://gradle.org/books/)
+  * Gradle in Action
 

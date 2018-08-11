@@ -1,12 +1,16 @@
-// Not overriding any internal property
-ext.person = 'Dobby'
-
 task hello {
     doLast {
-        println "Hello, $person!"
+        println 'Hello Earth'
     }
 }
-
-task hi(dependsOn: 'hello') << {
-    println 'Hello, World!'
+hello.doFirst {
+    println 'Hello Venus'
+}
+hello.doLast {
+    println 'Hello Mars'
+}
+hello {
+    doLast {
+        println 'Hello Jupiter'
+    }
 }
