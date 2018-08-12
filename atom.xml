@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-05-15T22:39:36-07:00</updated>
+  <updated>2018-08-11T23:22:44-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,892 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gradle Fundamentals: Part 3]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/"/>
+    <updated>2018-08-11T03:04:31-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3</id>
+    <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Basic Project Builds&rdquo; section of <a href="https://www.safaribooksonline.com/videos/gradle-fundamentals/9781491937266">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Java Projects</h3>
+
+<p>Output of <code>gradle build</code> for simple Java build file.</p>
+
+<figure class='code'><figcaption><span>Java plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; cat build.gradle
+</span><span class='line'>apply plugin: 'java'
+</span><span class='line'>
+</span><span class='line'>&gt; gradle build
+</span><span class='line'>:compileJava NO-SOURCE
+</span><span class='line'>:processResources NO-SOURCE
+</span><span class='line'>:classes UP-TO-DATE
+</span><span class='line'>:jar
+</span><span class='line'>:assemble
+</span><span class='line'>:compileTestJava NO-SOURCE
+</span><span class='line'>:processTestResources NO-SOURCE
+</span><span class='line'>:testClasses UP-TO-DATE
+</span><span class='line'>:test NO-SOURCE
+</span><span class='line'>:check UP-TO-DATE
+</span><span class='line'>:build
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.786 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Gradle&rsquo;s Build Init plugin is similar to Maven&rsquo;s <code>archetype</code> tasks.
+It can be used to setup a Gradle project.</p>
+
+<figure class='code'><figcaption><span>Build Init plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle init --type java-library
+</span><span class='line'>:wrapper
+</span><span class='line'>:init
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.967 secs
+</span><span class='line'>&gt; ls
+</span><span class='line'>build           build.gradle    gradle          gradlew         gradlew.bat     settings.gradle src\
+</span><span class='line'>
+</span><span class='line'>&gt; tree src
+</span><span class='line'>src
+</span><span class='line'>├── main
+</span><span class='line'>│   └── java
+</span><span class='line'>│       └── Library.java
+</span><span class='line'>└── test
+</span><span class='line'>    └── java
+</span><span class='line'>        └── LibraryTest.java
+</span><span class='line'>
+</span><span class='line'>4 directories, 2 files
+</span><span class='line'>
+</span><span class='line'>&gt; gradle build
+</span><span class='line'>:compileJava
+</span><span class='line'>Download https://jcenter.bintray.com/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.pom
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava/21.0/guava-21.0.pom
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava-parent/21.0/guava-parent-21.0.pom
+</span><span class='line'>Download https://jcenter.bintray.com/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava/21.0/guava-21.0.jar
+</span><span class='line'>:processResources NO-SOURCE
+</span><span class='line'>:classes
+</span><span class='line'>:jar
+</span><span class='line'>:assemble
+</span><span class='line'>:compileTestJava
+</span><span class='line'>:processTestResources NO-SOURCE
+</span><span class='line'>:testClasses
+</span><span class='line'>:test
+</span><span class='line'>:check
+</span><span class='line'>:build
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 6.218 secs
+</span><span class='line'>
+</span><span class='line'>&gt; tree build
+</span><span class='line'>build
+</span><span class='line'>├── classes
+</span><span class='line'>│   ├── main
+</span><span class='line'>│   │   └── Library.class
+</span><span class='line'>│   └── test
+</span><span class='line'>│       └── LibraryTest.class
+</span><span class='line'>├── libs
+</span><span class='line'>│   └── workspace.jar
+</span><span class='line'>├── reports
+</span><span class='line'>│   └── tests
+</span><span class='line'>│       └── test
+</span><span class='line'>│           ├── classes
+</span><span class='line'>│           │   └── LibraryTest.html
+</span><span class='line'>│           ├── css
+</span><span class='line'>│           │   ├── base-style.css
+</span><span class='line'>│           │   └── style.css
+</span><span class='line'>│           ├── index.html
+</span><span class='line'>│           ├── js
+</span><span class='line'>│           │   └── report.js
+</span><span class='line'>│           └── packages
+</span><span class='line'>│               └── default-package.html
+</span><span class='line'>├── test-results
+</span><span class='line'>│   └── test
+</span><span class='line'>│       ├── TEST-LibraryTest.xml
+</span><span class='line'>│       └── binary
+</span><span class='line'>│           ├── output.bin
+</span><span class='line'>│           ├── output.bin.idx
+</span><span class='line'>│           └── results.bin
+</span><span class='line'>└── tmp
+</span><span class='line'>    ├── compileJava
+</span><span class='line'>    ├── compileTestJava
+</span><span class='line'>    └── jar
+</span><span class='line'>        └── MANIFEST.MF
+</span><span class='line'>
+</span><span class='line'>18 directories, 14 files</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Gradle project properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle properties
+</span><span class='line'>:properties
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>allprojects: [root project 'workspace']
+</span><span class='line'>ant: org.gradle.api.internal.project.DefaultAntBuilder@42572e90
+</span><span class='line'>antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@39495f8
+</span><span class='line'>archivesBaseName: workspace
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/userguide/java_plugin.html">Java plugin</a></li>
+<li><a href="https://docs.gradle.org/3.5/userguide/build_init_plugin.html">Build init plugin</a></li>
+</ul>
+
+
+<h3>Groovy Projects</h3>
+
+<p>Examples:</p>
+
+<ul>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/quickstart/build.gradle">quickstart</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle">mixedJavaAndGroovy</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle">customizedLayout</a></li>
+</ul>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/userguide/groovy_plugin.html">Groovy plugin</a></li>
+<li><a href="https://github.com/gradle/gradle/tree/v3.5.1/subprojects/docs/src/samples/groovy">Groovy Examples</a></li>
+</ul>
+
+
+<h3>DAG and Source Sets</h3>
+
+<p>DAGs mentioned are the dependency graphs of tasks defined in Gradle Java and Groovy plugins.
+For example, the tasks <code>check</code> and <code>assemble</code> must be executed before <code>build</code> task, as shown in <a href="https://docs.gradle.org/3.5/userguide/java_plugin.html">here</a>.</p>
+
+<p>Source Sets are Gradle way to organize related source code and resources.
+Using source sets can also enable you to customize your project layout (e.g., Jenkins global library project).</p>
+
+<h3>Project Properties and Dependencies</h3>
+
+<p>Each <code>build.gradle</code> file is used to instantiate a <code>Project</code> object.
+During its life cycle, that object will try to create a <code>Settings</code> instance for the build.
+It will evaluate <code>settings.gradle</code> script to configure that <code>Settings</code> object (more about its life cycle at <a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html">here</a>).</p>
+
+<p>The documentation page has a list of default properties of <code>Project</code> class.
+It should be noted that adding a plugin can add additional properties to <code>Project</code> class, as shown in the same page.
+For example, <code>idea</code> plugin will add <code>idea</code> property for &ldquo;IdeaModel&rdquo;.</p>
+
+<figure class='code'><figcaption><span>Different way to specify dependencies</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-core&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="s1">&#39;org.springframework:spring-core:2.5&#39;</span><span class="o">,</span>
+</span><span class='line'>            <span class="s1">&#39;org.springframework:spring-aop:2.5&#39;</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-core&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span><span class="o">],</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-aop&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="o">)</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span><span class="s1">&#39;org.hibernate:hibernate:3.0.5&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">transitive</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.hibernate&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;hibernate&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;3.0.5&#39;</span><span class="o">,</span> <span class="nl">transitive:</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;org.hibernate&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;hibernate&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;3.0.5&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">transitive</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Artifact only notation</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="s2">&quot;org.groovy:groovy:2.2.0@jar&quot;</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.groovy&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;groovy&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.2.0&#39;</span><span class="o">,</span> <span class="nl">ext:</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check depdendencies with Gradle:</p>
+
+<figure class='code'><figcaption><span>Gradle automatically expands "dep" for "dependencies" task</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle dep
+</span><span class='line'>:dependencies
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>api - API dependencies for source set 'main'. (n)
+</span><span class='line'>\--- org.apache.commons:commons-math3:3.6.1 (n)
+</span><span class='line'>
+</span><span class='line'>apiElements - API elements for main. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>archives - Configuration for archive artifacts.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>compile - Dependencies for source set 'main' (deprecated, use 'implementation ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>compileClasspath - Compile classpath for source set 'main'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>compileOnly - Compile only dependencies for source set 'main'.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>default - Configuration for default artifacts.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>implementation - Implementation only dependencies for source set 'main'. (n)
+</span><span class='line'>\--- com.google.guava:guava:21.0 (n)
+</span><span class='line'>
+</span><span class='line'>runtime - Runtime dependencies for source set 'main' (deprecated, use 'runtimeOnly ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>runtimeClasspath - Runtime classpath of source set 'main'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>runtimeElements - Elements of runtime for main. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testCompile - Dependencies for source set 'test' (deprecated, use 'testImplementation ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testCompileClasspath - Compile classpath for source set 'test'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>+--- com.google.guava:guava:21.0
+</span><span class='line'>\--- junit:junit:4.12
+</span><span class='line'>     \--- org.hamcrest:hamcrest-core:1.3
+</span><span class='line'>
+</span><span class='line'>testCompileOnly - Compile only dependencies for source set 'test'.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testImplementation - Implementation only dependencies for source set 'test'. (n)
+</span><span class='line'>\--- junit:junit:4.12 (n)
+</span><span class='line'>
+</span><span class='line'>testRuntime - Runtime dependencies for source set 'test' (deprecated, use 'testRuntimeOnly ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testRuntimeClasspath - Runtime classpath of source set 'test'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>+--- com.google.guava:guava:21.0
+</span><span class='line'>\--- junit:junit:4.12
+</span><span class='line'>     \--- org.hamcrest:hamcrest-core:1.3
+</span><span class='line'>
+</span><span class='line'>testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>(n) - Not resolved (configuration is not meant to be resolved)
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.72 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html">Project</a></li>
+<li><a href="https://docs.gradle.org/current/userguide/introduction_dependency_management.html">Dependency Management</a></li>
+<li><a href="https://docs.gradle.org/current/userguide/dependency_types.html">Dependency types</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gradle Fundamentals: Part 2]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-2/"/>
+    <updated>2018-08-11T03:03:46-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-2</id>
+    <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Enough Groovy to Get By&rdquo; section of <a href="https://www.safaribooksonline.com/videos/gradle-fundamentals/9781491937266">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Static vs Dynamic Typing</h3>
+
+<p><a href="https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Hello.groovy">Code</a>.</p>
+
+<h3>POGOs</h3>
+
+<p><a href="https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Pogo.groovy">Code</a>.</p>
+
+<p><code>@Canonical</code> is equivalent to the following <code>@ToString</code>, <code>@EqualsAndHashCode</code>, and <code>@TupleConstructor</code> combined.</p>
+
+<h3>Collections and Closures</h3>
+
+<ul>
+<li><a href="https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Collection.groovy">Collection</a>.</li>
+<li><a href="https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Closures.groovy">Closure</a>.</li>
+</ul>
+
+
+<h3>Google Geocoder sample</h3>
+
+<p><a href="https://github.com/tdongsi/groovy/blob/develop/learn/src/my/safari/groovy/basic/Geocode.groovy">Code</a>.</p>
+
+<figure class='code'><figcaption><span>Geocoding example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">String</span> <span class="n">XML_BASE</span> <span class="o">=</span> <span class="s1">&#39;https://maps.googleapis.com/maps/api/geocode/xml?&#39;</span>
+</span><span class='line'><span class="n">List</span> <span class="n">address</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;2700 Coast Ave&#39;</span><span class="o">,</span> <span class="s1">&#39;Mountain View&#39;</span><span class="o">,</span> <span class="s1">&#39;CA&#39;</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">String</span> <span class="n">encoded</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="na">collect</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">URLEncoder</span><span class="o">.</span><span class="na">encode</span><span class="o">(</span><span class="n">it</span><span class="o">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="o">}.</span><span class="na">join</span><span class="o">(</span><span class="s1">&#39;,&#39;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">String</span> <span class="n">queryString</span> <span class="o">=</span> <span class="s2">&quot;address=$encoded&quot;</span>
+</span><span class='line'><span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;$XML_BASE$queryString&quot;</span>
+</span><span class='line'><span class="c1">// println url.toURL().text</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">def</span> <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">().</span><span class="na">parse</span><span class="o">(</span><span class="n">url</span><span class="o">)</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="na">result</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">geometry</span><span class="o">.</span><span class="na">location</span> <span class="c1">// Navigate DOM using dot</span>
+</span><span class='line'><span class="n">println</span> <span class="s2">&quot;Coordinates: ${loc.lat}, ${loc.lng}&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>ICNDB example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="kn">import</span> <span class="nn">groovy.json.JsonSlurper</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">String</span> <span class="n">JSON_BASE</span> <span class="o">=</span> <span class="s1">&#39;http://api.icndb.com/jokes/random?&#39;</span>
+</span><span class='line'><span class="c1">// Only the POTUS can claim such hyperbole.</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">params</span> <span class="o">=</span> <span class="o">[</span><span class="nl">limitTo:</span><span class="s1">&#39;[nerdy]&#39;</span><span class="o">,</span> <span class="nl">firstName:</span> <span class="s1">&#39;Donald&#39;</span><span class="o">,</span> <span class="nl">lastName:</span> <span class="s1">&#39;Trump&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">qs</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">collect</span> <span class="o">{</span><span class="n">k</span><span class="o">,</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="s2">&quot;$k=$v&quot;</span><span class="o">}.</span><span class="na">join</span><span class="o">(</span><span class="s1">&#39;&amp;&#39;</span><span class="o">)</span>
+</span><span class='line'><span class="n">String</span> <span class="n">jsonTxt</span> <span class="o">=</span> <span class="s2">&quot;$JSON_BASE$qs&quot;</span><span class="o">.</span><span class="na">toURL</span><span class="o">().</span><span class="na">text</span>
+</span><span class='line'><span class="c1">// println jsonTxt</span>
+</span><span class='line'><span class="kt">def</span> <span class="n">json</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonSlurper</span><span class="o">().</span><span class="na">parseText</span><span class="o">(</span><span class="n">jsonTxt</span><span class="o">)</span>
+</span><span class='line'><span class="n">println</span> <span class="n">json</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">joke</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Demo</span>
+</span><span class='line'><span class="n">String</span> <span class="n">HOMEPAGE</span> <span class="o">=</span> <span class="s1">&#39;http://oreilly.com&#39;</span>
+</span><span class='line'><span class="n">println</span> <span class="n">HOMEPAGE</span><span class="o">.</span><span class="na">toURL</span><span class="o">().</span><span class="na">text</span><span class="o">.</span><span class="na">readLines</span><span class="o">()</span> <span class="o">*.</span> <span class="n">size</span><span class="o">()</span>
+</span><span class='line'><span class="c1">// println HOMEPAGE.toURL().text</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gradle Fundamentals: Part 1]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-1/"/>
+    <updated>2018-08-11T02:58:33-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-1</id>
+    <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Introduction&rdquo; section of <a href="https://www.safaribooksonline.com/videos/gradle-fundamentals/9781491937266">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Quick facts</h3>
+
+<p>The course is recorded in July 2015, when the latest Gradle version is <code>2.4</code>.
+The examples are in Gradle <code>2.4</code>.</p>
+
+<h3>Installation and Configuration</h3>
+
+<p>Installing using <code>sdkman</code> (formerly GVM) is recommended.
+For example, on macOS, you might not be able to specify version using <code>homebrew</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; sdk install gradle 3.5.1
+</span><span class='line'>&gt; sdk use gradle 3.5.1
+</span><span class='line'>&gt; sdk list gradle
+</span><span class='line'>================================================================================
+</span><span class='line'>Available Gradle Versions
+</span><span class='line'>================================================================================
+</span><span class='line'>     4.10-rc-1           4.0.1               2.10                1.8
+</span><span class='line'>     4.9                 4.0                 2.9                 1.7
+</span><span class='line'>     4.8.1           &gt; * 3.5.1               2.8                 1.6
+</span><span class='line'>     4.8                 3.5                 2.7                 1.5
+</span><span class='line'>     4.7                 3.4.1               2.6                 1.4
+</span><span class='line'>     4.6                 3.4                 2.5                 1.3
+</span><span class='line'>     4.5.1               3.3                 2.4                 1.2
+</span><span class='line'>     4.5                 3.2.1               2.3                 1.1
+</span><span class='line'>     4.4.1               3.2                 2.2.1               1.0
+</span><span class='line'>     4.4                 3.1                 2.2                 0.9.2
+</span><span class='line'>     4.3.1               3.0                 2.1                 0.9.1
+</span><span class='line'>     4.3                 2.14.1              2.0                 0.9
+</span><span class='line'>     4.2.1               2.14                1.12                0.8
+</span><span class='line'>     4.2                 2.13                1.11                0.7
+</span><span class='line'>     4.1                 2.12                1.10
+</span><span class='line'>     4.0.2               2.11                1.9
+</span><span class='line'>
+</span><span class='line'>================================================================================
+</span><span class='line'>+ - local version
+</span><span class='line'>* - installed
+</span><span class='line'>&gt; - currently in use
+</span><span class='line'>================================================================================
+</span><span class='line'>
+</span><span class='line'>&gt; gradle -version
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Gradle 3.5.1
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Build time:   2017-06-16 14:36:27 UTC
+</span><span class='line'>Revision:     d4c3bb4eac74bd0a3c70a0d213709e484193e251
+</span><span class='line'>
+</span><span class='line'>Groovy:       2.4.10
+</span><span class='line'>Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+</span><span class='line'>JVM:          1.8.0_172 (Oracle Corporation 25.172-b11)
+</span><span class='line'>OS:           Mac OS X 10.13.6 x86_64</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Documentation</h3>
+
+<p>Important docs:</p>
+
+<ul>
+<li><a href="https://gradle.org/guides/">User Guide</a></li>
+<li><a href="https://docs.gradle.org/current/dsl/">DSL reference</a></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>Example Hello World build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="c1">// Not overriding any internal property</span>
+</span><span class='line'><span class="n">ext</span><span class="o">.</span><span class="na">person</span> <span class="o">=</span> <span class="s1">&#39;Dobby&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="n">hello</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s2">&quot;Hello, $person!&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">task</span> <span class="nf">hi</span><span class="o">(</span><span class="nl">dependsOn:</span> <span class="s1">&#39;hello&#39;</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">println</span> <span class="s1">&#39;Hello, World!&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle tasks --all
+</span><span class='line'>:tasks
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>All tasks runnable from root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>Build Setup tasks
+</span><span class='line'>-----------------
+</span><span class='line'>init - Initializes a new Gradle build.
+</span><span class='line'>wrapper - Generates Gradle wrapper files.
+</span><span class='line'>
+</span><span class='line'>Help tasks
+</span><span class='line'>----------
+</span><span class='line'>buildEnvironment - Displays all buildscript dependencies declared in root project 'workspace'.
+</span><span class='line'>components - Displays the components produced by root project 'workspace'. [incubating]
+</span><span class='line'>dependencies - Displays all dependencies declared in root project 'workspace'.
+</span><span class='line'>dependencyInsight - Displays the insight into a specific dependency in root project 'workspace'.
+</span><span class='line'>dependentComponents - Displays the dependent components of components in root project 'workspace'. [incubating]
+</span><span class='line'>help - Displays a help message.
+</span><span class='line'>model - Displays the configuration model of root project 'workspace'. [incubating]
+</span><span class='line'>projects - Displays the sub-projects of root project 'workspace'.
+</span><span class='line'>properties - Displays the properties of root project 'workspace'.
+</span><span class='line'>tasks - Displays the tasks runnable from root project 'workspace'.
+</span><span class='line'>
+</span><span class='line'>Other tasks
+</span><span class='line'>-----------
+</span><span class='line'>hello
+</span><span class='line'>hi
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.691 secs</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle hi
+</span><span class='line'>The Task.leftShift(Closure) method has been deprecated and is scheduled to be removed in Gradle 5.0. Please use Task.doLast(Action) instead.
+</span><span class='line'>        at build_6vy9edw0bhsp70x0atckfxbnz.run(/Users/tuecuong/dev/hub/java/docs/source/workspace/build.gradle:7)
+</span><span class='line'>:hello
+</span><span class='line'>Hello, Dobby!
+</span><span class='line'>:hi
+</span><span class='line'>Hello, World!
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.688 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Left-shift operator <code>&lt;&lt;</code> is the alias to the <code>doLast</code> command.
+Using <code>doLast</code> is preferrable since you can do more (e.g., setup, configuration) as opposed to actions only in <code>&lt;&lt;</code> clauses.</p>
+
+<h3>Sample Build Files</h3>
+
+<p>In version 3+, the guides and samples are not included in the Gradle installation.
+Instead, you can find it on</p>
+
+<ul>
+<li><a href="https://github.com/gradle/gradle/tree/master/subprojects/docs/src/samples">Samples as shown in video</a>
+
+<ul>
+<li><code>userguide</code> folder > <code>tutorial</code> folder > sample build.gradle files.</li>
+<li>Example: <a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/userguide/tutorial/helloEnhanced/build.gradle">helloEnhanced</a>.</li>
+</ul>
+</li>
+<li><a href="https://github.com/gradle/guides">Guide repo</a> which directs to the Github Org</li>
+<li><a href="https://github.com/gradle-guides">gradle-guides Github org</a></li>
+</ul>
+
+
+<h3>Where to Find Answers</h3>
+
+<ul>
+<li><a href="https://blog.gradle.org/">Blog</a></li>
+<li><a href="https://discuss.gradle.org/">Forum</a></li>
+<li>Stackoverflow</li>
+<li><a href="https://gradle.org/books/">Book</a>
+
+<ul>
+<li>Gradle in Action</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Advanced Java Part 1]]></title>
@@ -2537,547 +3423,6 @@ More importantly, it allows you to liberally print lots of information needed fo
 </span></code></pre></td></tr></table></div></figure>
 
 
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Maven Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook/"/>
-    <updated>2015-06-19T14:07:37-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2015/06/19/maven-cookbook</id>
-    <content type="html"><![CDATA[<p>This blog post lists out some common <code>mvn</code> commands.</p>
-
-<!--more-->
-
-
-<h3>Recipes</h3>
-
-<p><strong>Recipe 1</strong>: <code>mvn</code> exit normally with test failures.</p>
-
-<figure class='code'><figcaption><span>Exit normally with test failure</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sh "${mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>Recipe 2</strong>: Switch between corporate Nexus and Maven Central.</p>
-
-<p>Corporate Nexus is specified in settings.xml. Some need to use Maven Central for personal projects.
-To switch between them, create a <a href="https://maven.apache.org/settings.html">minimal settings.xml</a> and specify with <code>mvn -s settings.xml</code>.</p>
-
-<figure class='code'><figcaption><span>Minimal settings.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span>
-</span><span class='line'>  <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-</span><span class='line'>  <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/SETTINGS/1.0.0</span>
-</span><span class='line'><span class="s">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;localRepository/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;interactiveMode/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;usePluginRegistry/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;offline/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;pluginGroups/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;servers/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;mirrors/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;proxies/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;profiles/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;activeProfiles/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Similarly, the <code>settings.xml</code> may need to be modified for specific environments, such as Jenkins.</p>
-
-<figure class='code'><figcaption><span>Jenkins settings.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;pluginGroups&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;pluginGroup&gt;</span>org.jenkins-ci.tools<span class="nt">&lt;/pluginGroup&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/pluginGroups&gt;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&lt;profiles&gt;</span>
-</span><span class='line'>    <span class="c">&lt;!-- Give access to Jenkins plugins --&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;profile&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;id&gt;</span>jenkins<span class="nt">&lt;/id&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;activation&gt;</span>
-</span><span class='line'>        <span class="c">&lt;!-- change this to false, if you don&#39;t like to have it on per default --&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;activeByDefault&gt;</span>true<span class="nt">&lt;/activeByDefault&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/activation&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;repositories&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;repository&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/repository&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/repositories&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;pluginRepositories&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;pluginRepository&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
-</span><span class='line'>          <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/pluginRepository&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;/pluginRepositories&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/profile&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/profiles&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;mirrors&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;mirror&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;id&gt;</span>repo.jenkins-ci.org<span class="nt">&lt;/id&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;url&gt;</span>https://repo.jenkins-ci.org/public/<span class="nt">&lt;/url&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;mirrorOf&gt;</span>m.g.o-public<span class="nt">&lt;/mirrorOf&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/mirror&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/mirrors&gt;</span>
-</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>Recipe 3</strong>: Install a jar file into local repository. See <a href="http://tdongsi.github.io/blog/2015/11/17/pushing-local-jar-file-into-your-local-maven-m2-repository/">here</a>.</p>
-
-<p><strong>Recipe 4</strong>: Findbugs and Checkstyle. See <a href="https://www.safaribooksonline.com/library/view/continuous-integration-ci/9781491986547/video307702.html">here</a>.
-Run <code>mvn clean install site</code> to generate Findbugs and Checkstyle reports.</p>
-
-<figure class='code'><figcaption><span>Adding Findbugs and Checkstyle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;reporting&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>findbugs-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;version&gt;</span>3.0.4<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;xmlOutput&gt;</span>true<span class="nt">&lt;/xmlOutput&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;findbugsXmlOutput&gt;</span>true<span class="nt">&lt;/findbugsXmlOutput&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;findbugsXmlWithMessages&gt;</span>true<span class="nt">&lt;/findbugsXmlWithMessages&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-checkstyle-plugin<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.17<span class="nt">&lt;/version&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;reportSets&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;reportSet&gt;</span>
-</span><span class='line'>                  <span class="nt">&lt;reports&gt;</span>
-</span><span class='line'>                    <span class="nt">&lt;report&gt;</span>checkstyle<span class="nt">&lt;/report&gt;</span>
-</span><span class='line'>                  <span class="nt">&lt;/reports&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;/reportSet&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/resportSets&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/plugins&gt;</span>
-</span><span class='line'><span class="nt">&lt;/reporting&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Recipe 5: &ldquo;dependencyManagement&rdquo; tag</h3>
-
-<p>From <a href="https://stackoverflow.com/questions/2619598/differences-between-dependencymanagement-and-dependencies-in-maven">here</a>.</p>
-
-<p>In the parent POM, the main difference between the <code>&lt;dependencies&gt;</code> and <code>&lt;dependencyManagement&gt;</code> is this:</p>
-
-<p>Artifacts specified in the <code>&lt;dependencies&gt;</code> section will ALWAYS be included as a dependency of the child module(s).</p>
-
-<p>Artifacts specified in the <code>&lt;dependencyManagement&gt;</code> section, will only be included in the child module if they were also specified in the <code>&lt;dependencies&gt;</code> section of the child module itself.
-Why is it good you ask? because you specify the version and/or scope in the parent, and you can leave them out when specifying the dependencies in the child POM.
-This can help you use unified versions for dependencies for child modules, without specifying the version in each child module.</p>
-
-<h3>Conventions</h3>
-
-<p>Maven follows the principle &ldquo;Conventions over configurations&rdquo;.
-While it helps to get you started quickly, it is hard to understand what&rsquo;s going on underneath without knowing the defaults and conventions.</p>
-
-<h4><a href="https://www.safaribooksonline.com/library/view/apache-maven-cookbook/9781785286124/ch08s04.html">Plugins</a></h4>
-
-<p>You will recall that when using the Maven JaCoCo plugin, to generate code coverage we had to explicitly specify the <code>projectId</code> and <code>artifactId</code> values of the plugin to it from the command line.
-However, for most other plugins, we specified the plugin name without additional information.
-To avoid it for Jacoco, open the settings.xml file and add the following section:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;pluginGroups&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;pluginGroup&gt;</span>org.jacoco<span class="nt">&lt;/pluginGroup&gt;</span>
-</span><span class='line'><span class="nt">&lt;/pluginGroups&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Run the following command on the same project for which you ran JaCoCo earlier:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># Before
-</span><span class='line'>mvn clean org.jacoco:jacoco-maven-plugin:0.7.9:prepare-agent test org.jacoco:jacoco-maven-plugin:0.7.9:report
-</span><span class='line'>
-</span><span class='line'># After
-</span><span class='line'>mvn clean jacoco:prepare-agent test jacoco:report</span></code></pre></td></tr></table></div></figure>
-
-
-<p>What is going on? There are two types of Maven plugins, which are as follows:</p>
-
-<ul>
-<li>Plugins maintained by the Maven team itself (official plugins). These are in the default plugin groups <strong>org.apache.maven.plugins</strong> and <strong>org.codehaus.mojo</strong>.</li>
-<li>All other plugins (let&rsquo;s say third-party plugins).</li>
-</ul>
-
-
-<p>All official plugins have the same <code>groupId</code>, namely <strong>org.apache.maven.plugins</strong>.
-They also have a convention for <code>artifactId</code>: &ldquo;maven-${prefix}-plugin&rdquo;, where <code>prefix</code> stands for the plugin prefix, the short name to refer to the plugin.
-The prefix used to reference the plugin can be customized as well.
-The prefix can be specified directly through the <code>goalPrefix</code> configuration parameter on the Maven-plugin-plugin of the plugin&rsquo;s pom file.
-So, when we run mvn clean, Maven looks for the &ldquo;maven-clean-plugin&rdquo; in the <strong>org.apache.maven.plugins</strong> group.</p>
-
-<p>What about third-party plugins? <code>pluginGroups</code> lets Maven know the <code>groupId</code> where it should search for additional plugins.
-So in the earlier case, Maven searched for plugins in the org.jacoco group.
-Third-party plugins should be named differently from official plugins.
-The conventional way to define the <code>artifactId</code> for third-party plugins is &ldquo;${prefix}-maven-plugin&rdquo;.
-When specified in this way, Maven automatically identifies the shortcut name for the plugin.
-In the earlier case, as the artifactId is jacoco-maven-plugin, the shortcut is jacoco.</p>
-
-<p>Maven will always search specified pluginGroups before it searches the following default groups:</p>
-
-<ul>
-<li>org.apache.maven.plugins</li>
-<li>org.codehaus.mojo</li>
-</ul>
-
-
-<p>Maven takes the first match for the shortcut that it finds.
-For instance, if there is a clean shortcut in a user-specified plugin in pluginGroups, it will take precedence over a Maven Clean plugin.</p>
-
-<h3>Reference</h3>
-
-<ul>
-<li><a href="https://maven.apache.org/settings.html">settings.xml</a></li>
-<li><a href="http://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html">resource directory</a></li>
-<li><a href="https://www.safaribooksonline.com/library/view/apache-maven-cookbook/9781785286124/ch08s04.html">Apache Maven Cookbook</a> by Raghuram Bharathan</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[HttpClient Cookbook]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook/"/>
-    <updated>2015-06-08T17:14:29-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2015/06/08/httpclient-cookbook</id>
-    <content type="html"><![CDATA[<p>Apache HttpClient library is regularly used in Java program to query REST endpoints.</p>
-
-<!--more-->
-
-
-<h3>Beginner Cookbook</h3>
-
-<p>Based on HttpClient Tutorial (version 4.3).</p>
-
-<p><strong>Recipe 1</strong>: For simple use cases, it is better to use <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html">Fluent API</a>.</p>
-
-<figure class='code'><figcaption><span>Fluent API</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">API_ENDPOINT</span> <span class="o">=</span> <span class="s">&quot;http://api.icndb.com/jokes/random&quot;</span><span class="o">;</span>
-</span><span class='line'><span class="n">String</span> <span class="n">see</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="na">Get</span><span class="o">(</span><span class="n">API_ENDPOINT</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">execute</span><span class="o">()</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">returnContent</span><span class="o">()</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">asString</span><span class="o">();</span>
-</span><span class='line'><span class="n">assertFalse</span><span class="o">(</span><span class="n">see</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">());</span>
-</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">see</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>Recipe 2</strong>: Consuming response entities originate from a trusted HTTP server and are known to be of limited length. From <a href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html">here</a>. <a href="http://www.vogella.com/tutorials/ApacheHttpClient/article.html">Another variant</a>.</p>
-
-<figure class='code'><figcaption><span>Consuming entity content</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
-</span><span class='line'><span class="n">HttpGet</span> <span class="n">httpget</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;http://localhost/&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">httpget</span><span class="o">);</span>
-</span><span class='line'><span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">HttpEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">long</span> <span class="n">len</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="na">getContentLength</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">2048</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">entity</span><span class="o">));</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>            <span class="c1">// Stream content out</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Advanced Cookbook</h3>
-
-<h4>Version 4.1.x -> 4.2.1</h4>
-
-<p>Git2Gus service uses HttpClient 4.2.1 (httpclient-4.2.1.jar).</p>
-
-<p><strong>Recipe 1</strong>: Proxy setup. Based on <a href="https://stackoverflow.com/questions/9811828/common-httpclient-and-proxy">this</a>:</p>
-
-<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">DefaultHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'><span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">ConnRoutePNames</span><span class="o">.</span><span class="na">DEFAULT_PROXY</span><span class="o">,</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;issues.apache.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">HttpGet</span> <span class="n">req</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;executing request to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">HttpResponse</span> <span class="n">rsp</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">req</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">// When HttpClient instance is no longer needed,</span>
-</span><span class='line'>    <span class="c1">// shut down the connection manager to ensure</span>
-</span><span class='line'>    <span class="c1">// immediate deallocation of all system resources</span>
-</span><span class='line'>    <span class="n">httpclient</span><span class="o">.</span><span class="na">getConnectionManager</span><span class="o">().</span><span class="na">shutdown</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With proxy authentication? Check out <a href="https://stackoverflow.com/questions/13288038/httpclient-4-2-2-and-proxy-with-username-password">this</a></p>
-
-<p><strong>Recipe 2</strong>: Connection timeout. Based on <a href="https://gist.github.com/tychobrailleur/9fbf521727539b403c90">this</a>:</p>
-
-<figure class='code'><figcaption><span>Conneciton timeout</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunTest</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runDefaultClient</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">URI</span> <span class="n">uri</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">URL</span><span class="o">(</span><span class="s">&quot;http://localhost:3000/&quot;</span><span class="o">).</span><span class="na">toURI</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">HttpHost</span> <span class="n">host</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getHost</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span> <span class="n">uri</span><span class="o">.</span><span class="na">getScheme</span><span class="o">());</span>
-</span><span class='line'>        <span class="n">DefaultHttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">CONNECTION_TIMEOUT</span><span class="o">,</span> <span class="mi">2000</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">httpClient</span><span class="o">.</span><span class="na">getParams</span><span class="o">().</span><span class="na">setParameter</span><span class="o">(</span><span class="n">CoreConnectionPNames</span><span class="o">.</span><span class="na">SO_TIMEOUT</span><span class="o">,</span> <span class="mi">10000</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">HttpGet</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">HttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Later version</h4>
-
-<p><strong>Recipe 1</strong>: Based on <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientExecuteProxy.java">this</a></p>
-
-<figure class='code'><figcaption><span>Setting up proxy</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ClientExecuteProxy</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span><span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">CloseableHttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClients</span><span class="o">.</span><span class="na">createDefault</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">target</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;httpbin.org&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="s">&quot;https&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">HttpHost</span> <span class="n">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpHost</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">8080</span><span class="o">,</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">RequestConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="n">RequestConfig</span><span class="o">.</span><span class="na">custom</span><span class="o">()</span>
-</span><span class='line'>                    <span class="o">.</span><span class="na">setProxy</span><span class="o">(</span><span class="n">proxy</span><span class="o">)</span>
-</span><span class='line'>                    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">request</span><span class="o">.</span><span class="na">setConfig</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Executing request &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getRequestLine</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; to &quot;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s">&quot; via &quot;</span> <span class="o">+</span> <span class="n">proxy</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>            <span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">target</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;----------------------------------------&quot;</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">());</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">EntityUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">()));</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">response</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">httpclient</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Reference</h3>
-
-<ul>
-<li><a href="https://hc.apache.org/index.html">Project Home</a></li>
-<li><a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/index.html">JavaDoc</a></li>
-<li>Alternative: <a href="https://www.eclipse.org/jetty/documentation/9.4.6.v20170531/http-client.html">Jetty HttpClient</a>.</li>
-</ul>
-
-
-<p>Apache HttpClient 4.2.1</p>
-
-<ul>
-<li><a href="https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.2.1">Maven</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Blog Map]]></title>
-    <link href="http://tdongsi.github.io/java/blog/2011/08/06/blog-map/"/>
-    <updated>2011-08-06T15:05:44-07:00</updated>
-    <id>http://tdongsi.github.io/java/blog/2011/08/06/blog-map</id>
-    <content type="html"><![CDATA[<p>A blog post in 2011 will serve as a general guideline on how posts are organized in this blog.</p>
-
-<ul>
-<li>2015: Java topics. Too beginner to post in main blog.</li>
-<li>2016: Java-related interview topics</li>
-<li>2017: Groovy, Gradle topics.</li>
-</ul>
 
 ]]></content>
   </entry>

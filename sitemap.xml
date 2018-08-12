@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/</loc>
+<lastmod>2018-08-11T03:04:31-07:00</lastmod>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-2/</loc>
+<lastmod>2018-08-11T03:03:46-07:00</lastmod>
+</url>
+<url>
+<loc>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-1/</loc>
+<lastmod>2018-08-11T02:58:33-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2018/03/25/advanced-java-part-1/</loc>
 <lastmod>2018-03-25T14:35:11-07:00</lastmod>
 </url>
@@ -112,8 +124,5 @@
 </url>
 <url>
 <loc>http://tdongsi.github.io/java/blog/categories/book/</loc>
-</url>
-<url>
-<loc>http://tdongsi.github.io/java/posts/2/</loc>
 </url>
 </urlset>

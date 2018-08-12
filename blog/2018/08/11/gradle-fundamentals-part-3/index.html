@@ -1,0 +1,742 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Gradle Fundamentals: Part 3 - Personal Interview Notes</title>
+  <meta name="author" content="Cuong Dong-Si">
+
+  
+  <meta name="description" content="This post corresponds to &ldquo;Basic Project Builds&rdquo; section of this course. Java Projects Output of gradle build for simple Java build file. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/">
+  <link href="/java/favicon.png" rel="icon">
+  <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
+  <script src="/java/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/java/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body    class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/java/">Personal Interview Notes</a></h1>
+  
+    <h2>Neither success nor failure is ever final.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="tdongsi.github.io/java">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/java/">Blog Home</a></li>
+  <li><a href="/java/blog/archives">Archives</a></li>
+  <li><a href="http://tdongsi.github.io/SqlTests/syllabus/">Syllabus</a></li>
+  <li><a href="http://tdongsi.github.io">Personal Home</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Gradle Fundamentals: Part 3</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-08-11T03:04:31-07:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>3:04 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This post corresponds to &ldquo;Basic Project Builds&rdquo; section of <a href="https://www.safaribooksonline.com/videos/gradle-fundamentals/9781491937266">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Java Projects</h3>
+
+<p>Output of <code>gradle build</code> for simple Java build file.</p>
+
+<figure class='code'><figcaption><span>Java plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; cat build.gradle
+</span><span class='line'>apply plugin: 'java'
+</span><span class='line'>
+</span><span class='line'>&gt; gradle build
+</span><span class='line'>:compileJava NO-SOURCE
+</span><span class='line'>:processResources NO-SOURCE
+</span><span class='line'>:classes UP-TO-DATE
+</span><span class='line'>:jar
+</span><span class='line'>:assemble
+</span><span class='line'>:compileTestJava NO-SOURCE
+</span><span class='line'>:processTestResources NO-SOURCE
+</span><span class='line'>:testClasses UP-TO-DATE
+</span><span class='line'>:test NO-SOURCE
+</span><span class='line'>:check UP-TO-DATE
+</span><span class='line'>:build
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.786 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Gradle&rsquo;s Build Init plugin is similar to Maven&rsquo;s <code>archetype</code> tasks.
+It can be used to setup a Gradle project.</p>
+
+<figure class='code'><figcaption><span>Build Init plugin</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle init --type java-library
+</span><span class='line'>:wrapper
+</span><span class='line'>:init
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.967 secs
+</span><span class='line'>&gt; ls
+</span><span class='line'>build           build.gradle    gradle          gradlew         gradlew.bat     settings.gradle src\
+</span><span class='line'>
+</span><span class='line'>&gt; tree src
+</span><span class='line'>src
+</span><span class='line'>├── main
+</span><span class='line'>│   └── java
+</span><span class='line'>│       └── Library.java
+</span><span class='line'>└── test
+</span><span class='line'>    └── java
+</span><span class='line'>        └── LibraryTest.java
+</span><span class='line'>
+</span><span class='line'>4 directories, 2 files
+</span><span class='line'>
+</span><span class='line'>&gt; gradle build
+</span><span class='line'>:compileJava
+</span><span class='line'>Download https://jcenter.bintray.com/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.pom
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava/21.0/guava-21.0.pom
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava-parent/21.0/guava-parent-21.0.pom
+</span><span class='line'>Download https://jcenter.bintray.com/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar
+</span><span class='line'>Download https://jcenter.bintray.com/com/google/guava/guava/21.0/guava-21.0.jar
+</span><span class='line'>:processResources NO-SOURCE
+</span><span class='line'>:classes
+</span><span class='line'>:jar
+</span><span class='line'>:assemble
+</span><span class='line'>:compileTestJava
+</span><span class='line'>:processTestResources NO-SOURCE
+</span><span class='line'>:testClasses
+</span><span class='line'>:test
+</span><span class='line'>:check
+</span><span class='line'>:build
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 6.218 secs
+</span><span class='line'>
+</span><span class='line'>&gt; tree build
+</span><span class='line'>build
+</span><span class='line'>├── classes
+</span><span class='line'>│   ├── main
+</span><span class='line'>│   │   └── Library.class
+</span><span class='line'>│   └── test
+</span><span class='line'>│       └── LibraryTest.class
+</span><span class='line'>├── libs
+</span><span class='line'>│   └── workspace.jar
+</span><span class='line'>├── reports
+</span><span class='line'>│   └── tests
+</span><span class='line'>│       └── test
+</span><span class='line'>│           ├── classes
+</span><span class='line'>│           │   └── LibraryTest.html
+</span><span class='line'>│           ├── css
+</span><span class='line'>│           │   ├── base-style.css
+</span><span class='line'>│           │   └── style.css
+</span><span class='line'>│           ├── index.html
+</span><span class='line'>│           ├── js
+</span><span class='line'>│           │   └── report.js
+</span><span class='line'>│           └── packages
+</span><span class='line'>│               └── default-package.html
+</span><span class='line'>├── test-results
+</span><span class='line'>│   └── test
+</span><span class='line'>│       ├── TEST-LibraryTest.xml
+</span><span class='line'>│       └── binary
+</span><span class='line'>│           ├── output.bin
+</span><span class='line'>│           ├── output.bin.idx
+</span><span class='line'>│           └── results.bin
+</span><span class='line'>└── tmp
+</span><span class='line'>    ├── compileJava
+</span><span class='line'>    ├── compileTestJava
+</span><span class='line'>    └── jar
+</span><span class='line'>        └── MANIFEST.MF
+</span><span class='line'>
+</span><span class='line'>18 directories, 14 files</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Gradle project properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle properties
+</span><span class='line'>:properties
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>allprojects: [root project 'workspace']
+</span><span class='line'>ant: org.gradle.api.internal.project.DefaultAntBuilder@42572e90
+</span><span class='line'>antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@39495f8
+</span><span class='line'>archivesBaseName: workspace
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/userguide/java_plugin.html">Java plugin</a></li>
+<li><a href="https://docs.gradle.org/3.5/userguide/build_init_plugin.html">Build init plugin</a></li>
+</ul>
+
+
+<h3>Groovy Projects</h3>
+
+<p>Examples:</p>
+
+<ul>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/quickstart/build.gradle">quickstart</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle">mixedJavaAndGroovy</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle">customizedLayout</a></li>
+</ul>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/userguide/groovy_plugin.html">Groovy plugin</a></li>
+<li><a href="https://github.com/gradle/gradle/tree/v3.5.1/subprojects/docs/src/samples/groovy">Groovy Examples</a></li>
+</ul>
+
+
+<h3>DAG and Source Sets</h3>
+
+<p>DAGs mentioned are the dependency graphs of tasks defined in Gradle Java and Groovy plugins.
+For example, the tasks <code>check</code> and <code>assemble</code> must be executed before <code>build</code> task, as shown in <a href="https://docs.gradle.org/3.5/userguide/java_plugin.html">here</a>.</p>
+
+<p>Source Sets are Gradle way to organize related source code and resources.
+Using source sets can also enable you to customize your project layout (e.g., Jenkins global library project).</p>
+
+<h3>Project Properties and Dependencies</h3>
+
+<p>Each <code>build.gradle</code> file is used to instantiate a <code>Project</code> object.
+During its life cycle, that object will try to create a <code>Settings</code> instance for the build.
+It will evaluate <code>settings.gradle</code> script to configure that <code>Settings</code> object (more about its life cycle at <a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html">here</a>).</p>
+
+<p>The documentation page has a list of default properties of <code>Project</code> class.
+It should be noted that adding a plugin can add additional properties to <code>Project</code> class, as shown in the same page.
+For example, <code>idea</code> plugin will add <code>idea</code> property for &ldquo;IdeaModel&rdquo;.</p>
+
+<figure class='code'><figcaption><span>Different way to specify dependencies</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-core&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="s1">&#39;org.springframework:spring-core:2.5&#39;</span><span class="o">,</span>
+</span><span class='line'>            <span class="s1">&#39;org.springframework:spring-aop:2.5&#39;</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-core&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span><span class="o">],</span>
+</span><span class='line'>        <span class="o">[</span><span class="nl">group:</span> <span class="s1">&#39;org.springframework&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;spring-aop&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.5&#39;</span><span class="o">]</span>
+</span><span class='line'>    <span class="o">)</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span><span class="s1">&#39;org.hibernate:hibernate:3.0.5&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">transitive</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.hibernate&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;hibernate&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;3.0.5&#39;</span><span class="o">,</span> <span class="nl">transitive:</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="n">runtime</span><span class="o">(</span><span class="nl">group:</span> <span class="s1">&#39;org.hibernate&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;hibernate&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;3.0.5&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">transitive</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Artifact only notation</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="s2">&quot;org.groovy:groovy:2.2.0@jar&quot;</span>
+</span><span class='line'>    <span class="n">runtime</span> <span class="nl">group:</span> <span class="s1">&#39;org.groovy&#39;</span><span class="o">,</span> <span class="nl">name:</span> <span class="s1">&#39;groovy&#39;</span><span class="o">,</span> <span class="nl">version:</span> <span class="s1">&#39;2.2.0&#39;</span><span class="o">,</span> <span class="nl">ext:</span> <span class="s1">&#39;jar&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Check depdendencies with Gradle:</p>
+
+<figure class='code'><figcaption><span>Gradle automatically expands "dep" for "dependencies" task</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle dep
+</span><span class='line'>:dependencies
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>
+</span><span class='line'>api - API dependencies for source set 'main'. (n)
+</span><span class='line'>\--- org.apache.commons:commons-math3:3.6.1 (n)
+</span><span class='line'>
+</span><span class='line'>apiElements - API elements for main. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>archives - Configuration for archive artifacts.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>compile - Dependencies for source set 'main' (deprecated, use 'implementation ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>compileClasspath - Compile classpath for source set 'main'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>compileOnly - Compile only dependencies for source set 'main'.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>default - Configuration for default artifacts.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>implementation - Implementation only dependencies for source set 'main'. (n)
+</span><span class='line'>\--- com.google.guava:guava:21.0 (n)
+</span><span class='line'>
+</span><span class='line'>runtime - Runtime dependencies for source set 'main' (deprecated, use 'runtimeOnly ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>runtimeClasspath - Runtime classpath of source set 'main'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>\--- com.google.guava:guava:21.0
+</span><span class='line'>
+</span><span class='line'>runtimeElements - Elements of runtime for main. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testCompile - Dependencies for source set 'test' (deprecated, use 'testImplementation ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testCompileClasspath - Compile classpath for source set 'test'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>+--- com.google.guava:guava:21.0
+</span><span class='line'>\--- junit:junit:4.12
+</span><span class='line'>     \--- org.hamcrest:hamcrest-core:1.3
+</span><span class='line'>
+</span><span class='line'>testCompileOnly - Compile only dependencies for source set 'test'.
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testImplementation - Implementation only dependencies for source set 'test'. (n)
+</span><span class='line'>\--- junit:junit:4.12 (n)
+</span><span class='line'>
+</span><span class='line'>testRuntime - Runtime dependencies for source set 'test' (deprecated, use 'testRuntimeOnly ' instead).
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>testRuntimeClasspath - Runtime classpath of source set 'test'.
+</span><span class='line'>+--- org.apache.commons:commons-math3:3.6.1
+</span><span class='line'>+--- com.google.guava:guava:21.0
+</span><span class='line'>\--- junit:junit:4.12
+</span><span class='line'>     \--- org.hamcrest:hamcrest-core:1.3
+</span><span class='line'>
+</span><span class='line'>testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+</span><span class='line'>No dependencies
+</span><span class='line'>
+</span><span class='line'>(n) - Not resolved (configuration is not meant to be resolved)
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.72 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html">Project</a></li>
+<li><a href="https://docs.gradle.org/current/userguide/introduction_dependency_management.html">Dependency Management</a></li>
+<li><a href="https://docs.gradle.org/current/userguide/dependency_types.html">Dependency types</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Cuong Dong-Si</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2018-08-11T03:04:31-07:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>3:04 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/java/blog/categories/gradle/'>gradle</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/java/blog/2018/08/11/gradle-fundamentals-part-2/" title="Previous Post: Gradle Fundamentals: Part 2">&laquo; Gradle Fundamentals: Part 2</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>About This Blog</h1>
+    <p>Random interview experience and lessons.</p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2018/08/11/gradle-fundamentals-part-3/">Gradle Fundamentals: Part 3</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2018/08/11/gradle-fundamentals-part-2/">Gradle Fundamentals: Part 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2018/08/11/gradle-fundamentals-part-1/">Gradle Fundamentals: Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2018/03/25/advanced-java-part-1/">Advanced Java Part 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2018/02/08/jenkins-plugin-development/">Jenkins Plugin Development</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-5/">Groovy Fundamentals: Part 5: Demos</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-4/">Groovy Fundamentals: Part 4: Closures & Operators</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-3/">Groovy Fundamentals: Part 3: POGOs & Collections</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (4)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (8)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - Cuong Dong-Si -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
