@@ -144,7 +144,146 @@ Reference:
 
 ### Groovy Projects
 
+Examples:
+
+* [quickstart](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/quickstart/build.gradle)
+* [mixedJavaAndGroovy](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle)
+* [customizedLayout](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle)
+
+Reference:
+
+* [Groovy plugin](https://docs.gradle.org/3.5/userguide/groovy_plugin.html)
+* [Groovy Examples](https://github.com/gradle/gradle/tree/v3.5.1/subprojects/docs/src/samples/groovy)
+
 ### DAG and Source Sets
+
+DAGs mentioned are the dependency graphs of tasks defined in Gradle Java and Groovy plugins.
+For example, the tasks `check` and `assemble` must be executed before `build` task, as shown in [here](https://docs.gradle.org/3.5/userguide/java_plugin.html).
+
+Source Sets are Gradle way to organize related source code and resources. 
+Using source sets can also enable you to customize your project layout (e.g., Jenkins global library project).
 
 ### Project Properties and Dependencies
 
+Each `build.gradle` file is used to instantiate a `Project` object.
+During its life cycle, that object will try to create a `Settings` instance for the build.
+It will evaluate `settings.gradle` script to configure that `Settings` object (more about its life cycle at [here](https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html)).
+
+The documentation page has a list of default properties of `Project` class.
+It should be noted that adding a plugin can add additional properties to `Project` class, as shown in the same page.
+For example, `idea` plugin will add `idea` property for "IdeaModel".
+
+``` groovy Different way to specify dependencies
+dependencies {
+    runtime group: 'org.springframework', name: 'spring-core', version: '2.5'
+    runtime 'org.springframework:spring-core:2.5',
+            'org.springframework:spring-aop:2.5'
+    runtime(
+        [group: 'org.springframework', name: 'spring-core', version: '2.5'],
+        [group: 'org.springframework', name: 'spring-aop', version: '2.5']
+    )
+    runtime('org.hibernate:hibernate:3.0.5') {
+        transitive = true
+    }
+    runtime group: 'org.hibernate', name: 'hibernate', version: '3.0.5', transitive: true
+    runtime(group: 'org.hibernate', name: 'hibernate', version: '3.0.5') {
+        transitive = true
+    }
+}
+```
+
+``` groovy Artifact only notation
+dependencies {
+    runtime "org.groovy:groovy:2.2.0@jar"
+    runtime group: 'org.groovy', name: 'groovy', version: '2.2.0', ext: 'jar'
+}
+```
+
+Check depdendencies with Gradle:
+
+``` plain Gradle automatically expands "dep" for "dependencies" task
+> gradle dep
+:dependencies
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+api - API dependencies for source set 'main'. (n)
+\--- org.apache.commons:commons-math3:3.6.1 (n)
+
+apiElements - API elements for main. (n)
+No dependencies
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Dependencies for source set 'main' (deprecated, use 'implementation ' instead).
+No dependencies
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.apache.commons:commons-math3:3.6.1
+\--- com.google.guava:guava:21.0
+
+compileOnly - Compile only dependencies for source set 'main'.
+No dependencies
+
+default - Configuration for default artifacts.
++--- org.apache.commons:commons-math3:3.6.1
+\--- com.google.guava:guava:21.0
+
+implementation - Implementation only dependencies for source set 'main'. (n)
+\--- com.google.guava:guava:21.0 (n)
+
+runtime - Runtime dependencies for source set 'main' (deprecated, use 'runtimeOnly ' instead).
+No dependencies
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- org.apache.commons:commons-math3:3.6.1
+\--- com.google.guava:guava:21.0
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+No dependencies
+
+testCompile - Dependencies for source set 'test' (deprecated, use 'testImplementation ' instead).
+No dependencies
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- org.apache.commons:commons-math3:3.6.1
++--- com.google.guava:guava:21.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+testCompileOnly - Compile only dependencies for source set 'test'.
+No dependencies
+
+testImplementation - Implementation only dependencies for source set 'test'. (n)
+\--- junit:junit:4.12 (n)
+
+testRuntime - Runtime dependencies for source set 'test' (deprecated, use 'testRuntimeOnly ' instead).
+No dependencies
+
+testRuntimeClasspath - Runtime classpath of source set 'test'.
++--- org.apache.commons:commons-math3:3.6.1
++--- com.google.guava:guava:21.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+No dependencies
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+BUILD SUCCESSFUL
+
+Total time: 0.72 secs
+```
+
+Reference:
+
+* [Project](https://docs.gradle.org/3.5/dsl/org.gradle.api.Project.html)
+* [Dependency Management](https://docs.gradle.org/current/userguide/introduction_dependency_management.html)
+* [Dependency types](https://docs.gradle.org/current/userguide/dependency_types.html)

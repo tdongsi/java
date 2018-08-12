@@ -11,6 +11,11 @@ This post corresponds to "Introduction" section of [this course](https://www.saf
 
 <!--more-->
 
+### Quick facts
+
+The course is recorded in July 2015, when the latest Gradle version is `2.4`.
+The examples are in Gradle `2.4`.
+
 ### Installation and Configuration
 
 Installing using `sdkman` (formerly GVM) is recommended.
