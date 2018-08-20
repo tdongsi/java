@@ -11,6 +11,46 @@ This blog post lists out some common `mvn` commands.
 
 <!--more-->
 
+### Useful `mvn` commands
+
+1) If you want to find the version of a plugin currently being used, use the following command:
+
+``` plain Show detailed description of the plugin - including the version
+mvn -Dplugin=<groupId>:<artifactId> help:describe
+
+# Example
+$ mvn -Dplugin=org.codehaus.mojo:versions-maven-plugin help:describe
+…
+Name: Versions Maven Plugin
+Description: Versions Plugin for Maven. The Versions Plugin updates the
+  versions of components in the POM.
+Group Id: org.codehaus.mojo
+Artifact Id: versions-maven-plugin
+Version: 2.5
+Goal Prefix: versions
+
+This plugin has 31 goals:
+...
+```
+
+2) You can use the following command to see dependency tree of a project.
+It can be useful for debugging purposes such as finding out if a released artifact contains any SNAPSHOT dependency.
+
+``` plain
+$ mvn dependency:tree -Dhbase.phoenix.client.version=1.0.1.4 -Dincludes=:::*-SNAPSHOT
+...
+[INFO] com.example.io.ingestion:intake:jar:1.0.0-SNAPSHOT
+[INFO] \- com.example.io:transactions-hbase:jar:1.0.1.4:compile
+[INFO]    \- com.example.io:transactions-common:jar:1.0.0-SNAPSHOT:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+...
+```
+
+In the above example, the first parameter `-Dhbase.phoenix.client.version` is simply to provide the version string to make the project compilable.
+The second parameter `-Dincludes` is for filtering the output of `dependency:tree`.
+
 ### Recipes
 
 **Recipe 1**: `mvn` exit normally with test failures.
