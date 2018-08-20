@@ -9,8 +9,7 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This blog post lists out some common mvn commands. Recipes Recipe 1: mvn exit normally with test failures. Exit normally with test failure1
-sh "${ &hellip;">
+  <meta name="description" content="This blog post lists out some common mvn commands. Useful mvn commands 1) If you want to find the version of a plugin currently being used, use the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +90,68 @@ sh "${ &hellip;">
 
 <!--more-->
 
+
+<h3>Useful <code>mvn</code> commands</h3>
+
+<p>1) If you want to find the version of a plugin currently being used, use the following command:</p>
+
+<figure class='code'><figcaption><span>Show detailed description of the plugin - including the version</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn -Dplugin=&lt;groupId&gt;:&lt;artifactId&gt; help:describe
+</span><span class='line'>
+</span><span class='line'># Example
+</span><span class='line'>$ mvn -Dplugin=org.codehaus.mojo:versions-maven-plugin help:describe
+</span><span class='line'>…
+</span><span class='line'>Name: Versions Maven Plugin
+</span><span class='line'>Description: Versions Plugin for Maven. The Versions Plugin updates the
+</span><span class='line'>  versions of components in the POM.
+</span><span class='line'>Group Id: org.codehaus.mojo
+</span><span class='line'>Artifact Id: versions-maven-plugin
+</span><span class='line'>Version: 2.5
+</span><span class='line'>Goal Prefix: versions
+</span><span class='line'>
+</span><span class='line'>This plugin has 31 goals:
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2) You can use the following command to see dependency tree of a project.
+It can be useful for debugging purposes such as finding out if a released artifact contains any SNAPSHOT dependency.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mvn dependency:tree -Dhbase.phoenix.client.version=1.0.1.4 -Dincludes=:::*-SNAPSHOT
+</span><span class='line'>...
+</span><span class='line'>[INFO] com.example.io.ingestion:intake:jar:1.0.0-SNAPSHOT
+</span><span class='line'>[INFO] \- com.example.io:transactions-hbase:jar:1.0.1.4:compile
+</span><span class='line'>[INFO]    \- com.example.io:transactions-common:jar:1.0.0-SNAPSHOT:compile
+</span><span class='line'>[INFO] ------------------------------------------------------------------------
+</span><span class='line'>[INFO] BUILD SUCCESS
+</span><span class='line'>[INFO] ------------------------------------------------------------------------
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the above example, the first parameter <code>-Dhbase.phoenix.client.version</code> is simply to provide the version string to make the project compilable.
+The second parameter <code>-Dincludes</code> is for filtering the output of <code>dependency:tree</code>.</p>
 
 <h3>Recipes</h3>
 
