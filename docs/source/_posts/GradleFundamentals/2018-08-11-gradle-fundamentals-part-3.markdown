@@ -11,6 +11,22 @@ This post corresponds to "Basic Project Builds" section of [this course](https:/
 
 <!--more-->
 
+### Basics
+
+Some tasks are simple. 
+Note that some tasks are derived from the following rules:
+
+``` 
+$ gradle tasks
+:tasks
+...
+Rules
+-----
+Pattern: clean<TaskName>: Cleans the output files of a task.
+Pattern: build<ConfigurationName>: Assembles the artifacts of a configuration.
+Pattern: upload<ConfigurationName>: Assembles and uploads the artifacts belonging to a configuration.
+```
+
 ### Java Projects
 
 Output of `gradle build` for simple Java build file.
@@ -18,6 +34,10 @@ Output of `gradle build` for simple Java build file.
 ``` plain Java plugin
 > cat build.gradle
 apply plugin: 'java'
+
+# Same effect
+$ cat build.gradle
+apply(plugin: 'java')
 
 > gradle build
 :compileJava NO-SOURCE
@@ -122,6 +142,15 @@ build
 18 directories, 14 files
 ```
 
+#### Project properties
+
+The command `gradle properties` will list all the pre-defined properties of the top Project instance. 
+Some of the interesting properties of the Project class are:
+
+* `assemble`, `check`, `jar`, etc.: corresponding to defined tasks.
+* `version`, `sourceCompatibility`, `targetCompatibility`: commonly overridden properties. 
+* `ext`: Extra properties.
+
 ``` plain Gradle project properties
 > gradle properties
 :properties
@@ -135,6 +164,32 @@ ant: org.gradle.api.internal.project.DefaultAntBuilder@42572e90
 antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@39495f8
 archivesBaseName: workspace
 ...
+version: unspecified
+
+BUILD SUCCESSFUL
+
+Total time: 0.779 secs
+```
+
+For example, the following `build.gradle` will overwrite some of the base properties:
+
+```
+$ cat build.gradle
+apply plugin: 'java'
+version = '1.0'
+
+> gradle properties
+:properties
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+...
+version: 1.0
+
+BUILD SUCCESSFUL
+
+Total time: 0.715 secs
 ```
 
 Reference:
