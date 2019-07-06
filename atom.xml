@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2019-07-05T22:27:10-07:00</updated>
+  <updated>2019-07-05T22:40:06-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -354,6 +354,73 @@ Some of the interesting properties of the Project class are:</p>
 
 
 <h3>Groovy Projects</h3>
+
+<figure class='code'><figcaption><span>Quickstart Groovy project</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">plugins</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">id</span> <span class="s1">&#39;groovy&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">repositories</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">mavenCentral</span><span class="o">()</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">dependencies</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">implementation</span> <span class="s1">&#39;org.codehaus.groovy:groovy-all:2.4.15&#39;</span>
+</span><span class='line'>    <span class="n">testImplementation</span> <span class="s1">&#39;junit:junit:4.12&#39;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Build execution</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle build
+</span><span class='line'>:compileJava NO-SOURCE
+</span><span class='line'>:compileGroovy NO-SOURCE
+</span><span class='line'>:processResources NO-SOURCE
+</span><span class='line'>:classes UP-TO-DATE
+</span><span class='line'>:jar
+</span><span class='line'>:assemble
+</span><span class='line'>:compileTestJava NO-SOURCE
+</span><span class='line'>:compileTestGroovy NO-SOURCE
+</span><span class='line'>:processTestResources NO-SOURCE
+</span><span class='line'>:testClasses UP-TO-DATE
+</span><span class='line'>:test NO-SOURCE
+</span><span class='line'>:check UP-TO-DATE
+</span><span class='line'>:build
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.736 secs</span></code></pre></td></tr></table></div></figure>
+
 
 <p>Examples:</p>
 

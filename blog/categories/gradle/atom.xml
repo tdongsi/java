@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Gradle | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2019-07-05T22:27:10-07:00</updated>
+  <updated>2019-07-05T22:40:06-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -211,6 +211,40 @@ Total time: 0.715 secs
 
 
 <h3>Groovy Projects</h3>
+
+<pre><code class="groovy Quickstart Groovy project">plugins {
+    id 'groovy'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:2.4.15'
+    testImplementation 'junit:junit:4.12'
+}
+</code></pre>
+
+<pre><code class="plain Build execution">$ gradle build
+:compileJava NO-SOURCE
+:compileGroovy NO-SOURCE
+:processResources NO-SOURCE
+:classes UP-TO-DATE
+:jar
+:assemble
+:compileTestJava NO-SOURCE
+:compileTestGroovy NO-SOURCE
+:processTestResources NO-SOURCE
+:testClasses UP-TO-DATE
+:test NO-SOURCE
+:check UP-TO-DATE
+:build
+
+BUILD SUCCESSFUL
+
+Total time: 0.736 secs
+</code></pre>
 
 <p>Examples:</p>
 
