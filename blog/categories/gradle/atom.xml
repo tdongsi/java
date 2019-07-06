@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Gradle | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-08-19T21:54:36-07:00</updated>
+  <updated>2019-07-05T22:27:10-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -23,12 +23,31 @@
 <!--more-->
 
 
+<h3>Basics</h3>
+
+<p>Some tasks are simple.
+Note that some tasks are derived from the following rules:</p>
+
+<pre><code class="">$ gradle tasks
+:tasks
+...
+Rules
+-----
+Pattern: clean&lt;TaskName&gt;: Cleans the output files of a task.
+Pattern: build&lt;ConfigurationName&gt;: Assembles the artifacts of a configuration.
+Pattern: upload&lt;ConfigurationName&gt;: Assembles and uploads the artifacts belonging to a configuration.
+</code></pre>
+
 <h3>Java Projects</h3>
 
 <p>Output of <code>gradle build</code> for simple Java build file.</p>
 
 <pre><code class="plain Java plugin">&gt; cat build.gradle
 apply plugin: 'java'
+
+# Same effect
+$ cat build.gradle
+apply(plugin: 'java')
 
 &gt; gradle build
 :compileJava NO-SOURCE
@@ -132,6 +151,18 @@ build
 18 directories, 14 files
 </code></pre>
 
+<h4>Project properties</h4>
+
+<p>The command <code>gradle properties</code> will list all the pre-defined properties of the top Project instance.
+Some of the interesting properties of the Project class are:</p>
+
+<ul>
+<li><code>assemble</code>, <code>check</code>, <code>jar</code>, etc.: corresponding to defined tasks.</li>
+<li><code>version</code>, <code>sourceCompatibility</code>, <code>targetCompatibility</code>: commonly overridden properties.</li>
+<li><code>ext</code>: Extra properties.</li>
+</ul>
+
+
 <pre><code class="plain Gradle project properties">&gt; gradle properties
 :properties
 
@@ -144,6 +175,31 @@ ant: org.gradle.api.internal.project.DefaultAntBuilder@42572e90
 antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@39495f8
 archivesBaseName: workspace
 ...
+version: unspecified
+
+BUILD SUCCESSFUL
+
+Total time: 0.779 secs
+</code></pre>
+
+<p>For example, the following <code>build.gradle</code> will overwrite some of the base properties:</p>
+
+<pre><code>$ cat build.gradle
+apply plugin: 'java'
+version = '1.0'
+
+&gt; gradle properties
+:properties
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+...
+version: 1.0
+
+BUILD SUCCESSFUL
+
+Total time: 0.715 secs
 </code></pre>
 
 <p>Reference:</p>

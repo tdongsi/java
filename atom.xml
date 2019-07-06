@@ -4,7 +4,7 @@
   <title><![CDATA[Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2018-08-19T21:54:36-07:00</updated>
+  <updated>2019-07-05T22:27:10-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -21,6 +21,29 @@
     <content type="html"><![CDATA[<p>This post corresponds to &ldquo;Basic Project Builds&rdquo; section of <a href="https://www.safaribooksonline.com/videos/gradle-fundamentals/9781491937266">this course</a>.</p>
 
 <!--more-->
+
+
+<h3>Basics</h3>
+
+<p>Some tasks are simple.
+Note that some tasks are derived from the following rules:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle tasks
+</span><span class='line'>:tasks
+</span><span class='line'>...
+</span><span class='line'>Rules
+</span><span class='line'>-----
+</span><span class='line'>Pattern: clean&lt;TaskName&gt;: Cleans the output files of a task.
+</span><span class='line'>Pattern: build&lt;ConfigurationName&gt;: Assembles the artifacts of a configuration.
+</span><span class='line'>Pattern: upload&lt;ConfigurationName&gt;: Assembles and uploads the artifacts belonging to a configuration.</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>Java Projects</h3>
@@ -46,8 +69,16 @@
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&gt; cat build.gradle
 </span><span class='line'>apply plugin: 'java'
+</span><span class='line'>
+</span><span class='line'># Same effect
+</span><span class='line'>$ cat build.gradle
+</span><span class='line'>apply(plugin: 'java')
 </span><span class='line'>
 </span><span class='line'>&gt; gradle build
 </span><span class='line'>:compileJava NO-SOURCE
@@ -230,6 +261,16 @@ It can be used to setup a Gradle project.</p>
 </span><span class='line'>18 directories, 14 files</span></code></pre></td></tr></table></div></figure>
 
 
+<h4>Project properties</h4>
+
+<p>The command <code>gradle properties</code> will list all the pre-defined properties of the top Project instance.
+Some of the interesting properties of the Project class are:</p>
+
+<ul>
+<li><code>assemble</code>, <code>check</code>, <code>jar</code>, etc.: corresponding to defined tasks.</li>
+<li><code>version</code>, <code>sourceCompatibility</code>, <code>targetCompatibility</code>: commonly overridden properties.</li>
+<li><code>ext</code>: Extra properties.</li>
+</ul>
 
 
 <figure class='code'><figcaption><span>Gradle project properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -244,6 +285,11 @@ It can be used to setup a Gradle project.</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle properties
 </span><span class='line'>:properties
 </span><span class='line'>
@@ -255,7 +301,48 @@ It can be used to setup a Gradle project.</p>
 </span><span class='line'>ant: org.gradle.api.internal.project.DefaultAntBuilder@42572e90
 </span><span class='line'>antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@39495f8
 </span><span class='line'>archivesBaseName: workspace
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>...
+</span><span class='line'>version: unspecified
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.779 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For example, the following <code>build.gradle</code> will overwrite some of the base properties:</p>
+
+<figure class='code'><figcaption><span>Gradle project properties</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat build.gradle
+</span><span class='line'>apply plugin: 'java'
+</span><span class='line'>version = '1.0'
+</span><span class='line'>
+</span><span class='line'>&gt; gradle properties
+</span><span class='line'>:properties
+</span><span class='line'>
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>Root project
+</span><span class='line'>------------------------------------------------------------
+</span><span class='line'>...
+</span><span class='line'>version: 1.0
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>Total time: 0.715 secs</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Reference:</p>
