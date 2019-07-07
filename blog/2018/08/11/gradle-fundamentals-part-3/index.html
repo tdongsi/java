@@ -494,9 +494,9 @@ Some of the interesting properties of the Project class are:</p>
 <p>Examples:</p>
 
 <ul>
-<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/quickstart/build.gradle">quickstart</a></li>
-<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle">mixedJavaAndGroovy</a></li>
-<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle">customizedLayout</a></li>
+<li><a href="https://github.com/gradle/gradle/tree/master/subprojects/docs/src/samples/groovy/quickstart">quickstart</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy">mixedJavaAndGroovy</a></li>
+<li><a href="https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout">customizedLayout</a></li>
 </ul>
 
 
@@ -515,6 +515,61 @@ For example, the tasks <code>check</code> and <code>assemble</code> must be exec
 
 <p>Source Sets are Gradle way to organize related source code and resources.
 Using source sets can also enable you to customize your project layout (e.g., Jenkins global library project).</p>
+
+<p>The <code>java</code> plugin adds two default source sets:</p>
+
+<ul>
+<li><code>main</code>: Contains the production source code of the project, which is compiled and assembled into a JAR.</li>
+<li><code>test</code>: Contains your test source code, which is compiled and executed using <strong>JUnit</strong> or <strong>TestNG</strong>. These are typically unit tests, but you can include any test.</li>
+</ul>
+
+
+<p>For each source set, there are &ldquo;SourceSet tasks&rdquo; associated with it, as listed in <a href="https://docs.gradle.org/current/userguide/java_plugin.html#java_source_set_tasks">here</a>.
+For example, the Java plugin adds the following tasks:</p>
+
+<ul>
+<li>compile<em>SourceSet</em>Java - JavaCompile</li>
+<li>process<em>SourceSet</em>Resources - Copy</li>
+<li><em>sourceSet</em>Classes — Task: Depends on: compile<em>SourceSet</em>Java, process<em>SourceSet</em>Resources</li>
+</ul>
+
+
+<p>For example, the default <code>test</code> source set has those SourceSet tasks defined accordingly as <code>testClasses</code> -> <code>compileTestJava</code>, <code>processTestResources</code>.
+If you define another source set such as <code>integrationTest</code>, additional SourceSet tasks should be defined accordingly.</p>
+
+<p>Java plugin assumes that the project layout follows Maven convention.
+If you have a custom <em>sourceSet</em>, it should follow similar convention:</p>
+
+<ul>
+<li><code>src/sourceSet/java</code>: Java source for the source set named <em>sourceSet</em>.</li>
+<li><code>src/sourceSet/resources</code>: Resources for the source set named <em>sourceSet</em>.</li>
+</ul>
+
+
+<p>Changing the project layout is done by configuring the <code>sourceSets</code> property.</p>
+
+<figure class='code'><figcaption><span>Custom Java project layout</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">sourceSets</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">main</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">java</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">srcDirs</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;src/java&#39;</span><span class="o">]</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">resources</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">srcDirs</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;src/resources&#39;</span><span class="o">]</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h3>Project Properties and Dependencies</h3>
 
