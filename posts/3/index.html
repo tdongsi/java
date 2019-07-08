@@ -9,7 +9,39 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This blog post lists out some common mvn commands. ">
+  <meta name="description" content="(Counter.java) download
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+package my.practice.concurrency; /** * &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +99,253 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/java/blog/2015/11/19/concurrency-tutorial-in-java-part-1-producer-consumer-problem/">Process Synchronization (Pt. 1): Producer-Consumer Problem</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-11-19T14:57:21-08:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>19</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><figcaption><span> (Counter.java)</span> <a href='/java/download/code/java/Concurrency/src/Counter.java'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Simulate a queue in Producer-Consumer problem</span>
+</span><span class='line'><span class="cm"> * </span>
+</span><span class='line'><span class="cm"> * @author cdongsi</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Counter</span> <span class="o">{</span>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Increment counter value by one.</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">increment</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Decrement counter value by one.</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">decrement</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Return the current counter value.</span>
+</span><span class='line'><span class="cm">  * </span>
+</span><span class='line'><span class="cm">  * @return</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">current</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Reset the counter value. For multiple experiment runs.</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reset</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (Producer.java)</span> <a href='/java/download/code/java/Concurrency/src/Producer.java'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Producer</span> <span class="kd">extends</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Add some item into a common item queue</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">produce</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Use Counter as an item queue</span>
+</span><span class='line'><span class="cm">  * </span>
+</span><span class='line'><span class="cm">  * @param queue</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">useQueue</span><span class="o">(</span><span class="n">Counter</span> <span class="n">queue</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (Consumer.java)</span> <a href='/java/download/code/java/Concurrency/src/Consumer.java'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">my</span><span class="o">.</span><span class="na">practice</span><span class="o">.</span><span class="na">concurrency</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Consumer</span> <span class="kd">extends</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Remove some item from a common item queue</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">consume</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Use Counter as an item queue</span>
+</span><span class='line'><span class="cm">  * </span>
+</span><span class='line'><span class="cm">  * @param queue</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">useQueue</span><span class="o">(</span><span class="n">Counter</span> <span class="n">queue</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>Producer-Consumer simulation (one producer, one consumer)</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Run the simulation of producer-consumer problem</span>
+</span><span class='line'><span class="cm"> * with the given queue.</span>
+</span><span class='line'><span class="cm"> * </span>
+</span><span class='line'><span class="cm"> * At the end of simulation run, the queue should have 0 item.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">produceAndConsume</span><span class="o">(</span><span class="n">Counter</span> <span class="n">queue</span><span class="o">,</span> <span class="n">Producer</span> <span class="n">producer</span><span class="o">,</span> <span class="n">Consumer</span> <span class="n">consumer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Thread</span><span class="o">((</span><span class="n">Runnable</span><span class="o">)</span> <span class="n">producer</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">Thread</span> <span class="n">t2</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Thread</span><span class="o">((</span><span class="n">Runnable</span><span class="o">)</span> <span class="n">consumer</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">t2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">t1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span><span class='line'>      <span class="n">t2</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="c1">// Nothing</span>
+</span><span class='line'>  <span class="k">return</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once you have concrete implementations of your queue (implementing Counter interface), producer (Producer interface), and consumer (Consumer interface), you can run the simulation easily. One example is as follows:</p>
+
+<figure class='code'><figcaption><span>Run Producer-Consumer with concrete implementations</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="n">Counter</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleCounter</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">Producer</span> <span class="n">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleProducer</span><span class="o">(</span><span class="n">queue</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">Consumer</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SimpleConsumer</span><span class="o">(</span><span class="n">queue</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">produceAndConsume</span><span class="o">(</span><span class="n">queue</span><span class="o">,</span> <span class="n">producer</span><span class="o">,</span> <span class="n">consumer</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Queue at the end: &quot;</span> <span class="o">+</span> <span class="n">queue</span><span class="o">.</span><span class="na">current</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -190,6 +469,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/java/blog/2019/07/07/gradle-fundamentals-tasks/">Gradle Fundamentals: Tasks</a>
+      </li>
+    
+      <li class="post">
         <a href="/java/blog/2018/08/11/gradle-fundamentals-part-3/">Gradle Fundamentals: Part 3</a>
       </li>
     
@@ -225,16 +508,12 @@
         <a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a>
       </li>
     
-      <li class="post">
-        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (4)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (8)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (5)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (8)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
 </section>
 
 

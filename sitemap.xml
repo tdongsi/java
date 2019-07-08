@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks/</loc>
+<lastmod>2019-07-07T18:56:56-07:00</lastmod>
+</url>
+<url>
 <loc>http://tdongsi.github.io/java/blog/2018/08/11/gradle-fundamentals-part-3/</loc>
 <lastmod>2018-08-11T03:04:31-07:00</lastmod>
 </url>

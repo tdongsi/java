@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Java 8 - Personal Interview Notes</title>
+  <title>Gradle Fundamentals: Tasks - Personal Interview Notes</title>
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This post discusses various new features in Java 8.
-Java 8 is considered the latest Long-Term Support (LTS) release in new Java release schedule. &hellip;">
+  <meta name="description" content="This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of this course. Identifying, Defining, and Executing Tasks Define a task: Define a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2016/12/17/java-8/">
+  <link rel="canonical" href="http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks/">
   <link href="/java/favicon.png" rel="icon">
   <link href="/java/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Personal Interview Notes" type="application/atom+xml">
@@ -71,7 +70,7 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
   
   <header>
     
-      <h1 class="entry-title">Java 8</h1>
+      <h1 class="entry-title">Gradle Fundamentals: Tasks</h1>
     
     
       <p class="meta">
@@ -80,22 +79,36 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
 
 
 
-<time class='entry-date' datetime='2016-12-17T22:37:46-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:37 pm</span></time>
+<time class='entry-date' datetime='2019-07-07T18:56:56-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2019</span></span> <span class='time'>6:56 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>This post discusses various new features in Java 8.
-Java 8 is considered the latest Long-Term Support (LTS) release in new Java release schedule.</p>
+<div class="entry-content"><p>This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of <a href="https://learning.oreilly.com/videos/gradle-fundamentals/9781491937266/9781491937266-video224139">this course</a>.</p>
 
 <!--more-->
 
 
-<h3>Lambdas</h3>
+<h3>Identifying, Defining, and Executing Tasks</h3>
 
-<figure class='code'><figcaption><span>Different forms</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p>Define <a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Task.html">a task</a>:</p>
+
+<figure class='code'><figcaption><span>Define a task</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">myTask</span>
+</span><span class='line'><span class="n">task</span> <span class="n">myTask</span> <span class="o">{</span> <span class="n">configure</span> <span class="n">closure</span> <span class="o">}</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">myTask</span><span class="o">(</span><span class="nl">type:</span> <span class="n">SomeType</span><span class="o">)</span>
+</span><span class='line'><span class="n">task</span> <span class="nf">myTask</span><span class="o">(</span><span class="nl">type:</span> <span class="n">SomeType</span><span class="o">)</span> <span class="o">{</span> <span class="n">configure</span> <span class="n">closure</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>List a task:</p>
+
+<figure class='code'><figcaption><span>List a custom task</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -112,53 +125,26 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="kt">int</span> <span class="n">MULTIPLIER</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
-</span><span class='line'><span class="c1">// &quot;local variables referenced from a lambda expression/inner class must be final or effectively final&quot;</span>
-</span><span class='line'><span class="kt">int</span> <span class="n">aMultiplier</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle help --task hello
+</span><span class='line'>:help
+</span><span class='line'>Detailed task information for hello
 </span><span class='line'>
-</span><span class='line'><span class="c1">// Simplest lambda form</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">n</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span><span class="o">));</span>
+</span><span class='line'>Path
+</span><span class='line'>     :hello
 </span><span class='line'>
-</span><span class='line'><span class="c1">// Full lambda form</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">Integer</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>Type
+</span><span class='line'>     Task (org.gradle.api.Task)
 </span><span class='line'>
-</span><span class='line'><span class="c1">// Classic equivalent: anonymous inner class</span>
-</span><span class='line'><span class="n">Stream</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="k">new</span> <span class="n">Consumer</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="nd">@Override</span>
-</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">accept</span><span class="o">(</span><span class="n">Integer</span> <span class="n">integer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Second: &quot;</span> <span class="o">+</span> <span class="n">integer</span> <span class="o">*</span> <span class="n">aMultiplier</span> <span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">});</span>
-</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>Description
+</span><span class='line'>     Hello
+</span><span class='line'>
+</span><span class='line'>Group
+</span><span class='line'>     -
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Streams</h3>
-
-<p>There are many ways to produce streams.</p>
-
-<ul>
-<li>Stream.of()</li>
-<li>Stream.iterate()</li>
-<li>Stream.generate()</li>
-<li>Special methods in classes. E.g.:
-
-<ul>
-<li>Collections.stream()</li>
-<li>Random.doubles()</li>
-</ul>
-</li>
-</ul>
-
+<h3>Conditional Task Execution</h3>
 </div>
 
 
@@ -174,12 +160,12 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
 
 
 
-<time class='entry-date' datetime='2016-12-17T22:37:46-08:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:37 pm</span></time>
+<time class='entry-date' datetime='2019-07-07T18:56:56-07:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2019</span></span> <span class='time'>6:56 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/java/blog/categories/java/'>java</a>
+    <a class='category' href='/java/blog/categories/gradle/'>gradle</a>
   
 </span>
 
@@ -188,7 +174,7 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2016/12/17/java-8/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2016/12/17/java-8/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks/" data-via="" data-counturl="http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks/" >Tweet</a>
   
   
   
@@ -199,10 +185,8 @@ Java 8 is considered the latest Long-Term Support (LTS) release in new Java rele
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/java/blog/2016/09/09/common-interview-questions/" title="Previous Post: Common interview questions">&laquo; Common interview questions</a>
+        <a class="basic-alignment left" href="/java/blog/2018/08/11/gradle-fundamentals-part-3/" title="Previous Post: Gradle Fundamentals: Part 3">&laquo; Gradle Fundamentals: Part 3</a>
       
-      
-        <a class="basic-alignment right" href="/java/blog/2016/12/27/date-and-time-in-java-7-vs-java-8/" title="Next Post: Date and Time in Java 7 vs Java 8">Date and Time in Java 7 vs Java 8 &raquo;</a>
       
     </p>
   </footer>

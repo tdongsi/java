@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Gradle | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2019-07-07T02:50:30-07:00</updated>
+  <updated>2019-07-07T19:05:30-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gradle Fundamentals: Tasks]]></title>
+    <link href="http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks/"/>
+    <updated>2019-07-07T18:56:56-07:00</updated>
+    <id>http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks</id>
+    <content type="html"><![CDATA[<p>This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of <a href="https://learning.oreilly.com/videos/gradle-fundamentals/9781491937266/9781491937266-video224139">this course</a>.</p>
+
+<!--more-->
+
+
+<h3>Identifying, Defining, and Executing Tasks</h3>
+
+<p>Define <a href="https://docs.gradle.org/3.5/dsl/org.gradle.api.Task.html">a task</a>:</p>
+
+<pre><code class="groovy Define a task">task myTask
+task myTask { configure closure }
+task myTask(type: SomeType)
+task myTask(type: SomeType) { configure closure }
+</code></pre>
+
+<p>List a task:</p>
+
+<pre><code class="plain List a custom task">$ gradle help --task hello
+:help
+Detailed task information for hello
+
+Path
+     :hello
+
+Type
+     Task (org.gradle.api.Task)
+
+Description
+     Hello
+
+Group
+     -
+
+BUILD SUCCESSFUL
+</code></pre>
+
+<h3>Conditional Task Execution</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Gradle Fundamentals: Part 3]]></title>
@@ -315,6 +360,8 @@ If you have a custom <em>sourceSet</em>, it should follow similar convention:</p
 }
 </code></pre>
 
+<p>See <a href="https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests">this</a> for example of adding a new source set <code>intTest</code> for integration tests.</p>
+
 <h3>Project Properties and Dependencies</h3>
 
 <p>Each <code>build.gradle</code> file is used to instantiate a <code>Project</code> object.
@@ -324,6 +371,16 @@ It will evaluate <code>settings.gradle</code> script to configure that <code>Set
 <p>The documentation page has a list of default properties of <code>Project</code> class.
 It should be noted that adding a plugin can add additional properties to <code>Project</code> class, as shown in the same page.
 For example, <code>idea</code> plugin will add <code>idea</code> property for &ldquo;IdeaModel&rdquo;.</p>
+
+<p>To declare a specific dependency for a configuration you can use the following syntax:</p>
+
+<pre><code class="plain">dependencies {
+    configurationName dependencyNotation1, dependencyNotation2, ...
+}
+</code></pre>
+
+<p>Examples of <em>configurationName</em>: &ldquo;compile&rdquo; and &ldquo;testCompile&rdquo; are the common ones, being deprecated with &ldquo;implementation&rdquo; and &ldquo;testImplementation&rdquo; being the replacements.
+See <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">this</a> for relationship between different dependecy configurations.</p>
 
 <pre><code class="groovy Different way to specify dependencies">dependencies {
     runtime group: 'org.springframework', name: 'spring-core', version: '2.5'

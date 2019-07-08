@@ -571,6 +571,8 @@ If you have a custom <em>sourceSet</em>, it should follow similar convention:</p
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>See <a href="https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests">this</a> for example of adding a new source set <code>intTest</code> for integration tests.</p>
+
 <h3>Project Properties and Dependencies</h3>
 
 <p>Each <code>build.gradle</code> file is used to instantiate a <code>Project</code> object.
@@ -580,6 +582,19 @@ It will evaluate <code>settings.gradle</code> script to configure that <code>Set
 <p>The documentation page has a list of default properties of <code>Project</code> class.
 It should be noted that adding a plugin can add additional properties to <code>Project</code> class, as shown in the same page.
 For example, <code>idea</code> plugin will add <code>idea</code> property for &ldquo;IdeaModel&rdquo;.</p>
+
+<p>To declare a specific dependency for a configuration you can use the following syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
+</span><span class='line'>    configurationName dependencyNotation1, dependencyNotation2, ...
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Examples of <em>configurationName</em>: &ldquo;compile&rdquo; and &ldquo;testCompile&rdquo; are the common ones, being deprecated with &ldquo;implementation&rdquo; and &ldquo;testImplementation&rdquo; being the replacements.
+See <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">this</a> for relationship between different dependecy configurations.</p>
 
 <figure class='code'><figcaption><span>Different way to specify dependencies</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -840,6 +855,8 @@ For example, <code>idea</code> plugin will add <code>idea</code> property for &l
         <a class="basic-alignment left" href="/java/blog/2018/08/11/gradle-fundamentals-part-2/" title="Previous Post: Gradle Fundamentals: Part 2">&laquo; Gradle Fundamentals: Part 2</a>
       
       
+        <a class="basic-alignment right" href="/java/blog/2019/07/07/gradle-fundamentals-tasks/" title="Next Post: Gradle Fundamentals: Tasks">Gradle Fundamentals: Tasks &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -854,6 +871,10 @@ For example, <code>idea</code> plugin will add <code>idea</code> property for &l
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/java/blog/2019/07/07/gradle-fundamentals-tasks/">Gradle Fundamentals: Tasks</a>
+      </li>
     
       <li class="post">
         <a href="/java/blog/2018/08/11/gradle-fundamentals-part-3/">Gradle Fundamentals: Part 3</a>
@@ -891,16 +912,12 @@ For example, <code>idea</code> plugin will add <code>idea</code> property for &l
         <a href="/java/blog/2017/12/08/groovy-fundamentals-part-2/">Groovy Fundamentals: Part 2: Numbers & Strings</a>
       </li>
     
-      <li class="post">
-        <a href="/java/blog/2017/12/08/groovy-fundamentals-part-1/">Groovy Fundamentals: Part 1: Basics</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (4)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (8)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/java/blog/categories/book/'>book (1)</a></li><li><a href='/java/blog/categories/concurrency/'>concurrency (2)</a></li><li><a href='/java/blog/categories/gradle/'>gradle (5)</a></li><li><a href='/java/blog/categories/groovy/'>groovy (8)</a></li><li><a href='/java/blog/categories/java/'>java (9)</a></li><li><a href='/java/blog/categories/maven/'>maven (1)</a></li><li><a href='/java/blog/categories/questions/'>questions (1)</a></li><li><a href='/java/blog/categories/todo/'>todo (1)</a></li><li><a href='/java/blog/categories/tutorial/'>tutorial (3)</a></li></ul>
 </section>
 
 
