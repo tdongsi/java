@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Gradle Fundamentals: Tasks"
+title: "Gradle Fundamentals 4: Tasks"
 date: 2019-07-07 18:56:56 -0700
 comments: true
 categories: 
