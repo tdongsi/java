@@ -199,11 +199,47 @@ Reference:
 
 ### Groovy Projects
 
+``` groovy Quickstart Groovy project
+plugins {
+    id 'groovy'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:2.4.15'
+    testImplementation 'junit:junit:4.12'
+}
+```
+
+``` plain Build execution
+$ gradle build
+:compileJava NO-SOURCE
+:compileGroovy NO-SOURCE
+:processResources NO-SOURCE
+:classes UP-TO-DATE
+:jar
+:assemble
+:compileTestJava NO-SOURCE
+:compileTestGroovy NO-SOURCE
+:processTestResources NO-SOURCE
+:testClasses UP-TO-DATE
+:test NO-SOURCE
+:check UP-TO-DATE
+:build
+
+BUILD SUCCESSFUL
+
+Total time: 0.736 secs
+```
+
 Examples:
 
-* [quickstart](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/quickstart/build.gradle)
-* [mixedJavaAndGroovy](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle)
-* [customizedLayout](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle)
+* [quickstart](https://github.com/gradle/gradle/tree/master/subprojects/docs/src/samples/groovy/quickstart)
+* [mixedJavaAndGroovy](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy)
+* [customizedLayout](https://github.com/gradle/gradle/blob/master/subprojects/docs/src/samples/groovy/customizedLayout)
 
 Reference:
 
@@ -218,6 +254,44 @@ For example, the tasks `check` and `assemble` must be executed before `build` ta
 Source Sets are Gradle way to organize related source code and resources. 
 Using source sets can also enable you to customize your project layout (e.g., Jenkins global library project).
 
+The `java` plugin adds two default source sets:
+
+* `main`: Contains the production source code of the project, which is compiled and assembled into a JAR.
+* `test`: Contains your test source code, which is compiled and executed using **JUnit** or **TestNG**. These are typically unit tests, but you can include any test.
+
+For each source set, there are "SourceSet tasks" associated with it, as listed in [here](https://docs.gradle.org/current/userguide/java_plugin.html#java_source_set_tasks). 
+For example, the Java plugin adds the following tasks:
+
+* compile*SourceSet*Java - JavaCompile
+* process*SourceSet*Resources - Copy
+* *sourceSet*Classes — Task: Depends on: compile*SourceSet*Java, process*SourceSet*Resources
+
+For example, the default `test` source set has those SourceSet tasks defined accordingly as `testClasses` -> `compileTestJava`, `processTestResources`.
+If you define another source set such as `integrationTest`, additional SourceSet tasks should be defined accordingly.
+
+Java plugin assumes that the project layout follows Maven convention.
+If you have a custom *sourceSet*, it should follow similar convention:
+
+* `src/sourceSet/java`: Java source for the source set named *sourceSet*.
+* `src/sourceSet/resources`: Resources for the source set named *sourceSet*.
+
+Changing the project layout is done by configuring the `sourceSets` property. 
+
+``` groovy Custom Java project layout
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+}
+```
+
+See [this](https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests) for example of adding a new source set `intTest` for integration tests.
+
 ### Project Properties and Dependencies
 
 Each `build.gradle` file is used to instantiate a `Project` object.
@@ -227,6 +301,17 @@ It will evaluate `settings.gradle` script to configure that `Settings` object (m
 The documentation page has a list of default properties of `Project` class.
 It should be noted that adding a plugin can add additional properties to `Project` class, as shown in the same page.
 For example, `idea` plugin will add `idea` property for "IdeaModel".
+
+To declare a specific dependency for a configuration you can use the following syntax:
+
+``` plain
+dependencies {
+    configurationName dependencyNotation1, dependencyNotation2, ...
+}
+```
+
+Examples of *configurationName*: "compile" and "testCompile" are the common ones, being deprecated with "implementation" and "testImplementation" being the replacements.
+See [this](https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management) for relationship between different dependecy configurations. 
 
 ``` groovy Different way to specify dependencies
 dependencies {

@@ -24,4 +24,5 @@ site
 **/.idea
 *.iml
 **/target
-docs/source/workspace/.gradle
+**/.gradle
+
