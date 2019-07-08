@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Gradle | Personal Interview Notes]]></title>
   <link href="http://tdongsi.github.io/java/blog/categories/gradle/atom.xml" rel="self"/>
   <link href="http://tdongsi.github.io/java/"/>
-  <updated>2019-07-07T19:05:30-07:00</updated>
+  <updated>2019-07-07T19:47:19-07:00</updated>
   <id>http://tdongsi.github.io/java/</id>
   <author>
     <name><![CDATA[Cuong Dong-Si]]></name>
@@ -19,6 +19,13 @@
     <updated>2019-07-07T18:56:56-07:00</updated>
     <id>http://tdongsi.github.io/java/blog/2019/07/07/gradle-fundamentals-tasks</id>
     <content type="html"><![CDATA[<p>This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of <a href="https://learning.oreilly.com/videos/gradle-fundamentals/9781491937266/9781491937266-video224139">this course</a>.</p>
+
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/current/userguide/more_about_tasks.html">More about Tasks</a></li>
+</ul>
+
 
 <!--more-->
 
@@ -35,7 +42,17 @@ task myTask(type: SomeType) { configure closure }
 
 <p>List a task:</p>
 
-<pre><code class="plain List a custom task">$ gradle help --task hello
+<pre><code class="plain List a custom task">$ cat build.gradle
+...
+task hello {
+    description 'Hello'
+    doLast {
+        println 'Hello, World!'
+    }
+}
+...
+
+$ gradle help --task hello
 :help
 Detailed task information for hello
 
@@ -55,6 +72,88 @@ BUILD SUCCESSFUL
 </code></pre>
 
 <h3>Conditional Task Execution</h3>
+
+<pre><code class="plain Conditional execution with predicate">$ cat build.gradle
+...
+task hello {
+    description 'Hello'
+    doLast {
+        println 'Hello, World!'
+    }
+}
+
+hello.dependsOn 'compileJava'
+hello.onlyIf { !project.hasProperty('skipHello') }
+...
+
+$ gradle hello
+:compileJava NO-SOURCE
+:hello
+Hello, World!
+
+BUILD SUCCESSFUL
+
+$ gradle hello -PskipHello
+:compileJava NO-SOURCE
+:hello SKIPPED
+
+BUILD SUCCESSFUL
+</code></pre>
+
+<h4>Up-to-date tasks (Incremental Build)</h4>
+
+<p>Besides explicit predicates, another strategy for skipping tasks is to check for inputs if it is updated, as discussed in <a href="https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:up_to_date_checks">this section</a>.</p>
+
+<pre><code class="groovy Before build.gradle">task transform {
+    ext.srcFile = file('mountains.xml')
+    ext.destDir = new File(buildDir, 'generated')
+    doLast {
+        println "Transforming source file."
+        destDir.mkdirs()
+        def mountains = new XmlParser().parse(srcFile)
+        mountains.mountain.each { mountain -&gt;
+            def name = mountain.name[0].text()
+            def height = mountain.height[0].text()
+            def destFile = new File(destDir, "${name}.txt")
+            destFile.text = "$name -&gt; ${height}\n"
+        }
+    }
+}
+</code></pre>
+
+<p>Using this naive task definition, the second run will do the same thing even though nothing is changed.</p>
+
+<pre><code class="groovy After build.gradle">task transform {
+    ext.srcFile = file('mountains.xml')
+    ext.destDir = new File(buildDir, 'generated')
+
+    // Define inputs and outputs
+    inputs.file srcFile
+    outputs.dir destDir
+
+    doLast {
+        println "Transforming source file."
+        destDir.mkdirs()
+        def mountains = new XmlParser().parse(srcFile)
+        mountains.mountain.each { mountain -&gt;
+            def name = mountain.name[0].text()
+            def height = mountain.height[0].text()
+            def destFile = new File(destDir, "${name}.txt")
+            destFile.text = "$name -&gt; ${height}\n"
+        }
+    }
+}
+</code></pre>
+
+<p>Now, Gradle knows which files to check to determine whether the task is up-to-date or not.</p>
+
+<pre><code class="plain Gradle outputs">&gt; gradle transform
+:transform
+Transforming source file.
+
+&gt; gradle transform
+:transform UP-TO-DATE
+</code></pre>
 ]]></content>
   </entry>
   

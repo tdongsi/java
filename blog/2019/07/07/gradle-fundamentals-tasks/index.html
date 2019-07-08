@@ -9,7 +9,7 @@
   <meta name="author" content="Cuong Dong-Si">
 
   
-  <meta name="description" content="This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of this course. Identifying, Defining, and Executing Tasks Define a task: Define a &hellip;">
+  <meta name="description" content="This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of this course. Reference: More about Tasks Identifying, Defining, and Executing Tasks &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +88,13 @@
 
 <div class="entry-content"><p>This post corresponds to Section 4: &ldquo;Custom Tasks&rdquo; of <a href="https://learning.oreilly.com/videos/gradle-fundamentals/9781491937266/9781491937266-video224139">this course</a>.</p>
 
+<p>Reference:</p>
+
+<ul>
+<li><a href="https://docs.gradle.org/current/userguide/more_about_tasks.html">More about Tasks</a></li>
+</ul>
+
+
 <!--more-->
 
 
@@ -125,7 +132,27 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gradle help --task hello
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat build.gradle
+</span><span class='line'>...
+</span><span class='line'>task hello {
+</span><span class='line'>    description 'Hello'
+</span><span class='line'>    doLast {
+</span><span class='line'>        println 'Hello, World!'
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>...
+</span><span class='line'>
+</span><span class='line'>$ gradle help --task hello
 </span><span class='line'>:help
 </span><span class='line'>Detailed task information for hello
 </span><span class='line'>
@@ -145,6 +172,156 @@
 
 
 <h3>Conditional Task Execution</h3>
+
+<figure class='code'><figcaption><span>Conditional execution with predicate</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat build.gradle
+</span><span class='line'>...
+</span><span class='line'>task hello {
+</span><span class='line'>    description 'Hello'
+</span><span class='line'>    doLast {
+</span><span class='line'>        println 'Hello, World!'
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>hello.dependsOn 'compileJava'
+</span><span class='line'>hello.onlyIf { !project.hasProperty('skipHello') }
+</span><span class='line'>...
+</span><span class='line'>
+</span><span class='line'>$ gradle hello
+</span><span class='line'>:compileJava NO-SOURCE
+</span><span class='line'>:hello
+</span><span class='line'>Hello, World!
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL
+</span><span class='line'>
+</span><span class='line'>$ gradle hello -PskipHello
+</span><span class='line'>:compileJava NO-SOURCE
+</span><span class='line'>:hello SKIPPED
+</span><span class='line'>
+</span><span class='line'>BUILD SUCCESSFUL</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Up-to-date tasks (Incremental Build)</h4>
+
+<p>Besides explicit predicates, another strategy for skipping tasks is to check for inputs if it is updated, as discussed in <a href="https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:up_to_date_checks">this section</a>.</p>
+
+<figure class='code'><figcaption><span>Before build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">transform</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ext</span><span class="o">.</span><span class="na">srcFile</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s1">&#39;mountains.xml&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">ext</span><span class="o">.</span><span class="na">destDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">buildDir</span><span class="o">,</span> <span class="s1">&#39;generated&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s2">&quot;Transforming source file.&quot;</span>
+</span><span class='line'>        <span class="n">destDir</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">()</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">mountains</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlParser</span><span class="o">().</span><span class="na">parse</span><span class="o">(</span><span class="n">srcFile</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">mountains</span><span class="o">.</span><span class="na">mountain</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span> <span class="n">mountain</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mountain</span><span class="o">.</span><span class="na">name</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">text</span><span class="o">()</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">height</span> <span class="o">=</span> <span class="n">mountain</span><span class="o">.</span><span class="na">height</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">text</span><span class="o">()</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">destFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">destDir</span><span class="o">,</span> <span class="s2">&quot;${name}.txt&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">destFile</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="s2">&quot;$name -&gt; ${height}\n&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this naive task definition, the second run will do the same thing even though nothing is changed.</p>
+
+<figure class='code'><figcaption><span>After build.gradle</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='groovy'><span class='line'><span class="n">task</span> <span class="n">transform</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ext</span><span class="o">.</span><span class="na">srcFile</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s1">&#39;mountains.xml&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">ext</span><span class="o">.</span><span class="na">destDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">buildDir</span><span class="o">,</span> <span class="s1">&#39;generated&#39;</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Define inputs and outputs</span>
+</span><span class='line'>    <span class="n">inputs</span><span class="o">.</span><span class="na">file</span> <span class="n">srcFile</span>
+</span><span class='line'>    <span class="n">outputs</span><span class="o">.</span><span class="na">dir</span> <span class="n">destDir</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">doLast</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s2">&quot;Transforming source file.&quot;</span>
+</span><span class='line'>        <span class="n">destDir</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">()</span>
+</span><span class='line'>        <span class="kt">def</span> <span class="n">mountains</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlParser</span><span class="o">().</span><span class="na">parse</span><span class="o">(</span><span class="n">srcFile</span><span class="o">)</span>
+</span><span class='line'>        <span class="n">mountains</span><span class="o">.</span><span class="na">mountain</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span> <span class="n">mountain</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mountain</span><span class="o">.</span><span class="na">name</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">text</span><span class="o">()</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">height</span> <span class="o">=</span> <span class="n">mountain</span><span class="o">.</span><span class="na">height</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">text</span><span class="o">()</span>
+</span><span class='line'>            <span class="kt">def</span> <span class="n">destFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">destDir</span><span class="o">,</span> <span class="s2">&quot;${name}.txt&quot;</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">destFile</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="s2">&quot;$name -&gt; ${height}\n&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, Gradle knows which files to check to determine whether the task is up-to-date or not.</p>
+
+<figure class='code'><figcaption><span>Gradle outputs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; gradle transform
+</span><span class='line'>:transform
+</span><span class='line'>Transforming source file.
+</span><span class='line'>
+</span><span class='line'>&gt; gradle transform
+</span><span class='line'>:transform UP-TO-DATE</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
