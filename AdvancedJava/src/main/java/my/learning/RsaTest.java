@@ -6,13 +6,24 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
+/**
+ * Demonstrate stack trace produced by mismatch between encryption and decryption.
+ *
+ * encrypt_wrong uses a random keystore, returned by getKeyStore()
+ * encrypt & decrypt uses the same keystore, returned by getKeyStore2().
+ *
+ * saml.jks is produced with:
+ *
+ * $ openssl pkcs12 -export -out keystore5.p12 -inkey mr2.key -in mr.cert -certfile more.cert
+ * $ keytool -importkeystore -srckeystore keystore5.p12 -srcstoretype pkcs12 -destkeystore saml.jks -deststoretype jks
+ */
 public class RsaTest {
 
     private final static String PASSWORD = "Awesome123";
 
     public static void main(String [] args) throws Exception {
         String plaintext = "text";
-        byte[] ciphertext = encrypt_wrong((plaintext));
+        byte[] ciphertext = encrypt((plaintext));
         String recoveredPlaintext = decrypt(ciphertext);
         System.out.println("recoveredPlaintext   "+recoveredPlaintext);
     }
