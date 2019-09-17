@@ -56,7 +56,7 @@ public class RsaTest {
     }
 
     public static KeyStore getKeyStore() throws Exception {
-        String file ="AppleConnect.jks";
+        String file ="AppleConnect.jks";  // Pretend some random jks as AppleConnect
         KeyStore keyStore = KeyStore.getInstance("JKS");
         String password = "wso2carbon";
         FileInputStream in = null;
